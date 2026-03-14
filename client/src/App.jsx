@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { useDispatch,useSelector } from 'react-redux'
 import { increment,decrement,incrementByAmount } from './store/slices/counter'
+import Home from './pages/Home';
 export default function App() {
   const value = useSelector((state)=>state.counter.value);
   const dispatch = useDispatch();
