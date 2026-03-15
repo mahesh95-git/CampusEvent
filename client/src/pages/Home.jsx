@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-
-/* ─── DATA ───────────────────────────────────────────────── */
+import { useSelector } from "react-redux";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import Plans from "../components/Plans";
+import Pill from "../components/Pill";
+import FadeIn from "../util/FadeIn";
+/* ─── DATA ────────*/
 const stats = [
   { value: "50K+",  label: "Students Reached",        icon: "🎓" },
   { value: "1.2K+", label: "Events Hosted",            icon: "📅" },
@@ -41,14 +46,7 @@ const features = [
   { icon: "🛡️", title: "Subscription Management",   desc: "Flexible plans with automated access control for organizations.",                                   bg: "bg-amber-500/10",   border: "border-amber-500/20",   text: "text-amber-400",   learn: "text-amber-400"   },
 ];
 
-const plans = [
-  { name: "Free",         price: "₹0",   period: "forever",      desc: "Perfect for individual students",      highlight: false, badge: null,          accentDark: "text-teal-400",  accentLight: "text-teal-600",  checkDark: "bg-teal-500/15 border border-teal-500/30 text-teal-400",  checkLight: "bg-teal-100 border border-teal-300 text-teal-600",  btnDark: "border border-teal-500/40 text-teal-400 hover:bg-teal-500/10",         btnLight: "border border-teal-500/50 text-teal-600 hover:bg-teal-50",
-    items: ["Browse all events", "Register for 5 events/month", "Basic notifications", "Event history"] },
-  { name: "Campus Pro",   price: "₹199", period: "per semester",  desc: "For the actively engaged student",     highlight: true,  badge: "Most Popular", accentDark: "text-teal-400",  accentLight: "text-teal-600",  checkDark: "bg-teal-500/15 border border-teal-500/30 text-teal-400",  checkLight: "bg-teal-100 border border-teal-300 text-teal-600",  btnDark: "bg-gradient-to-r from-teal-600 to-teal-400 text-white shadow-lg shadow-teal-500/30", btnLight: "bg-gradient-to-r from-teal-600 to-teal-400 text-white shadow-lg shadow-teal-500/30",
-    items: ["Unlimited registrations", "Priority booking", "Volunteer tracking & certificates", "Advanced notifications", "Personal dashboard analytics", "Badge & achievement system"] },
-  { name: "Department",   price: "₹999", period: "per semester",  desc: "For coordinators & departments",       highlight: false, badge: null,          accentDark: "text-amber-400", accentLight: "text-amber-600", checkDark: "bg-amber-500/15 border border-amber-500/30 text-amber-400", checkLight: "bg-amber-100 border border-amber-300 text-amber-600", btnDark: "border border-amber-500/40 text-amber-400 hover:bg-amber-500/10",      btnLight: "border border-amber-500/50 text-amber-600 hover:bg-amber-50",
-    items: ["Everything in Pro", "Create & manage events", "Team volunteer management", "Bulk registrations", "Analytics & reports", "Dedicated support"] },
-];
+
 
 const testimonials = [
   { name: "Priya Sharma", role: "CSE Final Year",       text: "Managing our tech fest registrations went from chaos to completely smooth. Love the volunteer tracking!",              avatar: "PS", av: "bg-teal-500"   },
@@ -69,39 +67,17 @@ function AnimatedNumber({ target }) {
   return <span>{Number.isInteger(num) ? Math.floor(count).toLocaleString() : count.toFixed(1)}{suffix}</span>;
 }
 
-/* ─── FADE IN ────────────────────────────────────────────── */
-function FadeIn({ children, delay = 0, className = "" }) {
-  const ref = useRef(null);
-  const [v, setV] = useState(false);
-  useEffect(() => {
-    const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.1 });
-    if (ref.current) o.observe(ref.current);
-    return () => o.disconnect();
-  }, []);
-  return (
-    <div ref={ref} className={className}
-      style={{ opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(26px)", transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s` }}>
-      {children}
-    </div>
-  );
-}
 
-/* ─── PILL ────────────────────────────────────────────────── */
-function Pill({ children, dark }) {
-  return (
-    <span className={`inline-flex items-center gap-2 px-4 py-[5px] rounded-full text-[11px] font-semibold uppercase tracking-[0.08em] border ${dark ? "bg-teal-500/10 border-teal-500/25 text-teal-300" : "bg-teal-500/8 border-teal-500/20 text-teal-700"}`}>
-      {children}
-    </span>
-  );
-}
+
 
 /* ════════════════════════════════════════════════════════════
    HOME
 ════════════════════════════════════════════════════════════ */
 export default function Home() {
-  const [dark, setDark]                         = useState(true);
+  const theme = useSelector((state) => state.theme.value);
+  const dark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
   const [activeCategory, setActiveCategory]     = useState("All");
-  const [activePlan, setActivePlan]             = useState(1);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [subEmail, setSubEmail]                 = useState("");
   const [subSubmitted, setSubSubmitted]         = useState(false);
@@ -153,39 +129,7 @@ export default function Home() {
       `}</style>
 
       {/* ══════ NAV ══════ */}
-      <nav className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-colors duration-300 ${D("bg-[#070D1A]/88 border-white/[0.06]","bg-[#F0F7F6]/92 border-black/[0.07]")}`}>
-        <div className="max-w-[1280px] mx-auto px-8 h-[66px] flex items-center justify-between">
-
-          {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-[38px] h-[38px] rounded-[11px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[19px] shadow-lg shadow-teal-500/30">🎯</div>
-            <span className={`font-extrabold text-[18px] tracking-[-0.4px] ${D("text-slate-50","text-slate-900")}`}>CampusEvents</span>
-          </div>
-
-          {/* Nav links */}
-          <div className="hidden md:flex items-center gap-7 text-[14px] font-medium">
-            {[["Features","#features"],["Events","#events"],["Plans","#plans"],["About","#about"]].map(([l,h]) => (
-              <a key={l} href={h} className={`transition-colors duration-200 hover:text-teal-500 ${D("text-slate-400","text-slate-500")}`}>{l}</a>
-            ))}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-2.5">
-            {/* Theme toggle */}
-            <button onClick={() => setDark(d => !d)}
-              className={`flex items-center gap-1.5 px-[14px] py-[7px] rounded-[8px] border text-[13px] font-medium cursor-pointer transition-all duration-200 ${D("bg-white/[0.07] border-white/[0.1] text-slate-400 hover:text-slate-200","bg-black/[0.05] border-black/[0.1] text-slate-500 hover:text-slate-700")}`}>
-              <span className="text-[15px] leading-none">{D("☀️","🌙")}</span>
-              {D("Light","Dark")}
-            </button>
-            <button className={`px-[18px] py-2 rounded-[9px] border text-[14px] font-semibold transition-all duration-200 hover:border-teal-500 ${D("border-white/[0.12] text-slate-300","border-black/[0.1] text-slate-600")}`}>
-              Sign In
-            </button>
-            <button className="px-[20px] py-[9px] rounded-[9px] border-none bg-gradient-to-r from-teal-600 to-teal-400 text-white text-[14px] font-bold shadow-lg shadow-teal-500/40 hover:scale-[1.03] transition-transform duration-200 cursor-pointer">
-              Get Started
-            </button>
-          </div>
-        </div>
-      </nav>
+        <NavBar/>
 
       {/* ══════ HERO ══════ */}
       <section className="relative pt-[110px] pb-20 px-6 text-center overflow-hidden">
@@ -430,59 +374,7 @@ export default function Home() {
       </section>
 
       {/* ══════ PLANS ══════ */}
-      <section id="plans" className="py-16 px-6">
-        <div className="max-w-[1100px] mx-auto">
-          <FadeIn className="text-center mb-14">
-            <div className="mb-4"><Pill dark={dark}>Simple Pricing</Pill></div>
-            <h2 className={`text-[clamp(28px,4vw,46px)] font-extrabold tracking-[-1px] mb-3 ${D("text-slate-50","text-slate-900")}`}>
-              Plans for every<br /><span className={gradTxt}>campus journey</span>
-            </h2>
-            <p className={`text-[16px] max-w-[440px] mx-auto ${D("text-slate-400","text-slate-500")}`}>No hidden fees. Cancel anytime. Upgrade as your involvement grows.</p>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
-            {plans.map((plan, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div onClick={() => setActivePlan(i)}
-                  className={`relative rounded-[22px] p-[30px] cursor-pointer transition-all duration-300 border-2 ${plan.highlight
-                    ? `scale-[1.03] ${D("bg-gradient-to-b from-teal-900/30 to-[#0D1626] border-teal-500 shadow-xl shadow-teal-500/20","bg-gradient-to-b from-teal-50 to-white border-teal-500 shadow-xl shadow-teal-500/15")}`
-                    : activePlan===i
-                      ? D("bg-[#111827] border-teal-500/40 shadow-lg shadow-teal-500/10","bg-white border-teal-400/50 shadow-md")
-                      : D("bg-[#111827] border-white/[0.07] hover:border-teal-500/30","bg-white border-slate-100 hover:border-teal-300")}`}>
-
-                  {plan.badge && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-teal-600 to-teal-400 text-white text-[10px] font-black px-4 py-[5px] rounded-full shadow-md shadow-teal-500/30 whitespace-nowrap">
-                      {plan.badge}
-                    </span>
-                  )}
-
-                  <div className="mb-5">
-                    <p className={`text-[12px] font-bold uppercase tracking-[0.06em] mb-1.5 ${D(plan.accentDark, plan.accentLight)}`}>{plan.name}</p>
-                    <div className="flex items-baseline gap-1 mb-2">
-                      <span className={`text-[40px] font-black tracking-[-1.5px] ${D("text-slate-50","text-slate-900")}`}>{plan.price}</span>
-                      <span className={`text-[13px] ${D("text-slate-500","text-slate-400")}`}>/{plan.period}</span>
-                    </div>
-                    <p className={`text-[14px] ${D("text-slate-400","text-slate-500")}`}>{plan.desc}</p>
-                  </div>
-
-                  <div className={`border-t pt-5 mb-6 ${D("border-white/[0.06]","border-slate-100")}`}>
-                    {plan.items.map((item, j) => (
-                      <div key={j} className="flex items-center gap-2.5 mb-2.5 text-[14px]">
-                        <span className={`w-[20px] h-[20px] rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${D(plan.checkDark, plan.checkLight)}`}>✓</span>
-                        <span className={D("text-slate-400","text-slate-600")}>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button className={`w-full py-[11px] rounded-[11px] text-[15px] font-bold transition-all duration-200 hover:scale-[1.02] cursor-pointer ${D(plan.btnDark, plan.btnLight)}`}>
-                    {plan.cta}
-                  </button>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
+     <Plans/>
 
       {/* ══════ TESTIMONIALS ══════ */}
       <section className={`py-16 px-6 border-t transition-colors duration-300 ${D("bg-[#0D1626] border-white/[0.05]","bg-[#E6F2F1] border-slate-200/50")}`}>
@@ -522,107 +414,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════ SUBSCRIPTION ══════ */}
-      <section className="py-16 px-6">
-        <div className="max-w-[780px] mx-auto">
-          <FadeIn>
-            <div className={`relative rounded-[28px] border-2 p-14 text-center overflow-hidden transition-colors duration-300 ${D("bg-gradient-to-br from-[#0D1626] to-[#0A1A20] border-teal-500/20 shadow-xl shadow-teal-500/10","bg-gradient-to-br from-teal-50 to-emerald-50/80 border-teal-400/20 shadow-xl shadow-teal-500/10")}`}>
-              {/* Blobs */}
-              <div className="absolute -top-14 -right-14 w-48 h-48 rounded-full bg-teal-500/5 pointer-events-none" />
-              <div className="absolute -bottom-10 -left-10 w-36 h-36 rounded-full bg-amber-500/5 pointer-events-none" />
-
-              <div className="relative">
-                <div className="text-[48px] mb-4 anim-float">📬</div>
-                <div className="mb-5"><Pill dark={dark}>Stay in the Loop</Pill></div>
-                <h2 className={`text-[clamp(24px,4vw,40px)] font-extrabold tracking-[-1px] mt-4 mb-3 ${D("text-slate-50","text-slate-900")}`}>
-                  Never Miss a Campus Event
-                </h2>
-                <p className={`text-[15px] leading-[1.7] mb-9 max-w-[460px] mx-auto ${D("text-slate-400","text-slate-500")}`}>
-                  Get weekly digests of upcoming events, volunteer opportunities, and exclusive early registration access — straight to your inbox.
-                </p>
-
-                {!subSubmitted ? (<>
-                  <div className="flex gap-2.5 max-w-[460px] mx-auto mb-3 flex-wrap">
-                    <input type="email" placeholder="your.email@university.edu"
-                      value={subEmail}
-                      onChange={e => { setSubEmail(e.target.value); setSubError(""); }}
-                      onKeyDown={e => e.key==="Enter" && handleSub()}
-                      className={`flex-1 min-w-[200px] px-[18px] py-[13px] rounded-[11px] border text-[14px] outline-none transition-all duration-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 ${subError ? "border-rose-500" : D("border-white/[0.1]","border-slate-200")} ${D("bg-white/[0.05] text-slate-100 placeholder:text-slate-600","bg-white text-slate-800 placeholder:text-slate-400")}`} />
-                    <button onClick={handleSub}
-                      className="px-7 py-[13px] rounded-[11px] border-none bg-gradient-to-r from-teal-600 to-teal-400 text-white text-[15px] font-bold shadow-lg shadow-teal-500/35 hover:scale-[1.04] transition-transform duration-200 cursor-pointer whitespace-nowrap">
-                      Subscribe Free →
-                    </button>
-                  </div>
-                  {subError && <p className="text-rose-500 text-[13px] mb-2">{subError}</p>}
-                  <p className={`text-[12px] mb-7 ${D("text-slate-600","text-slate-400")}`}>📵 No spam, ever. Unsubscribe in one click.</p>
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {[["🎯","Priority Registration"],["📊","Weekly Digest"],["🎁","Exclusive Offers"],["📱","Mobile Alerts"]].map(([icon,label]) => (
-                      <span key={label} className={`flex items-center gap-1.5 text-[13px] font-medium px-[14px] py-1.5 rounded-full border ${D("bg-white/[0.04] border-white/[0.07] text-slate-400","bg-white border-slate-200 text-slate-500")}`}>
-                        {icon} {label}
-                      </span>
-                    ))}
-                  </div>
-                </>) : (
-                  <div className="anim-fadeup">
-                    <div className="text-[56px] mb-4">🎉</div>
-                    <h3 className="text-[24px] font-extrabold text-teal-500 mb-2">You're subscribed!</h3>
-                    <p className={`text-[15px] mb-5 ${D("text-slate-400","text-slate-500")}`}>Check your inbox for a welcome email. Your first event digest arrives this Friday.</p>
-                    <button onClick={() => { setSubSubmitted(false); setSubEmail(""); }}
-                      className={`text-[13px] px-[22px] py-2 rounded-[9px] border cursor-pointer transition-colors duration-200 ${D("border-white/[0.1] text-slate-500 hover:text-slate-300 bg-transparent","border-slate-200 text-slate-400 hover:text-slate-600 bg-transparent")}`}>
-                      Subscribe another email
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
+    
 
       {/* ══════ FOOTER ══════ */}
-      <footer className={`border-t px-8 pt-12 pb-8 transition-colors duration-300 ${D("border-white/[0.05]","border-slate-200/60")}`}>
-        <div className="max-w-[1280px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-10 mb-12">
-            {/* Brand */}
-            <div>
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-[38px] h-[38px] rounded-[11px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[18px] shadow-lg shadow-teal-500/25">🎯</div>
-                <span className={`font-extrabold text-[18px] ${D("text-slate-50","text-slate-900")}`}>CampusEvents</span>
-              </div>
-              <p className={`text-[14px] leading-[1.7] max-w-[300px] mb-5 ${D("text-slate-500","text-slate-400")}`}>
-                Empowering campus communities through seamless event management and meaningful engagement.
-              </p>
-              <div className="flex gap-2.5">
-                {["𝕏","in","fb","📧"].map(s => (
-                  <div key={s} className={`w-9 h-9 rounded-[9px] border flex items-center justify-center text-[14px] cursor-pointer transition-all duration-200 hover:border-teal-500 hover:text-teal-500 ${D("border-white/[0.08] text-slate-500","border-slate-200 text-slate-400")}`}>
-                    {s}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* For Users */}
-            <div>
-              <p className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 ${D("text-slate-100","text-slate-800")}`}>For Users</p>
-              {["Participants","Coordinators","Volunteers","Super Admin","Support"].map(link => (
-                <a key={link} href="#"
-                  className={`block text-[14px] mb-2.5 no-underline transition-colors duration-200 hover:text-teal-500 ${D("text-slate-500","text-slate-400")}`}>
-                  {link}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom */}
-          <div className={`border-t pt-6 flex flex-wrap justify-between items-center gap-3 ${D("border-white/[0.06]","border-slate-100")}`}>
-            <p className={`text-[13px] m-0 ${D("text-slate-600","text-slate-400")}`}>© 2025 CampusEvents. All rights reserved.</p>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block pulse-green" />
-              <span className={`text-[12px] ${D("text-slate-600","text-slate-400")}`}>All systems operational</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 }
