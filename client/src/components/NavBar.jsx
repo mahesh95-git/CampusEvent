@@ -20,7 +20,7 @@ const PRODUCT_ITEMS = [
     iconBg: "rgba(13,148,139,0.15)",
     title: "Register Organisation",
     desc: "Onboard your college or club to manage events",
-    href: "/register/org",
+    href: "/orgregistration",
   },
   {
     icon: "🎟️",
@@ -116,7 +116,7 @@ function NavBar() {
   const D = (d, l) => (dark ? d : l);
 
   function handleParticipantSignIn() {
-    navigate("/login?role=participant");
+    navigate("/login");
   }
 
   return (
