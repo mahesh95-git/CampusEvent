@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Icon } from "../../components/ui/org_admin_compo/Icon";
-import { StatCard } from "../../components/ui/org_admin_compo/StatCard";
+import { Icon } from "../../components/Icon";
+import { StatCard } from "../../components/StatCard";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 

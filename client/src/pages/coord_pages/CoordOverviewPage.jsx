@@ -1,8 +1,8 @@
 import React from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { StatCard } from "../../components/ui/org_admin_compo/StatCard";
-import { CustomTooltip } from "../../components/ui/org_admin_compo/CustomTooltip";
+import { StatCard } from "../../components/StatCard";
+import { CustomTooltip } from "../../components/CustomTooltip";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from "recharts";

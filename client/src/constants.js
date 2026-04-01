@@ -48,9 +48,9 @@ const SHARED_FIELDS = [
 
 
 const ROLE_OPTIONS = [
-  { value: "participant", label: "Participant",  dot: "#10B981" },
+  { value: "participant", label: "Participant", dot: "#10B981" },
   { value: "coordinator", label: "Coordinator", dot: "#0D948B" },
-  { value: "collegeadmin",   label: "college Admin",   dot: "#F59E0B" },
+  { value: "collegeadmin", label: "college Admin", dot: "#F59E0B" },
 ];
 
 const PLANS = [
@@ -142,15 +142,82 @@ const INDIAN_STATES = [
 ];
 
 const COLLEGE_TYPES = [
-  { value: "engineering",  label: "Engineering" },
-  { value: "arts",         label: "Arts" },
-  { value: "science",      label: "Science" },
-  { value: "commerce",     label: "Commerce" },
-  { value: "medical",      label: "Medical" },
-  { value: "law",          label: "Law" },
-  { value: "management",   label: "Management" },
-  { value: "polytechnic",  label: "Polytechnic" },
-  { value: "other",        label: "Other" },
+  { value: "engineering", label: "Engineering" },
+  { value: "arts", label: "Arts" },
+  { value: "science", label: "Science" },
+  { value: "commerce", label: "Commerce" },
+  { value: "medical", label: "Medical" },
+  { value: "law", label: "Law" },
+  { value: "management", label: "Management" },
+  { value: "polytechnic", label: "Polytechnic" },
+  { value: "other", label: "Other" },
 ];
 
-export { ROLES, SHARED_FIELDS, ROLE_OPTIONS, PLANS, INDIAN_STATES, COLLEGE_TYPES };
+
+
+const NAV_CONFIG = {
+  orgadmin: {
+    label: "Org Admin",
+    emoji: "🎯",
+    color: "teal",
+    accent: { dark: "#14B8A6", light: "#0D948B" },
+    plan: { label: "Organisation plan", expiry: "Expires Mar 31, 2026" },
+    navItems: [
+      { label: "Overview", path: "/dashboard/orgadmin", icon: "grid" },
+      { label: "Departments", path: "/dashboard/orgadmin/departments", icon: "building" },
+      { label: "Coordinators", path: "/dashboard/orgadmin/coordinators", icon: "user-add" },
+      { label: "Events", path: "/dashboard/orgadmin/events", icon: "calendar" },
+    ],
+
+    // Quick panel shown at bottom of sidebar (optional)
+    quickPanel: null,
+  },
+
+  coordinator: {
+    label: "Coordinator",
+    emoji: "📋",
+    color: "indigo",
+    accent: { dark: "#818CF8", light: "#6366F1" },
+    plan: null, // coordinators don't have a plan badge
+    navItems: [
+      { label: "Overview", path: "/dashboard/coordinator", icon: "grid" },
+      { label: "My Events", path: "/dashboard/coordinator/events", icon: "calendar" },
+      { label: "Create Event", path: "/dashboard/coordinator/events/create", icon: "user-add" },
+      { label: "Participants", path: "/dashboard/coordinator/participants", icon: "building" },
+    ],
+
+    quickPanel: null,
+  },
+
+  student: {
+    label: "Student",
+    emoji: "🎓",
+    color: "amber",
+    accent: { dark: "#F59E0B", light: "#D97706" },
+    plan: null,
+    navItems: [
+      { label: "Overview", path: "/dashboard/student", icon: "grid" },
+      { label: "Events", path: "/dashboard/student/events", icon: "calendar" },
+      { label: "Profile", path: "/dashboard/student/profile", icon: "user-add" },
+    ],
+
+    quickPanel: null,
+  },
+
+  volunteer: {
+    label: "Volunteer",
+    emoji: "🙌",
+    color: "amber",
+    accent: { dark: "#FCD34D", light: "#F59E0B" },
+    plan: null,
+    navItems: [
+      { label: "Overview", path: "/dashboard/volunteer", icon: "grid" },
+      { label: "My events", path: "/dashboard/volunteer/events", icon: "calendar" },
+      // { label: "My tasks", path: "/dashboard/volunteer/tasks", icon: "task" },
+      { label: "Attendance", path: "/dashboard/volunteer/attendance", icon: "check" },
+    ],
+
+    quickPanel: null,
+  },
+};
+export { ROLES, SHARED_FIELDS, ROLE_OPTIONS, PLANS, INDIAN_STATES, COLLEGE_TYPES, NAV_CONFIG };

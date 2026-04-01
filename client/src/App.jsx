@@ -1,33 +1,31 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import OrgRegistration from "./pages/orgregistration";
-
-// Dashboard Refactored
-import { DashboardLayout } from "./components/ui/org_admin_compo/DashboardLayout";
-import DashboardOverview from "./pages/org_admin_pages/DashboardOverview";
-import DepartmentsPage from "./pages/org_admin_pages/DepartmentsPage";
-
-import EventsPage from "./pages/org_admin_pages/EventsPage";
-import CoordinatorsPage from "./pages/org_admin_pages/CoordinatorsPage";
-import ProfilePage from "./pages/org_admin_pages/ProfilePage";
-
-// Coordinator Dashboard
-import { CoordLayout } from "./components/ui/org_admin_compo/CoordLayout";
-import CoordOverview from "./pages/coord_pages/CoordOverview";
-import MyEventsPage from "./pages/coord_pages/MyEventsPage";
-import CreateEventPage from "./pages/coord_pages/CreateEventPage";
-import ParticipantsPage from "./pages/coord_pages/ParticipantsPage";
-import Register from "./pages/Register";
-
+import DashboardLayout from "./components/DashboardLayout";
+import NotFound from "./components/NotFound";
+import {
+  Home,
+  Login,
+  OrgRegistration,
+  Register,
+  OrgAdminOverview,
+  DepartmentsPage,
+  EventsPage,
+  CoordinatorsPage,
+  ProfilePage,
+  CoordOverview,
+  MyEventsPage,
+  CreateEventPage,
+  ParticipantsPage,
+  StudentOverview,
+  StudentEventsPage,
+  StudentEventDetailPage,
+  StudentProfilePage,
+} from "./pages";
 
 export default function App() {
   const theme = useSelector((state) => state.theme.value);
 
-  // checking the theme and applying it to the root element
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
@@ -51,31 +49,35 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/orgregistration" element={<OrgRegistration />} />
 
-        {/* Nested Routing for Org Admin Dashboard */}
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<DashboardOverview />} />
-          <Route path="departments" element={<DepartmentsPage />} />
-          <Route path="coordinators" element={<CoordinatorsPage />} />
-          <Route path="events" element={<EventsPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-        </Route>
+          {/* Org Admin Routes */}
+          <Route path="orgadmin">
+            <Route index element={<OrgAdminOverview />} />
+            <Route path="departments" element={<DepartmentsPage />} />
+            <Route path="coordinators" element={<CoordinatorsPage />} />
+            <Route path="events" element={<EventsPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
 
-        {/* Nested Routing for Dept Coordinator Dashboard */}
-        <Route path="/coordinator" element={<CoordLayout />}>
-          <Route index element={<CoordOverview />} />
-          <Route path="events" element={<MyEventsPage />} />
-          <Route path="events/create" element={<CreateEventPage />} />
-          <Route path="participants" element={<ParticipantsPage />} />
-        </Route>
+          {/* Coordinator Routes */}
+          <Route path="coordinator">
+            <Route index element={<CoordOverview />} />
+            <Route path="events">
+              <Route index element={<MyEventsPage />} />
+              <Route path="create" element={<CreateEventPage />} />
+            </Route>
+            <Route path="participants" element={<ParticipantsPage />} />
+          </Route>
 
-        <Route
-          path="*"
-          element={
-            <div className="flex h-screen items-center justify-center text-2xl font-bold">
-              404 Not Found
-            </div>
-          }
-        />
+          {/* Student Routes */}
+          <Route path="student">
+            <Route index element={<StudentOverview />} />
+            <Route path="events" element={<StudentEventsPage />} />
+            <Route path="events/:eventId" element={<StudentEventDetailPage />} />
+            <Route path="profile" element={<StudentProfilePage />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

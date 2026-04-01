@@ -1,0 +1,132 @@
+export const STUDENT_EVENTS = [
+  {
+    id: 501,
+    name: "Freshers' Welcome Concert",
+    type: "college",
+    dept: "Student Affairs",
+    date: "Apr 12, 2026",
+    time: "5:00 PM",
+    location: "Auditorium",
+    seats: 250,
+    status: "upcoming",
+    description:
+      "A welcome evening for new students with music, food stalls, and club showcases.",
+    joined: true,
+    participation: "Interested",
+    banner:
+      "https://images.unsplash.com/photo-1518976024611-7d00bbfe0bb2?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: 502,
+    name: "Public Tech Talk: AI in 2026",
+    type: "public",
+    dept: "Computer Science",
+    date: "Apr 18, 2026",
+    time: "3:00 PM",
+    location: "Lecture Hall 3",
+    seats: 180,
+    status: "registration_open",
+    description:
+      "A talk open to all students on the latest trends in artificial intelligence and machine learning.",
+    joined: false,
+    participation: "Not joined",
+    banner:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: 503,
+    name: "Intercollege Football Tournament",
+    type: "college",
+    dept: "Sports Council",
+    date: "May 2, 2026",
+    time: "10:00 AM",
+    location: "Main Field",
+    seats: 16,
+    status: "upcoming",
+    description:
+      "Competitive football matches between colleges with live cheering and refreshments.",
+    joined: true,
+    participation: "Registered",
+    banner:
+      "https://images.unsplash.com/photo-1505672678657-cc7037095e2d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: 504,
+    name: "Public Career Expo",
+    type: "public",
+    dept: "Placement Cell",
+    date: "May 10, 2026",
+    time: "11:00 AM",
+    location: "Convention Center",
+    seats: 400,
+    status: "registration_open",
+    description:
+      "Company stalls, resume review sessions, and networking for students across all streams.",
+    joined: false,
+    participation: "Not joined",
+    banner:
+      "https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: 505,
+    name: "Art & Culture Fest",
+    type: "college",
+    dept: "Cultural Club",
+    date: "May 20, 2026",
+    time: "4:00 PM",
+    location: "Cultural Arena",
+    seats: 300,
+    status: "upcoming",
+    description:
+      "A celebration of dance, music, theatre and visual arts by students from across the campus.",
+    joined: true,
+    participation: "Registered",
+    banner:
+      "https://images.unsplash.com/photo-1518972559570-8ad1de36a18b?auto=format&fit=crop&w=1200&q=80",
+  },
+];
+
+export const STUDENT_PROFILE = {
+  name: "Aditi Sharma",
+  role: "Student",
+  college: "KIT College of Engineering",
+  email: "aditi.sharma@student.kit.edu",
+  phone: "+91 91234 56789",
+  year: "2nd year",
+  department: "Computer Science",
+  joinedDate: "Jul 28, 2024",
+  lastLogin: "Mar 30, 2026, 11:15 AM",
+  bio: "Computer science student interested in hackathons, public talks, and community events.",
+  initials: "AS",
+  avatarGrad: "from-amber-600 to-amber-400",
+  history: [
+    {
+      id: 601,
+      name: "Green Campus Drive",
+      event: "College",
+      date: "Feb 12, 2026",
+      status: "Attended",
+    },
+    {
+      id: 602,
+      name: "Women in Tech Panel",
+      event: "Public",
+      date: "Jan 22, 2026",
+      status: "Attended",
+    },
+    {
+      id: 603,
+      name: "Coding Bootcamp",
+      event: "College",
+      date: "Dec 14, 2025",
+      status: "Attended",
+    },
+    {
+      id: 604,
+      name: "Community Cleanup",
+      event: "Public",
+      date: "Nov 28, 2025",
+      status: "Missed",
+    },
+  ],
+};

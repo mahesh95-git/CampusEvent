@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { StatCard } from "../../components/ui/org_admin_compo/StatCard";
+import { StatCard } from "../../components/StatCard";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 

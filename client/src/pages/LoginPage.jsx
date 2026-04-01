@@ -1,12 +1,14 @@
 import React from "react";
-import UserLogin from "../components/UserLogin";
 import { useSearchParams } from "react-router-dom";
 import CollegeLogin from "../components/CollegeLogin";
+import NotFound from "../components/NotFound";
 function Login() {
   const [searchParams] = useSearchParams();
   const college = searchParams.get("college");
-  console.log("College param:", college);
-  return college  ? <CollegeLogin /> : <UserLogin />;
+
+  return college? (
+    <CollegeLogin college={college} />
+  ) : <NotFound/>;
 }
 
 export default Login;
