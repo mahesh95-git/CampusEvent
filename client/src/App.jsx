@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import DashboardLayout from "./components/DashboardLayout";
-import NotFound from "./components/NotFound";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import NotFound from "@/components/common/NotFound";
 import {
   Home,
   Login,
@@ -21,6 +21,10 @@ import {
   StudentEventsPage,
   StudentEventDetailPage,
   StudentProfilePage,
+  VolunteerOverview,
+  VolunteerEventsPage,
+  VolunteerTasksPage,
+  VolunteerAttendancePage,
 } from "./pages";
 
 export default function App() {
@@ -75,6 +79,14 @@ export default function App() {
             <Route path="events" element={<StudentEventsPage />} />
             <Route path="events/:eventId" element={<StudentEventDetailPage />} />
             <Route path="profile" element={<StudentProfilePage />} />
+          </Route>
+
+          {/* Volunteer Routes */}
+          <Route path="volunteer">
+            <Route index element={<VolunteerOverview />} />
+            <Route path="events" element={<VolunteerEventsPage />} />
+            <Route path="tasks" element={<VolunteerTasksPage />} />
+            <Route path="attendance" element={<VolunteerAttendancePage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

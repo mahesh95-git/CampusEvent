@@ -130,17 +130,6 @@ const PLANS = [
   },
 ];
 
-const INDIAN_STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
-  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
-  "Andaman and Nicobar Islands", "Chandigarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry",
-];
-
 const COLLEGE_TYPES = [
   { value: "engineering", label: "Engineering" },
   { value: "arts", label: "Arts" },
@@ -198,6 +187,7 @@ const NAV_CONFIG = {
     navItems: [
       { label: "Overview", path: "/dashboard/student", icon: "grid" },
       { label: "Events", path: "/dashboard/student/events", icon: "calendar" },
+      { label: "Volunteer", path: "/dashboard/volunteer", icon: "check" },
       { label: "Profile", path: "/dashboard/student/profile", icon: "user-add" },
     ],
 
@@ -212,12 +202,58 @@ const NAV_CONFIG = {
     plan: null,
     navItems: [
       { label: "Overview", path: "/dashboard/volunteer", icon: "grid" },
-      { label: "My events", path: "/dashboard/volunteer/events", icon: "calendar" },
-      // { label: "My tasks", path: "/dashboard/volunteer/tasks", icon: "task" },
+      { label: "My Events", path: "/dashboard/volunteer/events", icon: "calendar" },
+      { label: "My Tasks", path: "/dashboard/volunteer/tasks", icon: "task" },
       { label: "Attendance", path: "/dashboard/volunteer/attendance", icon: "check" },
     ],
 
     quickPanel: null,
   },
 };
-export { ROLES, SHARED_FIELDS, ROLE_OPTIONS, PLANS, INDIAN_STATES, COLLEGE_TYPES, NAV_CONFIG };
+// zod schema
+const INDIAN_STATES = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry",
+];
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/svg+xml",
+];
+export { ROLES, SHARED_FIELDS, ROLE_OPTIONS, PLANS, INDIAN_STATES, COLLEGE_TYPES, NAV_CONFIG, ACCEPTED_IMAGE_TYPES };

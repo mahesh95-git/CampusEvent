@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id                  Int      @id @default(autoincrement())
+  collegeName         String
+  collegeSlug         String   @unique
+  collegeType         String
+  establishedYear     Int
+  affiliatedUniversity String
+  website             String?
+  logoUrl             String?
+  addressStreet       String
+  addressCity         String
+  addressPincode      String
+  addressState        String
+  adminName           String
+  adminEmail          String   @unique
+  contactPhone        String
+  adminPassword       String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}

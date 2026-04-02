@@ -1,11 +1,14 @@
-import {configureStore} from "@reduxjs/toolkit"
-import counterReducer from "./slices/counter"
-import themeReducer from "./slices/theme"
+import { configureStore } from "@reduxjs/toolkit";
+import themeReducer from "./slices/theme";
+import { organizationApi } from "./api";
 
 const store = configureStore({
-    reducer:{
-        counter:counterReducer,
-        theme:themeReducer
-    }
-})
+  reducer: {
+    theme: themeReducer,
+    [organizationApi.reducerPath]: organizationApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(organizationApi.middleware),
+});
+
 export default store;

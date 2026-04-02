@@ -4,65 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { FieldLabel, FieldError, inputCls, SectionHeading, EyeIcon } from "@/components/ui/form-helpers";
 import {
   orgRegistrationSchema,
   orgRegistrationDefaults,
 } from "@/zod/orgRegistration";
+import { useRegisterOrganizationMutation } from "../store/api";
 import { COLLEGE_TYPES, INDIAN_STATES } from "../constants";
-
-function FieldLabel({ children, htmlFor, required, dark }) {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className={cn(
-        "block text-[12px] font-medium mb-1.5",
-        dark ? "text-slate-400" : "text-slate-500"
-      )}
-    >
-      {children}
-      {required && <span className="text-rose-400 ml-0.5">*</span>}
-    </label>
-  );
-}
-
-function FieldError({ message }) {
-  if (!message) return null;
-  return (
-    <p className="flex items-center gap-1.5 text-[11px] text-rose-400 mt-1">
-      <svg className="w-3 h-3 shrink-0" viewBox="0 0 16 16" fill="none">
-        <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M8 5v3M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-      {message}
-    </p>
-  );
-}
-
-function inputCls(hasError, dark) {
-  return cn(
-    "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all duration-150 font-[inherit]",
-    hasError
-      ? dark
-        ? "bg-[#111827] border-rose-500/50 text-slate-200 placeholder:text-slate-600 focus:border-rose-400 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.14)]"
-        : "bg-white border-rose-400 text-slate-800 placeholder:text-slate-300 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.12)]"
-      : dark
-        ? "bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-teal-500 focus:shadow-[0_0_0_3px_rgba(13,148,139,0.16)]"
-        : "bg-white border-slate-200 text-slate-800 placeholder:text-slate-300 focus:border-teal-500 focus:shadow-[0_0_0_3px_rgba(13,148,139,0.12)]"
-  );
-}
-
-// ─── Section heading ───────────
-
-function SectionHeading({ icon, title, dark }) {
-  return (
-    <div className="flex items-center gap-2 mb-4">
-      <span className={cn("text-[11px] font-bold uppercase tracking-[0.08em]", dark ? "text-teal-500" : "text-teal-600")}>
-        {icon} {title}
-      </span>
-      <div className={cn("flex-1 h-px", dark ? "bg-white/[0.06]" : "bg-slate-100")} />
-    </div>
-  );
-}
 
 // ─── Logo upload ──────────────────────────────────────────────────────────────
 
@@ -124,13 +75,14 @@ function OrgRegistrationForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(orgRegistrationSchema),
     defaultValues: orgRegistrationDefaults,
     mode: "onTouched",
   });
+
+  const [registerOrganization, { isLoading, error }] = useRegisterOrganizationMutation();
 
   // Auto-generate slug from college name
   const handleNameChange = useCallback((e) => {
@@ -147,21 +99,15 @@ function OrgRegistrationForm() {
   async function onSubmit(data) {
     setServerError("");
     try {
-      // TODO: replace with real API call
-      await new Promise((r) => setTimeout(r, 1400));
+      const { logo: _logo, ...payload } = data;
+      await registerOrganization(payload).unwrap();
       navigate("/register/success");
     } catch (err) {
-      setServerError(err?.response?.data?.message || "Something went wrong. Please try again.");
+      setServerError(
+        err?.data?.message || err?.message || err?.error || "Something went wrong. Please try again."
+      );
     }
   }
-
-  const EyeIcon = ({ open }) => (
-    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none">
-      <path d="M3 10s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-      <circle cx="10" cy="10" r="2" stroke="currentColor" strokeWidth="1.4"/>
-      {!open && <path d="M3 3l14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>}
-    </svg>
-  );
 
   const pwBtnCls = cn(
     "absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded transition-colors",
@@ -267,10 +213,10 @@ function OrgRegistrationForm() {
               {/* College name */}
               <div>
                 <FieldLabel htmlFor="collegeName" required dark={dark}>College name</FieldLabel>
-                <input
+                <Input
                   id="collegeName"
                   type="text"
-                  placeholder="e.g. KIT College of Engineering"
+                  placeholder="e.g. Example College of Technology"
                   className={inputCls(!!errors.collegeName, dark)}
                   {...register("collegeName")}
                   onChange={handleNameChange}
@@ -285,10 +231,10 @@ function OrgRegistrationForm() {
                   <span className={cn("absolute left-3.5 top-1/2 -translate-y-1/2 text-[12px] pointer-events-none select-none", D("text-slate-600", "text-slate-400"))}>
                     ?college=
                   </span>
-                  <input
+                  <Input
                     id="collegeSlug"
                     type="text"
-                    placeholder="kit-college"
+                    placeholder="example-college"
                     className={cn(inputCls(!!errors.collegeSlug, dark), "pl-[84px]")}
                     {...register("collegeSlug")}
                   />
@@ -299,7 +245,7 @@ function OrgRegistrationForm() {
               {/* College type */}
               <div>
                 <FieldLabel htmlFor="collegeType" required dark={dark}>College type</FieldLabel>
-                <select
+                <Select
                   id="collegeType"
                   className={cn(inputCls(!!errors.collegeType, dark), "cursor-pointer")}
                   {...register("collegeType")}
@@ -308,14 +254,14 @@ function OrgRegistrationForm() {
                   {COLLEGE_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
                   ))}
-                </select>
+                </Select>
                 <FieldError message={errors.collegeType?.message} />
               </div>
 
               {/* Established year */}
               <div>
                 <FieldLabel htmlFor="establishedYear" required dark={dark}>Established year</FieldLabel>
-                <input
+                <Input
                   id="establishedYear"
                   type="number"
                   placeholder="e.g. 1994"
@@ -330,10 +276,10 @@ function OrgRegistrationForm() {
               {/* Affiliated university */}
               <div>
                 <FieldLabel htmlFor="affiliatedUniversity" required dark={dark}>Affiliated university</FieldLabel>
-                <input
+                <Input
                   id="affiliatedUniversity"
                   type="text"
-                  placeholder="e.g. Shivaji University"
+                  placeholder="e.g. Example University"
                   className={inputCls(!!errors.affiliatedUniversity, dark)}
                   {...register("affiliatedUniversity")}
                 />
@@ -343,10 +289,10 @@ function OrgRegistrationForm() {
               {/* Website */}
               <div>
                 <FieldLabel htmlFor="website" dark={dark}>Website</FieldLabel>
-                <input
+                <Input
                   id="website"
                   type="url"
-                  placeholder="https://www.kitcollege.edu.in"
+                  placeholder="https://www.example.edu"
                   className={inputCls(!!errors.website, dark)}
                   {...register("website")}
                 />
@@ -366,10 +312,10 @@ function OrgRegistrationForm() {
               {/* Street — full width */}
               <div className="col-span-2">
                 <FieldLabel htmlFor="address.street" required dark={dark}>Street address</FieldLabel>
-                <input
+                <Input
                   id="address.street"
                   type="text"
-                  placeholder="e.g. 2nd Floor, Godoli, Near KIT Campus"
+                  placeholder="e.g. 123 Main Street, Downtown Campus"
                   className={inputCls(!!errors.address?.street, dark)}
                   {...register("address.street")}
                 />
@@ -379,10 +325,10 @@ function OrgRegistrationForm() {
               {/* City */}
               <div>
                 <FieldLabel htmlFor="address.city" required dark={dark}>City</FieldLabel>
-                <input
+                <Input
                   id="address.city"
                   type="text"
-                  placeholder="e.g. Kolhapur"
+                  placeholder="e.g. Example City"
                   className={inputCls(!!errors.address?.city, dark)}
                   {...register("address.city")}
                 />
@@ -392,7 +338,7 @@ function OrgRegistrationForm() {
               {/* Pincode */}
               <div>
                 <FieldLabel htmlFor="address.pincode" required dark={dark}>Pincode</FieldLabel>
-                <input
+                <Input
                   id="address.pincode"
                   type="text"
                   placeholder="e.g. 416001"
@@ -406,7 +352,7 @@ function OrgRegistrationForm() {
               {/* State — full width */}
               <div className="col-span-2">
                 <FieldLabel htmlFor="address.state" required dark={dark}>State</FieldLabel>
-                <select
+                <Select
                   id="address.state"
                   className={cn(inputCls(!!errors.address?.state, dark), "cursor-pointer")}
                   {...register("address.state")}
@@ -415,7 +361,7 @@ function OrgRegistrationForm() {
                   {INDIAN_STATES.map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
-                </select>
+                </Select>
                 <FieldError message={errors.address?.state?.message} />
               </div>
             </div>
@@ -427,7 +373,7 @@ function OrgRegistrationForm() {
               {/* Admin name — full width */}
               <div className="col-span-2">
                 <FieldLabel htmlFor="adminName" required dark={dark}>Full name</FieldLabel>
-                <input
+                <Input
                   id="adminName"
                   type="text"
                   placeholder="e.g. Dr. Rajesh Kumar"
@@ -441,7 +387,7 @@ function OrgRegistrationForm() {
               {/* Email */}
               <div>
                 <FieldLabel htmlFor="adminEmail" required dark={dark}>Email address</FieldLabel>
-                <input
+                <Input
                   id="adminEmail"
                   type="email"
                   placeholder="admin@college.edu"
@@ -455,7 +401,7 @@ function OrgRegistrationForm() {
               {/* Phone */}
               <div>
                 <FieldLabel htmlFor="contactPhone" required dark={dark}>Contact phone</FieldLabel>
-                <input
+                <Input
                   id="contactPhone"
                   type="tel"
                   placeholder="9876543210"
@@ -470,7 +416,7 @@ function OrgRegistrationForm() {
               <div>
                 <FieldLabel htmlFor="adminPassword" required dark={dark}>Password</FieldLabel>
                 <div className="relative">
-                  <input
+                  <Input
                     id="adminPassword"
                     type={showPw ? "text" : "password"}
                     placeholder="Min 8 chars, uppercase, number, special"
@@ -489,7 +435,7 @@ function OrgRegistrationForm() {
               <div>
                 <FieldLabel htmlFor="confirmPassword" required dark={dark}>Confirm password</FieldLabel>
                 <div className="relative">
-                  <input
+                  <Input
                     id="confirmPassword"
                     type={showCpw ? "text" : "password"}
                     placeholder="Re-enter your password"
@@ -506,30 +452,26 @@ function OrgRegistrationForm() {
             </div>
 
             {/* Server error */}
-            {serverError && (
+            {(serverError || error) && (
               <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[13px] mb-5", D("bg-rose-500/10 border border-rose-500/20 text-rose-400", "bg-rose-50 border border-rose-200 text-rose-600"))}>
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="none">
                   <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />
                   <path d="M8 5v3M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
-                {serverError}
+                {serverError || error?.data?.message || error?.error || error?.message}
               </div>
             )}
 
             {/* Submit */}
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isLoading}
               className={cn(
-                "w-full py-3 rounded-xl text-[15px] font-bold text-white transition-all duration-200 mb-6",
-                isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.01] hover:opacity-95 active:scale-[0.99]"
+                "w-full py-3 rounded-xl text-[15px] font-bold transition-all duration-200 mb-6",
+                isLoading ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.01] hover:opacity-95 active:scale-[0.99]"
               )}
-              style={{
-                background: "linear-gradient(135deg, #0D948B, #14B8A6)",
-                boxShadow: "0 4px 18px rgba(13,148,139,0.4)",
-              }}
             >
-              {isSubmitting ? (
+              {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="w-4 h-4 animate-spin" viewBox="0 0 16 16" fill="none">
                     <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" strokeDasharray="28" strokeDashoffset="10" strokeLinecap="round" opacity="0.4"/>
@@ -537,8 +479,10 @@ function OrgRegistrationForm() {
                   </svg>
                   Registering organisation…
                 </span>
-              ) : "Register organisation →"}
-            </button>
+              ) : (
+                "Register organisation →"
+              )}
+            </Button>
 
           </form>
         </div>

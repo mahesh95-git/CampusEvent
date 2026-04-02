@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
+import { FieldLabel as Label, FieldError, inputCls, SectionHeading, EyeIcon } from "@/components/ui/form-helpers";
 import signupSchema from "../zod/registration";
 
 
@@ -48,29 +49,6 @@ const YEARS = [
   { value: "5", label: "Fifth Year" },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function FieldError({ message }) {
-  if (!message) return null;
-  return (
-    <p className="flex items-center gap-1.5 text-[11.5px] text-rose-400 mt-1.5">
-      <svg className="w-3 h-3 shrink-0" viewBox="0 0 16 16" fill="none">
-        <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2"/>
-        <path d="M8 5v3M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-      {message}
-    </p>
-  );
-}
-
-function Label({ children, htmlFor, required, dark }) {
-  return (
-    <label htmlFor={htmlFor} className={cn("block text-[12px] font-medium mb-1.5", dark ? "text-slate-400" : "text-slate-500")}>
-      {children}{required && <span className="text-rose-400 ml-0.5">*</span>}
-    </label>
-  );
-}
-
 // ─── ParticipantSignup ────────────────────────────────────────────────────────
 
 function Register() {
@@ -104,33 +82,7 @@ function Register() {
     }
   }
 
-  const inputCls = (hasErr) => cn(
-    "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all duration-150 font-[inherit]",
-    hasErr
-      ? D("bg-[#111827] border-rose-500/50 text-slate-200 placeholder:text-slate-600 focus:border-rose-400 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.14)]",
-          "bg-white border-rose-400 text-slate-800 placeholder:text-slate-300 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.12)]")
-      : D("bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-teal-500 focus:shadow-[0_0_0_3px_rgba(13,148,139,0.18)]",
-          "bg-white border-slate-200 text-slate-800 placeholder:text-slate-300 focus:border-teal-500 focus:shadow-[0_0_0_3px_rgba(13,148,139,0.14)]")
-  );
-
-  const selectCls = (hasErr) => cn(inputCls(hasErr), "cursor-pointer");
-
-  const SectionHeading = ({ children }) => (
-    <div className="flex items-center gap-3 mb-4">
-      <span className={cn("text-[11px] font-bold uppercase tracking-[0.07em] whitespace-nowrap", D("text-teal-500", "text-teal-600"))}>
-        {children}
-      </span>
-      <div className={cn("flex-1 h-px", D("bg-white/[0.06]", "bg-slate-100"))} />
-    </div>
-  );
-
-  const EyeIcon = ({ open }) => (
-    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none">
-      <path d="M3 10s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-      <circle cx="10" cy="10" r="2" stroke="currentColor" strokeWidth="1.4"/>
-      {!open && <path d="M3 3l14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>}
-    </svg>
-  );
+  const selectCls = (hasErr) => cn(inputCls(hasErr, dark), "cursor-pointer");
 
   const eyeBtnCls = cn("absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded transition-colors", D("text-slate-600 hover:text-slate-400","text-slate-300 hover:text-slate-600"));
 

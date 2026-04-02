@@ -1,53 +1,9 @@
 import { z } from "zod";
-
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-  "image/svg+xml",
-];
+import { INDIAN_STATES } from "../constants";
+import { ACCEPTED_IMAGE_TYPES } from "../constants";
 const MAX_LOGO_SIZE_MB = 2;
 const MAX_LOGO_BYTES = MAX_LOGO_SIZE_MB * 1024 * 1024;
 
-const INDIAN_STATES = [
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chhattisgarh",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-  "Andaman and Nicobar Islands",
-  "Chandigarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Jammu and Kashmir",
-  "Ladakh",
-  "Lakshadweep",
-  "Puducherry",
-];
 
 const addressSchema = z.object({
   street: z
@@ -150,6 +106,11 @@ export const orgRegistrationSchema = z
       .min(1, "Admin name is required")
       .min(3, "Admin name must be at least 3 characters")
       .max(100, "Admin name must be under 100 characters"),
+      contactPhone: z
+      .string()
+      .min(1, "Contact phone is required")
+      .max(15, "Contact phone must be under 15 characters"
+      ),
 
     adminEmail: z
       .string()
@@ -176,19 +137,23 @@ export const orgRegistrationSchema = z
     path: ["confirmPassword"],
   });
 
-  export const orgRegistrationDefaults = {
-  collegeName:     "",
-  collegeSlug:     "",
-  adminName:       "",
-  adminEmail:      "",
-  contactPhone:    "",
+export const orgRegistrationDefaults = {
+  collegeName: "",
+  collegeSlug: "",
+  adminName: "",
+  adminEmail: "",
+  contactPhone: "",
   address: {
-    street:  "",
-    city:    "",
-    state:   "",
+    street: "",
+    city: "",
+    state: "",
     pincode: "",
   },
-  logo:            undefined,
-  adminPassword:   "",
+  logo: undefined,
+  adminPassword: "",
   confirmPassword: "",
+  collegeType: "engineering",
+  affiliatedUniversity: "",
+  establishedYear: new Date().getFullYear(),
+  website: "",
 };
