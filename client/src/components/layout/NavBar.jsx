@@ -33,7 +33,6 @@ const PRODUCT_ITEMS = [
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
-  { label: "Events",   href: "#events"   },
   { label: "About",    href: "#about"    },
 ];
 
@@ -212,21 +211,7 @@ function NavBar() {
             {D("Light", "Dark")}
           </button>
 
-          {/* Sign In — direct button, participant only */}
-          <button
-            onClick={handleParticipantSignIn}
-            className={cn(
-              "flex items-center gap-2 px-[18px] py-[9px] rounded-[9px] border",
-              "text-[14px] font-semibold transition-all duration-200",
-              D(
-                "border-white/[0.12] text-slate-300 hover:border-teal-500 hover:text-slate-100",
-                "border-black/[0.1]  text-slate-600 hover:border-teal-500 hover:text-slate-800"
-              )
-            )}
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-            Sign In
-          </button>
+
 
         </div>
       </div>

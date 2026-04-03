@@ -177,9 +177,6 @@ export default function Home() {
           </p>
 
           <div className="flex justify-center gap-3 flex-wrap mb-14">
-            <button className="flex items-center gap-2 px-8 py-3.5 rounded-[12px] font-bold text-[16px] bg-gradient-to-r from-teal-600 to-teal-400 text-white shadow-xl shadow-teal-500/35 hover:scale-[1.04] transition-transform duration-200 cursor-pointer border-none">
-              Explore Events →
-            </button>
             <button className={`flex items-center gap-2 px-8 py-3.5 rounded-[12px] font-medium text-[16px] border-2 transition-all duration-200 hover:border-teal-500 hover:text-teal-500 cursor-pointer ${D("border-white/[0.12] text-slate-400 bg-transparent", "border-slate-200 text-slate-500 bg-transparent")}`}>
               ▶ Watch Demo
             </button>
@@ -274,87 +271,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════ LIVE EVENTS ══════ */}
-      <section id="events" className="py-16 px-6">
-        <div className="max-w-[1280px] mx-auto">
-          <FadeIn className="flex flex-wrap items-end justify-between gap-5 mb-10">
-            <div>
-              <div className="mb-4"><Pill dark={dark}>Live on Campus</Pill></div>
-              <h2 className={`text-[clamp(26px,4vw,42px)] font-extrabold tracking-[-1px] mb-1 ${D("text-slate-50", "text-slate-900")}`}>Upcoming Events</h2>
-              <p className={`text-[15px] ${D("text-slate-500", "text-slate-500")}`}>Curated events from every corner of campus. Register in seconds.</p>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {categories.map(cat => (
-                <button key={cat} onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-[13px] font-semibold border transition-all duration-200 cursor-pointer ${activeCategory === cat ? "bg-teal-500/[0.15] border-teal-500 text-teal-500" : D("border-white/[0.08] text-slate-400 hover:border-teal-500/40 bg-transparent", "border-slate-200 text-slate-500 hover:border-teal-400 bg-transparent")}`}>
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((evt, i) => (
-              <FadeIn key={evt.title} delay={i * 0.06}>
-                <div className={`relative rounded-[18px] border pt-6 pb-[18px] px-[22px] transition-all duration-200 hover:-translate-y-1 cursor-pointer ${D("bg-[#0F1B2D] border-white/[0.07] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]", "bg-white border-slate-100 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]")}`}
-                  style={{ borderTopColor: evt.tagColor }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = evt.tagColor}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = dark ? "rgba(255,255,255,0.07)" : "rgb(241,245,249)"}>
-                  {/* Accent top bar */}
-                  <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[18px] opacity-70" style={{ background: `linear-gradient(90deg,${evt.tagColor},${evt.tagColor}60)` }} />
-
-                  {/* Hot badge */}
-                  {evt.hot && (
-                    <span className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full text-rose-500 text-[10px] font-bold bg-rose-500/10 border border-rose-500/25">
-                      🔥 Hot
-                    </span>
-                  )}
-
-                  {/* Tag */}
-                  <span className="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-bold border mb-3 text-white" style={{ background: evt.tagColor }}>
-                    {evt.tag}
-                  </span>
-
-                  <h3 className={`text-[15px] font-bold leading-snug mb-2 ${evt.hot ? "pr-12" : ""} ${D("text-slate-100", "text-slate-800")}`}>{evt.title}</h3>
-
-                  <div className={`flex flex-wrap gap-3 text-[13px] mb-4 ${D("text-slate-500", "text-slate-400")}`}>
-                    <span>🏛️ {evt.dept}</span>
-                    <span>📅 {evt.date}</span>
-                    <span>⏰ {evt.time}</span>
-                  </div>
-
-                  {/* Seats */}
-                  <div className="mb-4">
-                    <div className="flex justify-between text-[11px] mb-1.5">
-                      <span className={D("text-slate-500", "text-slate-400")}>Seats available</span>
-                      <span className={`font-semibold ${evt.statusOk ? "text-teal-500" : "text-rose-500"}`}>{evt.seats} left</span>
-                    </div>
-                    <div className={`h-[5px] rounded-full overflow-hidden ${D("bg-white/[0.06]", "bg-slate-100")}`}>
-                      <div className="h-full rounded-full" style={{ width: `${evt.barW}%`, background: `linear-gradient(90deg,${evt.tagColor},${evt.tagColor}90)` }} />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${evt.statusOk ? D("bg-emerald-500/15 text-emerald-400", "bg-emerald-100 text-emerald-700") : D("bg-rose-500/15 text-rose-400", "bg-rose-100 text-rose-700")}`}>
-                      {evt.status}
-                    </span>
-                    <button className="px-[18px] py-2 rounded-[9px] border-none bg-gradient-to-r from-teal-600 to-teal-400 text-white text-[13px] font-bold shadow-md shadow-teal-500/25 hover:scale-[1.05] transition-transform duration-200 cursor-pointer">
-                      Register →
-                    </button>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-
-          {filtered.length === 0 && (
-            <div className="text-center py-16">
-              <div className="text-[48px] mb-4">🔍</div>
-              <p className={D("text-slate-500", "text-slate-400")}>No events in this category yet. Check back soon!</p>
-            </div>
-          )}
-        </div>
-      </section>
 
       {/* ══════ FEATURES ══════ */}
       <section id="features" className={`py-16 px-6 border-t transition-colors duration-300 ${D("bg-[#0D1626] border-white/[0.05]", "bg-[#E6F2F1] border-slate-200/50")}`}>

@@ -4,26 +4,108 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Organization {
-  id                  Int      @id @default(autoincrement())
-  collegeName         String
-  collegeSlug         String   @unique
-  collegeType         String
-  establishedYear     Int
+  id                   Int          @id @default(autoincrement())
+  collegeName          String
+  collegeSlug          String       @unique
+  collegeType          String
+  establishedYear      Int
   affiliatedUniversity String
-  website             String?
-  logoUrl             String?
-  addressStreet       String
-  addressCity         String
-  addressPincode      String
-  addressState        String
-  adminName           String
-  adminEmail          String   @unique
-  contactPhone        String
-  adminPassword       String
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  website              String?
+  logoUrl              String?
+  addressStreet        String
+  addressCity          String
+  addressPincode       String
+  addressState         String
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  departments          Department[]
+  users                User[]
+  events               Event[]
+}
+
+model Department {
+  id             Int               @id @default(autoincrement())
+  DepartmentName String
+  ShortName      String
+  organizationId Int
+  colourCode     String
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  organization   Organization      @relation(fields: [organizationId], references: [id])
+  users          User[]
+  eventLinks     EventDepartment[]
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String         @unique
+  contactPhone   String
+  password       String
+  role           String
+  yearOfStudy    String?
+  rollNumber     String?
+  departmentId   Int?
+  organizationId Int
+  department     Department?    @relation(fields: [departmentId], references: [id])
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  collegeSlug    String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  createdEvents  Event[]        @relation("EventCreator")
+  registrations  Registration[]
+}
+
+model Event {
+  id                     Int               @id @default(autoincrement())
+  eventName              String            @db.VarChar(150)
+  description            String?
+  eventBanner            String?           @db.VarChar(255)
+  startDate              DateTime
+  endDate                DateTime
+  registrationDeadline   DateTime
+  venue                  String            @db.VarChar(255)
+  eventType              String            @db.VarChar(20)
+  registrationType       String            @db.VarChar(20)
+  feeType                String            @db.VarChar(10)
+  feeAmount              Decimal           @default(0.00) @db.Decimal(10, 2)
+  maxParticipants        Int?
+  status                 String            @db.VarChar(20)
+  organizationId         Int
+  createdBy              Int
+  registrationFormSchema Json?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  organization           Organization      @relation(fields: [organizationId], references: [id])
+  creator                User              @relation("EventCreator", fields: [createdBy], references: [id])
+  departments            EventDepartment[]
+  registrations          Registration[]
+}
+
+model EventDepartment {
+  eventId      Int
+  departmentId Int
+  event        Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, departmentId])
+}
+
+model Registration {
+  id            Int      @id @default(autoincrement())
+  eventId       Int
+  userId        Int
+  status        String   @db.VarChar(20)
+  paymentStatus String?  @db.VarChar(20)
+  amountPaid    Decimal  @default(0.00) @db.Decimal(10, 2)
+  formResponse  Json?
+  registeredAt  DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
 }

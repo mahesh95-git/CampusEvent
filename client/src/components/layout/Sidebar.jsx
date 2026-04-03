@@ -14,7 +14,7 @@ export function Sidebar({ NAV_CONFIG }) {
 
   const currentRoleMatch = location.pathname.split("/")[2];
  
-  const currentRole = NAV_CONFIG[currentRoleMatch] ? currentRoleMatch : "orgadmin";
+  const currentRole = NAV_CONFIG[currentRoleMatch] ? currentRoleMatch : "collegeadmin";
   const config = NAV_CONFIG[currentRole];
 
   const isActive = (p) => location.pathname === p;

@@ -1,6 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import AuthBootstrap from "@/components/auth/AuthBootstrap";
+import {
+  DashboardIndexRedirect,
+  ProtectedDashboard,
+  RoleGate,
+} from "@/components/auth/RoleBasedRoute";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import NotFound from "@/components/common/NotFound";
 import {
@@ -12,11 +18,14 @@ import {
   DepartmentsPage,
   EventsPage,
   CoordinatorsPage,
+  CollegeDetailsPage,
   ProfilePage,
   CoordOverview,
   MyEventsPage,
   CreateEventPage,
+  CoordinatorProfilePage,
   ParticipantsPage,
+  EventDetailPage,
   StudentOverview,
   StudentEventsPage,
   StudentEventDetailPage,
@@ -47,46 +56,61 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <AuthBootstrap />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/orgregistration" element={<OrgRegistration />} />
 
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          {/* Org Admin Routes */}
-          <Route path="orgadmin">
-            <Route index element={<OrgAdminOverview />} />
-            <Route path="departments" element={<DepartmentsPage />} />
-            <Route path="coordinators" element={<CoordinatorsPage />} />
-            <Route path="events" element={<EventsPage />} />
-            <Route path="profile" element={<ProfilePage />} />
-          </Route>
+        <Route path="/dashboard" element={<ProtectedDashboard />}>
+          <Route element={<DashboardLayout />}>
+            <Route index element={<DashboardIndexRedirect />} />
 
-          {/* Coordinator Routes */}
-          <Route path="coordinator">
-            <Route index element={<CoordOverview />} />
-            <Route path="events">
-              <Route index element={<MyEventsPage />} />
-              <Route path="create" element={<CreateEventPage />} />
+            <Route element={<RoleGate allowedRoles={["collegeadmin"]} />}>
+              <Route path="collegeadmin">
+                <Route index element={<OrgAdminOverview />} />
+                <Route path="departments" element={<DepartmentsPage />} />
+                <Route path="coordinators" element={<CoordinatorsPage />} />
+                <Route path="events" element={<EventsPage />} />
+                <Route path="events/create" element={<CreateEventPage />} />
+                <Route path="events/:eventId" element={<EventDetailPage />} />
+                <Route path="college" element={<CollegeDetailsPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+              </Route>
             </Route>
-            <Route path="participants" element={<ParticipantsPage />} />
-          </Route>
 
-          {/* Student Routes */}
-          <Route path="student">
-            <Route index element={<StudentOverview />} />
-            <Route path="events" element={<StudentEventsPage />} />
-            <Route path="events/:eventId" element={<StudentEventDetailPage />} />
-            <Route path="profile" element={<StudentProfilePage />} />
-          </Route>
+            <Route element={<RoleGate allowedRoles={["coordinator"]} />}>
+              <Route path="coordinator">
+                <Route index element={<CoordOverview />} />
+                <Route path="events">
+                  <Route index element={<MyEventsPage />} />
+                  <Route path="create" element={<CreateEventPage />} />
+                  <Route path=":eventId" element={<EventDetailPage />} />
+                </Route>
+                <Route path="students" element={<ParticipantsPage />} />
+                <Route path="participants" element={<ParticipantsPage />} />
+                <Route path="profile" element={<CoordinatorProfilePage />} />
+              </Route>
+            </Route>
 
-          {/* Volunteer Routes */}
-          <Route path="volunteer">
-            <Route index element={<VolunteerOverview />} />
-            <Route path="events" element={<VolunteerEventsPage />} />
-            <Route path="tasks" element={<VolunteerTasksPage />} />
-            <Route path="attendance" element={<VolunteerAttendancePage />} />
+            <Route element={<RoleGate allowedRoles={["student"]} />}>
+              <Route path="student">
+                <Route index element={<StudentOverview />} />
+                <Route path="events" element={<StudentEventsPage />} />
+                <Route path="events/:eventId" element={<StudentEventDetailPage />} />
+                <Route path="profile" element={<StudentProfilePage />} />
+              </Route>
+            </Route>
+
+            <Route element={<RoleGate allowedRoles={["volunteer"]} />}>
+              <Route path="volunteer">
+                <Route index element={<VolunteerOverview />} />
+                <Route path="events" element={<VolunteerEventsPage />} />
+                <Route path="tasks" element={<VolunteerTasksPage />} />
+                <Route path="attendance" element={<VolunteerAttendancePage />} />
+              </Route>
+            </Route>
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

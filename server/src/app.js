@@ -2,12 +2,20 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import organizationRouter from "./routes/organization.js";
+import authRouter from "./routes/auth.js";
+import departmentRouter from "./routes/department.js";
+import eventRouter from "./routes/event.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || true,
+    credentials: true,
+  }),
+);
 app.use(express.json({ limit: "5mb" }));
 
 app.get("/health", (req, res) => {
@@ -19,6 +27,9 @@ app.get("/hello", (req, res) => {
 });
 
 app.use("/api/organizations", organizationRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/departments", departmentRouter);
+app.use("/api/events", eventRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

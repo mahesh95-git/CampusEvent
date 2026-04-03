@@ -145,17 +145,19 @@ const COLLEGE_TYPES = [
 
 
 const NAV_CONFIG = {
-  orgadmin: {
+  collegeadmin: {
     label: "Org Admin",
     emoji: "🎯",
     color: "teal",
     accent: { dark: "#14B8A6", light: "#0D948B" },
     plan: { label: "Organisation plan", expiry: "Expires Mar 31, 2026" },
     navItems: [
-      { label: "Overview", path: "/dashboard/orgadmin", icon: "grid" },
-      { label: "Departments", path: "/dashboard/orgadmin/departments", icon: "building" },
-      { label: "Coordinators", path: "/dashboard/orgadmin/coordinators", icon: "user-add" },
-      { label: "Events", path: "/dashboard/orgadmin/events", icon: "calendar" },
+      { label: "Overview", path: "/dashboard/collegeadmin", icon: "grid" },
+      { label: "College Details", path: "/dashboard/collegeadmin/college", icon: "building" },
+      { label: "Departments", path: "/dashboard/collegeadmin/departments", icon: "building" },
+      { label: "Coordinators", path: "/dashboard/collegeadmin/coordinators", icon: "user-add" },
+      { label: "Events", path: "/dashboard/collegeadmin/events", icon: "calendar" },
+      { label: "Create Event", path: "/dashboard/collegeadmin/events/create", icon: "user-add" },
     ],
 
     // Quick panel shown at bottom of sidebar (optional)
@@ -172,7 +174,8 @@ const NAV_CONFIG = {
       { label: "Overview", path: "/dashboard/coordinator", icon: "grid" },
       { label: "My Events", path: "/dashboard/coordinator/events", icon: "calendar" },
       { label: "Create Event", path: "/dashboard/coordinator/events/create", icon: "user-add" },
-      { label: "Participants", path: "/dashboard/coordinator/participants", icon: "building" },
+      { label: "Students", path: "/dashboard/coordinator/students", icon: "building" },
+      { label: "Profile", path: "/dashboard/coordinator/profile", icon: "user-add" },
     ],
 
     quickPanel: null,

@@ -30,9 +30,11 @@ const signupSchema = z
       .string()
       .min(1, "Please select your year of study"),
 
-    educationLevel: z
+    rollNumber: z
       .string()
-      .min(1, "Please select your education level"),
+      .max(50, "Roll number is too long")
+      .optional()
+      .or(z.literal("")),
 
 
     password: z

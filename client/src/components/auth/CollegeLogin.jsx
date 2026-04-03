@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
 import { FieldLabel, FieldError, inputCls, EyeIcon } from "@/components/ui/form-helpers";
 import loginSchema from "@/zod/login";
 import { ROLES, SHARED_FIELDS, ROLE_OPTIONS } from "@/constants";
-async function fetchCollege(slug) {
-  const mock = {
-    kit: { name: "KIT College",    location: "Kolhapur, Maharashtra", initials: "KIT", accentColor: "#0D948B",logoUrl:"https://images.careerindia.com/college-photos/5388/kit-imer-logo_1621512632.png" },
-  };
-  await new Promise((r) => setTimeout(r, 500));
-  if (!mock[slug]) throw new Error("College not found");
-  return mock[slug];
-}
+import {
+  useGetOrganizationBySlugQuery,
+  useLoginUserMutation,
+} from "@/store/api";
 
+const LOGIN_ROLE_MAP = {
+  participant: "student",
+  student: "student",
+  coordinator: "coordinator",
+  collegeadmin: "collegeAdmin",
+};
 // ─── College logo / avatar ──
 function CollegeLogo({ college }) {
   if (college.logoUrl) {
@@ -100,27 +101,23 @@ function CollegeLogin() {
   const collegeSlug = searchParams.get("college")?.toLowerCase() || null;
   const initialRole = searchParams.get("role") || "participant";
 
-  const [college, setCollege]             = useState(null);
-  const [collegeLoading, setCollegeLoading] = useState(!!collegeSlug);
-  const [collegeError, setCollegeError]   = useState(null);
-
   const [role, setRole] = useState(
     ROLES[initialRole] ? initialRole : "participant"
   );
 
   const [serverError, setServerError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loginUser] = useLoginUserMutation();
+  const {
+    data: collegeResponse,
+    isLoading: collegeLoading,
+    isError: collegeError,
+  } = useGetOrganizationBySlugQuery(collegeSlug, {
+    skip: !collegeSlug,
+  });
 
   const config = ROLES[role];
-
-  useEffect(() => {
-    if (!collegeSlug) { setCollegeLoading(false); return; }
-    setCollegeLoading(true);
-    setCollegeError(null);
-    fetchCollege(collegeSlug)
-      .then((data) => { setCollege(data); setCollegeLoading(false); })
-      .catch(() => { setCollegeError("College not found."); setCollegeLoading(false); });
-  }, [collegeSlug]);
+  const college = collegeResponse?.college ?? null;
 
   const {
     register,
@@ -145,11 +142,29 @@ function CollegeLogin() {
   async function onSubmit(data) {
     setServerError("");
     try {
-      // TODO: replace with real API
-      await new Promise((r) => setTimeout(r, 1200));
-      navigate(`/dashboard?role=${role}${collegeSlug ? `&college=${collegeSlug}` : ""}`);
+      const backendRole = LOGIN_ROLE_MAP[role];
+
+      if (!backendRole) {
+        setServerError("This role is not supported for login yet.");
+        return;
+      }
+
+      const response = await loginUser({
+        email: data.email,
+        password: data.password,
+        role: backendRole,
+        collegeSlug,
+      }).unwrap();
+
+      const dashboardRole = response?.user?.role;
+
+      navigate(
+        `/dashboard/${dashboardRole}${collegeSlug ? `?college=${collegeSlug}` : ""}`,
+      );
     } catch (err) {
-      setServerError(err?.response?.data?.message || "Invalid credentials. Please try again.");
+      setServerError(
+        err?.data?.message || "Invalid credentials. Please try again.",
+      );
     }
   }
 
@@ -158,7 +173,7 @@ function CollegeLogin() {
 
 
   // ── Loading screen
-  if (collegeLoading) {
+  if (collegeSlug && collegeLoading) {
     return (
       <div className={cn("min-h-screen flex items-center justify-center flex-col gap-4", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
         <svg className="w-8 h-8 animate-spin text-teal-500" viewBox="0 0 24 24" fill="none">
@@ -171,7 +186,7 @@ function CollegeLogin() {
   }
 
   // ── College not found
-  if (collegeError) {
+  if (collegeSlug && collegeError) {
     return (
       <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
         <div className="text-center max-w-[470px]">
@@ -347,6 +362,18 @@ function CollegeLogin() {
                 </span>
               ) : config.cta}
             </button>
+
+            {collegeSlug && (role === "participant" || role === "student") && (
+              <a
+                href={`/register?college=${collegeSlug}`}
+                className={cn(
+                  "text-center text-[13px] font-medium underline underline-offset-4 transition-colors",
+                  D("text-teal-400 hover:text-teal-300", "text-teal-600 hover:text-teal-500"),
+                )}
+              >
+                New student? Create an account
+              </a>
+            )}
 
           </form>
 
