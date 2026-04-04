@@ -1,28 +1,55 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { STUDENT_EVENTS } from "./studentData";
+import { useGetStudentEventsQuery } from "@/store/api";
 
-const TYPE_LABELS = { college: "College event", public: "Public event" };
+const TYPE_LABELS = { internal: "Internal event", public: "Public event" };
 const STATUS_LABELS = {
+  draft: { label: "Draft", color: "#F59E0B" },
   upcoming: { label: "Upcoming", color: "#818CF8" },
-  registration_open: { label: "Open", color: "#14B8A6" },
+  active: { label: "Active", color: "#14B8A6" },
   completed: { label: "Completed", color: "#94A3B8" },
 };
+
+function formatDate(value) {
+  return new Date(value).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatTime(value) {
+  return new Date(value).toLocaleTimeString("en-IN", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 export default function StudentEventsPage() {
   const { dark, D } = useOutletContext();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [type, setType] = useState("all");
+  const { data, isLoading, isError, error } = useGetStudentEventsQuery();
 
-  const filtered = STUDENT_EVENTS.filter((event) => {
-    const matchesSearch =
-      event.name.toLowerCase().includes(search.toLowerCase()) ||
-      event.dept.toLowerCase().includes(search.toLowerCase());
-    const matchesType = type === "all" || event.type === type;
-    return matchesSearch && matchesType;
-  });
+  const events = data?.events ?? [];
+  const filtered = useMemo(
+    () =>
+      events.filter((event) => {
+        const departmentNames = event.departments
+          .map((department) => department.name)
+          .join(" ");
+        const matchesSearch =
+          event.eventName.toLowerCase().includes(search.toLowerCase()) ||
+          departmentNames.toLowerCase().includes(search.toLowerCase()) ||
+          event.venue.toLowerCase().includes(search.toLowerCase());
+        const matchesType = type === "all" || event.eventType === type;
+
+        return matchesSearch && matchesType;
+      }),
+    [events, search, type],
+  );
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
@@ -47,8 +74,7 @@ export default function StudentEventsPage() {
               D("text-slate-500", "text-slate-400"),
             )}
           >
-            College and public events available to you. Click any event to view
-            details.
+            Browse internal and public events available to you.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -64,7 +90,7 @@ export default function StudentEventsPage() {
             )}
           >
             <option value="all">All events</option>
-            <option value="college">College events</option>
+            <option value="internal">Internal events</option>
             <option value="public">Public events</option>
           </select>
           <div
@@ -90,7 +116,7 @@ export default function StudentEventsPage() {
             </svg>
             <input
               type="text"
-              placeholder="Search events…"
+              placeholder="Search events..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={cn(
@@ -106,18 +132,53 @@ export default function StudentEventsPage() {
       </div>
 
       <div className="px-8 py-6 overflow-y-auto flex-1">
+        {isLoading && (
+          <div
+            className={cn(
+              "rounded-[28px] border p-10 text-center mb-4",
+              D("border-white/[0.06] bg-[#0D1626]", "border-slate-200 bg-white"),
+            )}
+          >
+            <p
+              className={cn(
+                "text-[14px] font-semibold",
+                D("text-slate-200", "text-slate-900"),
+              )}
+            >
+              Loading events...
+            </p>
+          </div>
+        )}
+
+        {isError && (
+          <div
+            className={cn(
+              "rounded-[28px] border p-10 text-center mb-4",
+              D("border-rose-500/20 bg-rose-500/10", "border-rose-200 bg-rose-50"),
+            )}
+          >
+            <p
+              className={cn(
+                "text-[14px] font-semibold",
+                D("text-rose-300", "text-rose-700"),
+              )}
+            >
+              {error?.data?.message || "Unable to load events."}
+            </p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-4">
           {filtered.map((event) => {
             const status = STATUS_LABELS[event.status] || {
               label: event.status,
               color: "#94A3B8",
             };
+
             return (
               <button
                 key={event.id}
-                onClick={() =>
-                  navigate(`/dashboard/student/events/${event.id}`)
-                }
+                onClick={() => navigate(`/dashboard/student/events/${event.id}`)}
                 className={cn(
                   "w-full rounded-[28px] p-6 text-left border transition hover:-translate-y-0.5",
                   D(
@@ -134,7 +195,7 @@ export default function StudentEventsPage() {
                         D("text-slate-50", "text-slate-900"),
                       )}
                     >
-                      {event.name}
+                      {event.eventName}
                     </p>
                     <p
                       className={cn(
@@ -142,14 +203,14 @@ export default function StudentEventsPage() {
                         D("text-slate-400", "text-slate-600"),
                       )}
                     >
-                      {event.dept} · {TYPE_LABELS[event.type]}
+                      {event.departments.map((department) => department.shortName).join(", ") || "Open"} · {TYPE_LABELS[event.eventType] || event.eventType}
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span
                       className="text-[11px] font-semibold px-3 py-1 rounded-full"
                       style={{
-                        background: status.color + "20",
+                        background: `${status.color}20`,
                         color: status.color,
                       }}
                     >
@@ -164,7 +225,7 @@ export default function StudentEventsPage() {
                         ),
                       )}
                     >
-                      {event.date}
+                      {formatDate(event.startDate)}
                     </span>
                     <span
                       className={cn(
@@ -175,7 +236,7 @@ export default function StudentEventsPage() {
                         ),
                       )}
                     >
-                      {event.time}
+                      {formatTime(event.startDate)}
                     </span>
                   </div>
                 </div>
@@ -186,7 +247,7 @@ export default function StudentEventsPage() {
                       D("text-slate-300", "text-slate-700"),
                     )}
                   >
-                    {event.location}
+                    {event.venue}
                   </span>
                   <span
                     className={cn(
@@ -194,22 +255,22 @@ export default function StudentEventsPage() {
                       D("text-slate-300", "text-slate-700"),
                     )}
                   >
-                    Seats: {event.seats}
+                    Seats: {event.maxParticipants || "Open"}
                   </span>
                   <span
                     className={cn(
-                      "text-[13px] font-medium",
+                      "text-[13px] font-medium capitalize",
                       D("text-slate-300", "text-slate-700"),
                     )}
                   >
-                    {event.participation}
+                    {event.registrationType}
                   </span>
                 </div>
               </button>
             );
           })}
 
-          {filtered.length === 0 && (
+          {!isLoading && !isError && filtered.length === 0 && (
             <div
               className={cn(
                 "rounded-[28px] border p-10 text-center",
@@ -233,7 +294,7 @@ export default function StudentEventsPage() {
                   D("text-slate-500", "text-slate-500"),
                 )}
               >
-                Try a different keyword or filter type.
+                Try a different keyword or event type.
               </p>
             </div>
           )}

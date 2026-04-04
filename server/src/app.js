@@ -5,6 +5,7 @@ import organizationRouter from "./routes/organization.js";
 import authRouter from "./routes/auth.js";
 import departmentRouter from "./routes/department.js";
 import eventRouter from "./routes/event.js";
+import studentRouter from "./routes/student.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use("/api/organizations", organizationRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/departments", departmentRouter);
 app.use("/api/events", eventRouter);
+app.use("/api/students", studentRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

@@ -69,7 +69,7 @@ export default function MyEventsPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/6", "border-slate-200"))}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Events</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Department events assigned to you</p>
@@ -78,7 +78,7 @@ export default function MyEventsPage() {
           <select
             value={filterStatus}
             onChange={(event) => setFilterStatus(event.target.value)}
-            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none capitalize", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none capitalize", D("bg-card-dark border-white/10 text-slate-300", "bg-white border-slate-200 text-slate-700"))}
           >
             {ALL_STATUSES.map((status) => (
               <option key={status} value={status}>
@@ -86,7 +86,7 @@ export default function MyEventsPage() {
               </option>
             ))}
           </select>
-          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-card-dark border-white/10", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />
               <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round" />
@@ -96,7 +96,7 @@ export default function MyEventsPage() {
               placeholder="Search events..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className={cn("bg-transparent outline-none w-[160px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
+              className={cn("bg-transparent outline-none w-40 text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
             />
           </div>
           <button
@@ -129,10 +129,10 @@ export default function MyEventsPage() {
       )}
 
       <div className="flex-1 overflow-y-auto px-8 py-4">
-        <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
+        <div className={cn("rounded-2xl border overflow-hidden", D("border-white/7", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+              <tr className={cn("border-b", D("bg-deep-navy border-white/7", "bg-slate-50 border-slate-200"))}>
                 <th className={thCls}>Event name</th>
                 <th className={thCls}>Department(s)</th>
                 <th className={thCls}>Date</th>
@@ -147,7 +147,7 @@ export default function MyEventsPage() {
                 const status = STATUS_MAP[event.status] ?? STATUS_MAP.draft;
                 const nextStatuses = COORDINATOR_TRANSITIONS[event.status] ?? [];
                 return (
-                  <tr key={event.id} className={cn("border-b last:border-0 transition-colors", D("border-white/[0.04] hover:bg-white/[0.03]", "border-slate-100 hover:bg-slate-50"))}>
+                  <tr key={event.id} className={cn("border-b last:border-0 transition-colors", D("border-white/4 hover:bg-white/3", "border-slate-100 hover:bg-slate-50"))}>
                     <td className={cn(tdCls, "font-semibold")}>{event.eventName}</td>
                     <td className={tdCls}>{event.departments.map((department) => department.shortName).join(", ")}</td>
                     <td className={cn(tdCls, D("text-slate-400", "text-slate-500"))}>{formatDate(event.startDate)}</td>
@@ -171,7 +171,7 @@ export default function MyEventsPage() {
                               handleStatusChange(event.id, nextStatus);
                             }
                           }}
-                          className={cn("px-3 py-2 rounded-xl border text-[12px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+                          className={cn("px-3 py-2 rounded-xl border text-[12px] outline-none", D("bg-card-dark border-white/10 text-slate-300", "bg-white border-slate-200 text-slate-700"))}
                         >
                           <option value="">Move to...</option>
                           {nextStatuses.map((nextStatus) => (
@@ -189,7 +189,7 @@ export default function MyEventsPage() {
                     <td className="px-4 py-3.5 text-right">
                       <button
                         onClick={() => navigate(`/dashboard/coordinator/events/${event.id}`)}
-                        className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/[0.1] text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+                        className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
                       >
                         View
                       </button>
@@ -200,7 +200,7 @@ export default function MyEventsPage() {
 
               {isLoading && (
                 <tr>
-                  <td colSpan={7} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
+                  <td colSpan={7} className={cn("text-center py-16", D("bg-deep-navy text-slate-400", "bg-white text-slate-500"))}>
                     Loading events...
                   </td>
                 </tr>
@@ -208,7 +208,7 @@ export default function MyEventsPage() {
 
               {!isLoading && isError && (
                 <tr>
-                  <td colSpan={7} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
+                  <td colSpan={7} className={cn("text-center py-16", D("bg-deep-navy text-rose-400", "bg-white text-rose-600"))}>
                     {errorMessage}
                   </td>
                 </tr>
@@ -216,7 +216,7 @@ export default function MyEventsPage() {
 
               {!isLoading && !isError && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                  <td colSpan={7} className={cn("text-center py-16", D("bg-deep-navy", "bg-white"))}>
                     <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No events found</p>
                     <p className={cn("text-[13px] mt-1", D("text-slate-600", "text-slate-400"))}>Try a different search or filter.</p>
                   </td>

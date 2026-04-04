@@ -1,21 +1,31 @@
 import React from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { STUDENT_EVENTS } from "./studentData";
+import { useGetStudentOverviewQuery } from "@/store/api";
 import { StatCard } from "@/components/cards/StatCard";
+
+function formatDate(value) {
+  return new Date(value).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatTime(value) {
+  return new Date(value).toLocaleTimeString("en-IN", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 export default function StudentOverviewPage() {
   const { dark, D } = useOutletContext();
   const navigate = useNavigate();
+  const { data, isLoading, isError, error } = useGetStudentOverviewQuery();
 
-  const registeredCount = STUDENT_EVENTS.filter((event) => event.joined).length;
-  const upcomingCount = STUDENT_EVENTS.filter(
-    (event) => event.status === "upcoming",
-  ).length;
-  const collegeCount = STUDENT_EVENTS.filter(
-    (event) => event.type === "college",
-  ).length;
-  const recentEvents = STUDENT_EVENTS.slice(0, 10);
+  const stats = data?.overview?.stats;
+  const recentEvents = data?.overview?.recentEvents ?? [];
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
@@ -43,37 +53,44 @@ export default function StudentOverviewPage() {
             Browse college events and view your latest participation updates.
           </p>
         </div>
-        <button
-          onClick={() => navigate("/dashboard/student/events")}
-          className="rounded-xl px-4 py-2.5 font-semibold text-[13px] text-white"
-          style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
-        >
-          Browse events
-        </button>
       </div>
 
       <div className="grid grid-cols-3 gap-4 px-8 py-6">
         <StatCard
           label="Registered events"
-          value={registeredCount}
+          value={stats?.registeredCount ?? 0}
           color="#F59E0B"
           dark={dark}
         />
         <StatCard
           label="Upcoming events"
-          value={upcomingCount}
+          value={stats?.upcomingCount ?? 0}
           color="#10B981"
           dark={dark}
         />
         <StatCard
           label="College events"
-          value={collegeCount}
+          value={stats?.collegeCount ?? 0}
           color="#6366F1"
           dark={dark}
         />
       </div>
 
       <div className="px-8 pb-8 flex-1 min-h-0">
+        {isError && (
+          <div
+            className={cn(
+              "mb-4 rounded-3xl border p-5 text-[13px] font-medium",
+              D(
+                "border-rose-500/20 bg-rose-500/10 text-rose-300",
+                "border-rose-200 bg-rose-50 text-rose-700",
+              ),
+            )}
+          >
+            {error?.data?.message || "Unable to load student overview."}
+          </div>
+        )}
+
         <div
           className={cn(
             "rounded-3xl border overflow-y-auto h-full",
@@ -104,12 +121,31 @@ export default function StudentOverviewPage() {
             </p>
           </div>
           <div className="grid gap-4 p-8">
+            {isLoading && (
+              <div
+                className={cn(
+                  "rounded-3xl border p-10 text-center",
+                  D(
+                    "border-white/[0.06] bg-[#0D1626]",
+                    "border-slate-200 bg-white",
+                  ),
+                )}
+              >
+                <p
+                  className={cn(
+                    "text-[14px] font-semibold",
+                    D("text-slate-200", "text-slate-900"),
+                  )}
+                >
+                  Loading recent events...
+                </p>
+              </div>
+            )}
+
             {recentEvents.map((event) => (
               <button
                 key={event.id}
-                onClick={() =>
-                  navigate(`/dashboard/student/events/${event.id}`)
-                }
+                onClick={() => navigate(`/dashboard/student/events/${event.id}`)}
                 className={cn(
                   "w-full rounded-3xl p-6 text-left border transition hover:-translate-y-0.5",
                   D(
@@ -126,7 +162,7 @@ export default function StudentOverviewPage() {
                         D("text-slate-100", "text-slate-900"),
                       )}
                     >
-                      {event.name}
+                      {event.eventName}
                     </p>
                     <p
                       className={cn(
@@ -134,8 +170,8 @@ export default function StudentOverviewPage() {
                         D("text-slate-400", "text-slate-500"),
                       )}
                     >
-                      {event.dept} ·{" "}
-                      {event.type === "college" ? "College" : "Public"}
+                      {event.departments.map((department) => department.shortName).join(", ") || "Open"} ·{" "}
+                      {event.eventType === "internal" ? "College" : "Public"}
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -148,7 +184,7 @@ export default function StudentOverviewPage() {
                         ),
                       )}
                     >
-                      {event.date}
+                      {formatDate(event.startDate)}
                     </span>
                     <span
                       className={cn(
@@ -159,7 +195,7 @@ export default function StudentOverviewPage() {
                         ),
                       )}
                     >
-                      {event.time}
+                      {formatTime(event.startDate)}
                     </span>
                   </div>
                 </div>
@@ -170,7 +206,7 @@ export default function StudentOverviewPage() {
                       D("text-slate-300", "text-slate-600"),
                     )}
                   >
-                    {event.location}
+                    {event.venue}
                   </span>
                   <span
                     className={cn(
@@ -178,12 +214,13 @@ export default function StudentOverviewPage() {
                       D("text-slate-300", "text-slate-600"),
                     )}
                   >
-                    Seats: {event.seats}
+                    Seats: {event.maxParticipants || "Open"}
                   </span>
                 </div>
               </button>
             ))}
-            {recentEvents.length === 0 && (
+
+            {!isLoading && recentEvents.length === 0 && (
               <div
                 className={cn(
                   "rounded-3xl border p-10 text-center",

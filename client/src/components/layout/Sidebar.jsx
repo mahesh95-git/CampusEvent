@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 import { NAV_CONFIG } from "@/constants";
+import { useLogoutUserMutation } from "@/store/api";
 
 export function Sidebar({ NAV_CONFIG }) {
   const navigate  = useNavigate();
@@ -11,6 +12,7 @@ export function Sidebar({ NAV_CONFIG }) {
   const theme     = useSelector((s) => s.theme.value);
   const dark      = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   const D         = (d, l) => (dark ? d : l);
+  const [logout] = useLogoutUserMutation();
 
   const currentRoleMatch = location.pathname.split("/")[2];
  
@@ -67,6 +69,15 @@ export function Sidebar({ NAV_CONFIG }) {
 
   const profilePath = `/dashboard/${currentRole}/profile`;
 
+  async function handleLogout() {
+    try {
+      await logout().unwrap();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }
+
   return (
     <aside className={cn("w-[220px] shrink-0 flex flex-col h-full border-r", D("bg-[#0D1626] border-white/[0.06]", "bg-white border-slate-200"))}>
 
@@ -113,6 +124,17 @@ export function Sidebar({ NAV_CONFIG }) {
             <p className={cn("text-[12px] font-semibold truncate", D("text-slate-200", "text-slate-800"))}>Dr. Rajesh Kumar</p>
             <p className={cn("text-[11px] truncate", D("text-slate-500", "text-slate-400"))}>View profile</p>
           </div>
+        </button>
+
+        {/* Logout button */}
+        <button
+          onClick={handleLogout}
+          className={cn(
+            "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 w-full justify-center border",
+            D("border-rose-500/20 bg-rose-500/10 text-rose-400 hover:bg-rose-500/15", "border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100")
+          )}
+        >
+          <span>Logout</span>
         </button>
       </div>
     </aside>

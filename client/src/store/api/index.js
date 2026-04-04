@@ -1,7 +1,9 @@
 import { authApi } from "./auth/authApi";
 import { organizationApi } from "./organization/organizationApi";
+import { studentApi } from "./student/studentApi";
+import { publicApi } from "./public/publicApi";
 
-export { authApi, organizationApi };
+export { authApi, organizationApi, studentApi, publicApi };
 export const {
   useChangePasswordMutation,
   useGetCurrentUserQuery,
@@ -27,3 +29,12 @@ export const {
   useUpdateEventStatusMutation,
   useUpdateMyOrganizationMutation,
 } = organizationApi;
+export const {
+  useGetStudentEventByIdQuery,
+  useGetStudentEventsQuery,
+  useGetStudentOverviewQuery,
+  useGetStudentPlanQuery,
+  useUpdateStudentPlanMutation,
+  useRegisterForEventMutation,
+} = studentApi;
+export const { useGetEventByFormLinkQuery } = publicApi;

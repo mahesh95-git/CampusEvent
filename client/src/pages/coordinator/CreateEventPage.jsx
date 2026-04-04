@@ -20,7 +20,18 @@ const VOLUNTEER_ROLES = [
   "Photography",
   "Technical Support",
 ];
-const EVENT_TYPES = ["workshop", "seminar", "hackathon", "festival", "competition", "conference", "other"];
+const EVENT_TYPES = [
+  {
+    value: "internal",
+    label: "Internal event",
+    description: "Only students from this college can register.",
+  },
+  {
+    value: "public",
+    label: "Public event",
+    description: "Students from any college can register.",
+  },
+];
 const EVENT_STATUSES = ["draft", "upcoming", "active", "completed"];
 
 function combineDateAndTime(date, time) {
@@ -76,7 +87,7 @@ export default function CreateEventPage() {
   const [info, setInfo] = useState({
     name: "",
     description: "",
-    type: "workshop",
+    type: "internal",
     participation: "individual",
     fee: "free",
     amount: "",
@@ -94,9 +105,10 @@ export default function CreateEventPage() {
   });
 
   const [fields, setFields] = useState([
-    { id: 1, label: "Full name", type: "Text", required: true },
+    { id: 1, label: "Full Name", type: "Text", required: true },
+    { id: 2, label: "Email", type: "Email", required: true },
   ]);
-  const [nextFieldId, setNextId] = useState(2);
+  const [nextFieldId, setNextId] = useState(3);
 
   const [volunteers, setVolunteers] = useState([]);
   const [volForm, setVolForm] = useState({
@@ -195,7 +207,7 @@ export default function CreateEventPage() {
         status: info.status,
         departmentIds: team.departments,
         registrationFormSchema: {
-          fields: fields.map(({ id, ...field }) => field),
+          fields: fields.map((field) => ({ label: field.label, type: field.type, required: field.required })),
           volunteers,
           coCoordinators: team.coCoordinators,
         },
@@ -214,7 +226,7 @@ export default function CreateEventPage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/6", "border-slate-200"))}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Create Event</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -223,13 +235,13 @@ export default function CreateEventPage() {
         </div>
         <button
           onClick={() => navigate(eventsBasePath)}
-          className={cn("text-[13px] font-medium px-4 py-2.5 rounded-xl border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-600"))}
+          className={cn("text-[13px] font-medium px-4 py-2.5 rounded-xl border", D("border-white/10 text-slate-400", "border-slate-200 text-slate-600"))}
         >
           Cancel
         </button>
       </div>
 
-      <div className={cn("px-8 py-5 border-b", D("border-white/[0.04]", "border-slate-100"))}>
+      <div className={cn("px-8 py-5 border-b", D("border-white/4", "border-slate-100"))}>
         <div className="flex items-center gap-0">
           {steps.map((label, index) => {
             const currentStep = index + 1;
@@ -260,7 +272,7 @@ export default function CreateEventPage() {
                   </p>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={cn("flex-1 h-px mx-4", done ? "bg-indigo-500/60" : D("bg-white/[0.08]", "bg-slate-200"))} />
+                  <div className={cn("flex-1 h-px mx-4", done ? "bg-indigo-500/60" : D("bg-white/8", "bg-slate-200"))} />
                 )}
               </React.Fragment>
             );
@@ -268,7 +280,7 @@ export default function CreateEventPage() {
         </div>
       </div>
 
-      <div className="px-8 py-7 max-w-[760px] flex flex-col gap-5">
+      <div className="px-8 py-7 max-w-190 flex flex-col gap-5">
         {step === 1 && (
           <div className="flex flex-col gap-5">
             <div>
@@ -294,18 +306,21 @@ export default function CreateEventPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Event type</label>
+                <label className={labelCls}>Event audience *</label>
                 <select
                   className={inputCls}
                   value={info.type}
                   onChange={(event) => setInfo((current) => ({ ...current, type: event.target.value }))}
                 >
                   {EVENT_TYPES.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
+                    <option key={type.value} value={type.value}>
+                      {type.label}
                     </option>
                   ))}
                 </select>
+                <p className={cn("text-[11.5px] mt-2", D("text-slate-500", "text-slate-400"))}>
+                  {EVENT_TYPES.find((type) => type.value === info.type)?.description}
+                </p>
               </div>
 
               <div>
@@ -330,40 +345,38 @@ export default function CreateEventPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelCls}>Registration fee</label>
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  {["free", "paid"].map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setInfo((current) => ({ ...current, fee: value, amount: value === "free" ? "" : current.amount }))}
-                      className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
-                      style={{
-                        background: info.fee === value ? "linear-gradient(135deg,#0D948B,#14B8A6)" : "transparent",
-                        color: info.fee === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
-                        borderColor: info.fee === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
-                      }}
-                    >
-                      {value}
-                    </button>
-                  ))}
-                </div>
+            <div>
+              <label className={labelCls}>Registration fee</label>
+              <div className="grid grid-cols-2 gap-2 mt-1">
+                {["free", "paid"].map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setInfo((current) => ({ ...current, fee: value, amount: value === "free" ? "" : current.amount }))}
+                    className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
+                    style={{
+                      background: info.fee === value ? "linear-gradient(135deg,#0D948B,#14B8A6)" : "transparent",
+                      color: info.fee === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
+                      borderColor: info.fee === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
+                    }}
+                  >
+                    {value}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              <div>
-                <label className={labelCls}>Amount (INR)</label>
-                <input
-                  type="number"
-                  className={inputCls}
-                  min="0"
-                  placeholder="e.g. 200"
-                  disabled={info.fee === "free"}
-                  value={info.fee === "free" ? "" : info.amount}
-                  onChange={(event) => setInfo((current) => ({ ...current, amount: event.target.value }))}
-                />
-              </div>
+            <div>
+              <label className={labelCls}>Amount (INR)</label>
+              <input
+                type="number"
+                className={inputCls}
+                min="0"
+                placeholder="e.g. 200"
+                disabled={info.fee === "free"}
+                value={info.fee === "free" ? "" : info.amount}
+                onChange={(event) => setInfo((current) => ({ ...current, amount: event.target.value }))}
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -517,7 +530,7 @@ export default function CreateEventPage() {
 
             <div className="flex flex-col gap-3">
               {fields.map((field, index) => (
-                <div key={field.id} className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", D("bg-[#111827] border-white/[0.08]", "bg-slate-50 border-slate-200"))}>
+                <div key={field.id} className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
                   <span className={cn("text-[11px] font-bold w-5 text-center shrink-0", D("text-slate-600", "text-slate-400"))}>{index + 1}</span>
                   <input
                     type="text"
@@ -527,7 +540,7 @@ export default function CreateEventPage() {
                     onChange={(event) => patchField(field.id, "label", event.target.value)}
                   />
                   <select
-                    className={cn("text-[12px] px-2.5 py-1.5 rounded-lg border outline-none", D("bg-[#0D1626] border-white/[0.08] text-slate-300", "bg-white border-slate-200 text-slate-600"))}
+                    className={cn("text-[12px] px-2.5 py-1.5 rounded-lg border outline-none", D("bg-deep-navy border-white/8 text-slate-300", "bg-white border-slate-200 text-slate-600"))}
                     value={field.type}
                     onChange={(event) => patchField(field.id, "type", event.target.value)}
                   >
@@ -559,7 +572,7 @@ export default function CreateEventPage() {
             <button
               type="button"
               onClick={addField}
-              className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-[13px] font-medium transition-colors self-start", D("border-white/[0.1] text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+              className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-[13px] font-medium transition-colors self-start", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
             >
               <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
               Add field
@@ -573,7 +586,7 @@ export default function CreateEventPage() {
               Add volunteers for this event. You can assign roles and add more later.
             </p>
 
-            <div className={cn("p-4 rounded-xl border", D("bg-[#111827] border-white/[0.08]", "bg-slate-50 border-slate-200"))}>
+            <div className={cn("p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
               <p className={cn("text-[12px] font-bold mb-3", D("text-slate-400", "text-slate-500"))}>Add volunteer</p>
               <div className="grid grid-cols-3 gap-3 mb-3">
                 <div>
@@ -611,15 +624,15 @@ export default function CreateEventPage() {
                   {volunteers.length} volunteer{volunteers.length > 1 ? "s" : ""} added
                 </p>
                 {volunteers.map((volunteer) => (
-                  <div key={volunteer.id} className={cn("flex items-center gap-3 px-4 py-2.5 rounded-xl border", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                  <div key={volunteer.id} className={cn("flex items-center gap-3 px-4 py-2.5 rounded-xl border", D("bg-deep-navy border-white/7", "bg-white border-slate-200"))}>
+                    <div className="w-7 h-7 rounded-full bg-linear-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
                       {volunteer.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={cn("text-[13px] font-semibold", D("text-slate-100", "text-slate-800"))}>{volunteer.name}</p>
                       <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>{volunteer.email}</p>
                     </div>
-                    <span className={cn("text-[11.5px] font-medium px-2.5 py-1 rounded-lg shrink-0", D("bg-white/[0.05] text-slate-400", "bg-slate-100 text-slate-600"))}>{volunteer.role}</span>
+                    <span className={cn("text-[11.5px] font-medium px-2.5 py-1 rounded-lg shrink-0", D("bg-white/5 text-slate-400", "bg-slate-100 text-slate-600"))}>{volunteer.role}</span>
                     <button type="button" onClick={() => removeVolunteer(volunteer.id)} className={cn("text-[11px] w-6 h-6 rounded-lg flex items-center justify-center", D("hover:bg-rose-500/10 text-rose-400", "hover:bg-rose-50 text-rose-500"))}>x</button>
                   </div>
                 ))}
@@ -639,17 +652,17 @@ export default function CreateEventPage() {
         )}
       </div>
 
-      <div className={cn("sticky bottom-0 flex items-center justify-between px-8 py-4 border-t", D("bg-[#070D1A] border-white/[0.06]", "bg-white border-slate-200"))}>
+      <div className={cn("sticky bottom-0 flex items-center justify-between px-8 py-4 border-t", D("bg-abyss border-white/6", "bg-white border-slate-200"))}>
         <button
           onClick={() => (step > 1 ? setStep((current) => current - 1) : navigate(eventsBasePath))}
-          className={cn("px-5 py-2.5 rounded-xl text-[13px] font-medium border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-600"))}
+          className={cn("px-5 py-2.5 rounded-xl text-[13px] font-medium border", D("border-white/10 text-slate-400", "border-slate-200 text-slate-600"))}
         >
           {step > 1 ? "< Back" : "Cancel"}
         </button>
 
         <div className="flex items-center gap-2">
           {[1, 2, 3, 4].map((currentStep) => (
-            <span key={currentStep} className={cn("w-2 h-2 rounded-full transition-all", step === currentStep ? "bg-indigo-500 w-5" : D("bg-white/[0.15]", "bg-slate-300"))} />
+            <span key={currentStep} className={cn("w-2 h-2 rounded-full transition-all", step === currentStep ? "bg-indigo-500 w-5" : D("bg-white/15", "bg-slate-300"))} />
           ))}
         </div>
 

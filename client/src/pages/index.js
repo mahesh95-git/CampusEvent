@@ -20,6 +20,7 @@ export { default as EventDetailPage } from "./shared/EventDetailPage";
 export { default as StudentOverview } from "./student/StudentOverviewPage";
 export { default as StudentEventsPage } from "./student/StudentEventsPage";
 export { default as StudentEventDetailPage } from "./student/StudentEventDetailPage";
+export { default as StudentPlanPage } from "./student/StudentPlanPage";
 export { default as StudentProfilePage } from "./student/StudentProfilePage";
 
 export { default as VolunteerOverview } from "./volunteer/VolunteerOverviewPage";

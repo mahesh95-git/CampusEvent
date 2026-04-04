@@ -19,6 +19,7 @@ function normalizeEvent(event) {
     maxParticipants: event.maxParticipants,
     status: event.status,
     registrationFormSchema: event.registrationFormSchema,
+    registrationFormLink: event.registrationFormLink,
     organizationId: event.organizationId,
     createdBy: event.createdBy,
     createdAt: event.createdAt,
@@ -446,10 +447,27 @@ export async function createEvent(req, res) {
 
   const normalizedFeeAmount =
     feeType.trim().toLowerCase() === "free" ? 0 : Number(feeAmount ?? 0);
+  const normalizedEventType = eventType.trim().toLowerCase();
+  const allowedEventTypes = ["internal", "public"];
+
+  if (!allowedEventTypes.includes(normalizedEventType)) {
+    throw new AppError("Event type must be internal or public.", 400);
+  }
 
   if (Number.isNaN(normalizedFeeAmount) || normalizedFeeAmount < 0) {
     throw new AppError("Fee amount must be a valid positive number.", 400);
   }
+
+  const normalizedRegistrationSchema =
+    registrationFormSchema && typeof registrationFormSchema === "object"
+      ? {
+          ...registrationFormSchema,
+          audience: normalizedEventType,
+        }
+      : null;
+
+  // Generate unique registration form link
+  const registrationFormLink = `${crypto.randomUUID().substring(0, 12)}`;
 
   const createdEvent = await prisma.event.create({
     data: {
@@ -460,7 +478,7 @@ export async function createEvent(req, res) {
       endDate: end,
       registrationDeadline: deadline,
       venue: venue.trim(),
-      eventType: eventType.trim().toLowerCase(),
+      eventType: normalizedEventType,
       registrationType: registrationType.trim().toLowerCase(),
       feeType: feeType.trim().toLowerCase(),
       feeAmount: normalizedFeeAmount,
@@ -468,7 +486,8 @@ export async function createEvent(req, res) {
       status: status.trim().toLowerCase(),
       organizationId: req.user.organizationId,
       createdBy: req.user.id,
-      registrationFormSchema: registrationFormSchema ?? null,
+      registrationFormSchema: normalizedRegistrationSchema,
+      registrationFormLink: registrationFormLink,
       departments: {
         create: uniqueDepartmentIds.map((departmentId) => ({
           department: {
@@ -607,5 +626,310 @@ export async function updateEventStatus(req, res) {
     { event: normalizeEvent(updatedEvent) },
     "Event status updated successfully",
     200,
+  );
+}
+
+export async function registerForEvent(req, res) {
+  const eventId = Number(req.params.eventId);
+  const { formResponse } = req.body;
+  const userId = req.user.id;
+
+  if (!Number.isInteger(eventId) || eventId <= 0) {
+    throw new AppError("Valid event id is required.", 400);
+  }
+
+  if (!formResponse || typeof formResponse !== "object") {
+    throw new AppError("Form response is required.", 400);
+  }
+
+  // Get event with form schema to validate fields
+  const event = await prisma.event.findFirst({
+    where: { id: eventId },
+    select: {
+      id: true,
+      eventType: true,
+      registrationDeadline: true,
+      maxParticipants: true,
+      registrationFormSchema: true,
+      _count: {
+        select: {
+          registrations: true,
+        },
+      },
+    },
+  });
+
+  if (!event) {
+    throw new AppError("Event not found.", 404);
+  }
+
+  // Check if registration deadline has passed
+  if (new Date() > new Date(event.registrationDeadline)) {
+    throw new AppError("Registration deadline has passed.", 400);
+  }
+
+  // Check if max participants reached
+  if (event.maxParticipants && event._count.registrations >= event.maxParticipants) {
+    throw new AppError("Event has reached maximum participants.", 400);
+  }
+
+  // Check if already registered
+  const existingRegistration = await prisma.registration.findFirst({
+    where: {
+      eventId,
+      userId,
+    },
+  });
+
+  if (existingRegistration) {
+    throw new AppError("You are already registered for this event.", 400);
+  }
+
+  // Validate required fields from schema
+  if (event.registrationFormSchema?.fields && Array.isArray(event.registrationFormSchema.fields)) {
+    const requiredFields = event.registrationFormSchema.fields.filter((field) => field.required);
+    for (const field of requiredFields) {
+      if (!formResponse[field.label] || (typeof formResponse[field.label] === "string" && !formResponse[field.label].trim())) {
+        throw new AppError(`Field "${field.label}" is required.`, 400);
+      }
+    }
+  }
+
+  // Create registration
+  const registration = await prisma.registration.create({
+    data: {
+      eventId,
+      userId,
+      status: "confirmed",
+      formResponse,
+      paymentStatus: event.feeType === "free" ? "completed" : "pending",
+      amountPaid: event.feeAmount || 0,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          contactPhone: true,
+          department: {
+            select: {
+              id: true,
+              DepartmentName: true,
+              ShortName: true,
+            },
+          },
+        },
+      },
+      event: {
+        select: {
+          id: true,
+          eventName: true,
+          registrationType: true,
+        },
+      },
+    },
+  });
+
+  return successResponse(
+    res,
+    {
+      registration: {
+        id: registration.id,
+        status: registration.status,
+        registeredAt: registration.registeredAt,
+        paymentStatus: registration.paymentStatus,
+        amountPaid: Number(registration.amountPaid),
+        formResponse: registration.formResponse,
+        participant: registration.user,
+        event: registration.event,
+      },
+    },
+    "Successfully registered for event",
+    201,
+  );
+}
+
+export async function getEventByFormLink(req, res) {
+  const { formLink } = req.params;
+
+  if (!formLink?.trim()) {
+    throw new AppError("Registration form link is required.", 400);
+  }
+
+  const event = await prisma.event.findFirst({
+    where: {
+      registrationFormLink: formLink.trim(),
+    },
+    include: {
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      departments: {
+        include: {
+          department: {
+            select: {
+              id: true,
+              DepartmentName: true,
+              ShortName: true,
+              colourCode: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          registrations: true,
+        },
+      },
+    },
+  });
+
+  if (!event) {
+    throw new AppError("Event not found.", 404);
+  }
+
+  // Check if registration deadline has passed
+  const now = new Date();
+  const deadline = new Date(event.registrationDeadline);
+
+  if (now > deadline) {
+    throw new AppError("The registration deadline for this event has passed.", 410);
+  }
+
+  // Check if max participants reached
+  if (event.maxParticipants && event._count.registrations >= event.maxParticipants) {
+    throw new AppError("This event has reached its maximum participant limit.", 409);
+  }
+
+  return successResponse(
+    res,
+    {
+      event: {
+        id: event.id,
+        eventName: event.eventName,
+        description: event.description,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        registrationDeadline: event.registrationDeadline,
+        venue: event.venue,
+        eventType: event.eventType,
+        registrationType: event.registrationType,
+        feeType: event.feeType,
+        feeAmount: Number(event.feeAmount),
+        maxParticipants: event.maxParticipants,
+        status: event.status,
+        registrationFormSchema: event.registrationFormSchema,
+        participantCount: event._count.registrations,
+      },
+    },
+    "Event found",
+    200,
+  );
+}
+
+export async function registerForEventPublic(req, res) {
+  const { formLink } = req.params;
+  const { email, name, formResponse } = req.body;
+
+  if (!formLink?.trim()) {
+    throw new AppError("Registration form link is required.", 400);
+  }
+
+  if (!email?.trim() || !email.includes("@")) {
+    throw new AppError("Valid email is required.", 400);
+  }
+
+  if (!name?.trim()) {
+    throw new AppError("Name is required.", 400);
+  }
+
+  if (!formResponse || typeof formResponse !== "object") {
+    throw new AppError("Form response is required.", 400);
+  }
+
+  // Find event by form link
+  const event = await prisma.event.findFirst({
+    where: {
+      registrationFormLink: formLink.trim(),
+    },
+    select: {
+      id: true,
+      eventType: true,
+      eventName: true,
+      feeType: true,
+      feeAmount: true,
+      registrationDeadline: true,
+      maxParticipants: true,
+      registrationFormSchema: true,
+      _count: {
+        select: {
+          registrations: true,
+        },
+      },
+    },
+  });
+
+  if (!event) {
+    throw new AppError("Event not found.", 404);
+  }
+
+  // Check registration deadline
+  if (new Date() > new Date(event.registrationDeadline)) {
+    throw new AppError("The registration deadline for this event has passed.", 410);
+  }
+
+  // Validate form fields
+  const requiredFields = event.registrationFormSchema?.fields?.filter((f) => f.required) || [];
+  for (const field of requiredFields) {
+    if (!formResponse[field.label]?.trim?.()) {
+      throw new AppError(`Field "${field.label}" is required.`, 400);
+    }
+  }
+
+  //Check max participants
+  if (event.maxParticipants && event._count.registrations >= event.maxParticipants) {
+    throw new AppError("This event has reached its maximum participant limit.", 409);
+  }
+
+  // Filter formResponse to only include fields defined in schema
+  const filteredFormResponse = {};
+  if (event.registrationFormSchema?.fields && Array.isArray(event.registrationFormSchema.fields)) {
+    event.registrationFormSchema.fields.forEach((field) => {
+      if (formResponse[field.label] !== undefined) {
+        filteredFormResponse[field.label] = formResponse[field.label];
+      }
+    });
+  }
+
+  // Create registration for guest (no user association)
+  // All data stored in formResponse - no separate columns needed
+  const registration = await prisma.registration.create({
+    data: {
+      eventId: event.id,
+      status: "confirmed",
+      formResponse: filteredFormResponse,
+      paymentStatus: event.feeType === "free" ? "completed" : "pending",
+      amountPaid: event.feeAmount || 0,
+    },
+  });
+
+  return successResponse(
+    res,
+    {
+      registration: {
+        id: registration.id,
+        status: registration.status,
+        registeredAt: registration.registeredAt,
+        paymentStatus: registration.paymentStatus,
+        message: "Registration successful! Check your email for confirmation details.",
+      },
+    },
+    "Successfully registered for event",
+    201,
   );
 }

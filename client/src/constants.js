@@ -190,24 +190,7 @@ const NAV_CONFIG = {
     navItems: [
       { label: "Overview", path: "/dashboard/student", icon: "grid" },
       { label: "Events", path: "/dashboard/student/events", icon: "calendar" },
-      { label: "Volunteer", path: "/dashboard/volunteer", icon: "check" },
       { label: "Profile", path: "/dashboard/student/profile", icon: "user-add" },
-    ],
-
-    quickPanel: null,
-  },
-
-  volunteer: {
-    label: "Volunteer",
-    emoji: "🙌",
-    color: "amber",
-    accent: { dark: "#FCD34D", light: "#F59E0B" },
-    plan: null,
-    navItems: [
-      { label: "Overview", path: "/dashboard/volunteer", icon: "grid" },
-      { label: "My Events", path: "/dashboard/volunteer/events", icon: "calendar" },
-      { label: "My Tasks", path: "/dashboard/volunteer/tasks", icon: "task" },
-      { label: "Attendance", path: "/dashboard/volunteer/attendance", icon: "check" },
     ],
 
     quickPanel: null,

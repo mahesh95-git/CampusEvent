@@ -9,6 +9,7 @@ import {
 } from "@/components/auth/RoleBasedRoute";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import NotFound from "@/components/common/NotFound";
+import PublicRegistrationPage from "@/pages/PublicRegistrationPage";
 import {
   Home,
   Login,
@@ -30,10 +31,6 @@ import {
   StudentEventsPage,
   StudentEventDetailPage,
   StudentProfilePage,
-  VolunteerOverview,
-  VolunteerEventsPage,
-  VolunteerTasksPage,
-  VolunteerAttendancePage,
 } from "./pages";
 
 export default function App() {
@@ -62,6 +59,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/orgregistration" element={<OrgRegistration />} />
+        <Route path="/register/:formLink" element={<PublicRegistrationPage />} />
 
         <Route path="/dashboard" element={<ProtectedDashboard />}>
           <Route element={<DashboardLayout />}>
@@ -100,15 +98,6 @@ export default function App() {
                 <Route path="events" element={<StudentEventsPage />} />
                 <Route path="events/:eventId" element={<StudentEventDetailPage />} />
                 <Route path="profile" element={<StudentProfilePage />} />
-              </Route>
-            </Route>
-
-            <Route element={<RoleGate allowedRoles={["volunteer"]} />}>
-              <Route path="volunteer">
-                <Route index element={<VolunteerOverview />} />
-                <Route path="events" element={<VolunteerEventsPage />} />
-                <Route path="tasks" element={<VolunteerTasksPage />} />
-                <Route path="attendance" element={<VolunteerAttendancePage />} />
               </Route>
             </Route>
           </Route>
