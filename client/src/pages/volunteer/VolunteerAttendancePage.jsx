@@ -52,164 +52,100 @@ export default function VolunteerAttendancePage() {
         <div className="flex items-center gap-3">
           <select
             value={selectedEventId}
-            onChange={(e) => { setSelectedEventId(Number(e.target.value)); setSearch(""); setSaved(false); }}
-            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+            onChange={(e) => setSelectedEventId(parseInt(e.target.value))}
+            className={cn(
+              "px-3.5 py-2.5 rounded-xl border text-[13px] font-medium outline-none",
+              D("bg-[#111827] border-white/[0.1] text-slate-200", "bg-white border-slate-200 text-slate-800")
+            )}
           >
-            {VOLUNTEER_EVENTS.map((ev) => (
-              <option key={ev.id} value={ev.id}>{ev.name}</option>
+            {VOLUNTEER_EVENTS.map((e) => (
+              <option key={e.id} value={e.id}>{e.name}</option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Event summary strip */}
-      {selectedEvent && (
-        <div className={cn("px-8 py-3 border-b shrink-0 flex items-center gap-6", D("border-white/[0.06]", "border-slate-100"))}>
+      {/* Stats row */}
+      <div className={cn("flex items-center justify-between px-8 py-4 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+        <div className="flex items-center gap-6">
           <div>
-            <span className={cn("text-[12px] font-semibold", D("text-slate-300", "text-slate-700"))}>
-              {selectedEvent.name}
-            </span>
-            <span className={cn("text-[12px] ml-2", D("text-slate-500", "text-slate-400"))}>
-              · {selectedEvent.dept} · {selectedEvent.location} · {selectedEvent.date}
-            </span>
+            <p className={cn("text-[11px] font-semibold uppercase", D("text-slate-500", "text-slate-400"))}>Present</p>
+            <p className={cn("text-[22px] font-bold mt-1", D("text-slate-50", "text-slate-900"))}>{presentCount}</p>
           </div>
-          <div className="ml-auto flex items-center gap-3">
-            <span className={cn("text-[12px] font-semibold", D("text-slate-300", "text-slate-600"))}>
-              Present: <span style={{ color: "#10B981" }}>{presentCount}</span>/{totalCount}
-            </span>
-            <div className={cn("w-24 h-1.5 rounded-full overflow-hidden", D("bg-white/[0.08]", "bg-slate-100"))}>
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0}%`,
-                  background: "linear-gradient(90deg,#10B981,#34D399)",
-                }}
-              />
-            </div>
+          <div>
+            <p className={cn("text-[11px] font-semibold uppercase", D("text-slate-500", "text-slate-400"))}>Total</p>
+            <p className={cn("text-[22px] font-bold mt-1", D("text-slate-50", "text-slate-900"))}>{totalCount}</p>
           </div>
         </div>
-      )}
-
-      {/* Controls */}
-      <div className={cn("px-8 py-4 flex items-center gap-3 border-b shrink-0", D("border-white/[0.06]", "border-slate-100"))}>
-        <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
-          <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
-            <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3"/>
-            <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search participants…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className={cn("bg-transparent outline-none w-[180px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
-          />
-        </div>
-        <button
-          onClick={markAll}
-          className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] font-medium", D("border-white/[0.1] text-emerald-400 hover:bg-emerald-500/10 border-emerald-500/30", "border-emerald-300 text-emerald-600 hover:bg-emerald-50"))}
-        >
-          Mark all present
-        </button>
-        <button
-          onClick={clearAll}
-          className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] font-medium", D("border-white/[0.1] text-slate-400 hover:bg-white/[0.04]", "border-slate-200 text-slate-500 hover:bg-slate-50"))}
-        >
-          Clear all
-        </button>
-        <div className="ml-auto flex items-center gap-3">
-          {saved && (
-            <span className="text-[12px] font-medium" style={{ color: "#10B981" }}>
-              ✓ Attendance saved
-            </span>
-          )}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={markAll}
+            className={cn("px-3.5 py-2 rounded-lg text-[12px] font-medium border transition-colors", D("border-white/[0.1] hover:bg-white/[0.05]", "border-slate-200 hover:bg-slate-50"))}
+          >
+            Mark all
+          </button>
+          <button
+            onClick={clearAll}
+            className={cn("px-3.5 py-2 rounded-lg text-[12px] font-medium border transition-colors", D("border-white/[0.1] hover:bg-white/[0.05]", "border-slate-200 hover:bg-slate-50"))}
+          >
+            Clear all
+          </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2.5 rounded-xl text-[13px] font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#10B981,#34D399)" }}
+            className="px-3.5 py-2 rounded-lg text-[12px] font-bold text-white"
+            style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 4px 14px rgba(99,102,241,0.3)" }}
           >
-            Save Attendance
+            Save
           </button>
+          {saved && <span className={cn("text-[12px] font-medium", D("text-emerald-400", "text-emerald-600"))}>✓ Saved</span>}
         </div>
       </div>
 
-      {/* Participants table */}
-      <div className="flex-1 overflow-y-auto px-8 py-6">
+      {/* Search */}
+      <div className={cn("px-8 py-3 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+        <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border w-max", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
+            <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3"/>
+            <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>
+          </svg>
+          <input type="text" placeholder="Search participants…" value={search} onChange={e => setSearch(e.target.value)}
+            className={cn("bg-transparent outline-none w-[170px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
+          />
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="flex-1 overflow-y-auto px-8 py-4">
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
               <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+                <th className={cn(thCls, "w-12 text-center")}>
+                  <input type="checkbox" checked={participants.every(p => attendance[p.id])} onChange={(e) => e.target.checked ? markAll() : clearAll()} className="w-4 h-4" />
+                </th>
                 <th className={thCls}>Participant</th>
-                <th className={thCls}>Department</th>
-                <th className={thCls}>Registered</th>
-                <th className={cn(thCls, "text-center")}>Attendance</th>
+                <th className={thCls}>Email</th>
+                <th className={thCls}>Phone</th>
               </tr>
             </thead>
             <tbody>
-              {participants.map((p) => {
-                const present = attendance[p.id];
-                return (
-                  <tr
-                    key={p.id}
-                    className={cn(
-                      "border-b last:border-0 transition-colors",
-                      D("border-white/[0.04] hover:bg-white/[0.03]", "border-slate-100 hover:bg-slate-50"),
-                    )}
-                  >
-                    <td className={tdCls}>
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-amber-300 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                          {p.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                        </div>
-                        <div>
-                          <p className={cn("font-semibold text-[13px]", D("text-slate-100", "text-slate-800"))}>{p.name}</p>
-                          <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>{p.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={tdCls}>{p.dept}</td>
-                    <td className={cn(tdCls, D("text-slate-400", "text-slate-500"))}>{p.regDate}</td>
-                    <td className="px-4 py-3.5 text-center">
-                      <button
-                        onClick={() => toggle(p.id)}
-                        className={cn(
-                          "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition",
-                          present
-                            ? "bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25"
-                            : D(
-                                "bg-white/[0.05] text-slate-500 hover:bg-amber-500/15 hover:text-amber-400",
-                                "bg-slate-100 text-slate-400 hover:bg-amber-50 hover:text-amber-600",
-                              ),
-                        )}
-                      >
-                        {present ? (
-                          <>
-                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                              <path d="M1.5 5.5l3 3L9.5 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                            Present
-                          </>
-                        ) : (
-                          "Mark present"
-                        )}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-
-              {participants.length === 0 && (
-                <tr>
-                  <td colSpan={4} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
-                    <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>
-                      No participants found
-                    </p>
-                    <p className={cn("text-[12px] mt-1", D("text-slate-600", "text-slate-400"))}>
-                      Try a different search or event.
-                    </p>
+              {participants.map(p => (
+                <tr key={p.id} className={cn("border-b last:border-0 transition-colors", D("border-white/[0.04] hover:bg-white/[0.03]", "border-slate-100 hover:bg-slate-50"))}>
+                  <td className={cn(tdCls, "text-center")}>
+                    <input type="checkbox" checked={attendance[p.id] ?? false} onChange={() => toggle(p.id)} className="w-4 h-4" />
                   </td>
+                  <td className={tdCls}>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                        {p.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                      </div>
+                      <p className={cn("font-semibold", D("text-slate-100", "text-slate-800"))}>{p.name}</p>
+                    </div>
+                  </td>
+                  <td className={cn(tdCls, "font-mono text-[12px]")}>{p.email}</td>
+                  <td className={cn(tdCls, "font-mono text-[12px]")}>{p.phone}</td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>

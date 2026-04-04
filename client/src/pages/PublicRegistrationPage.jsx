@@ -46,7 +46,7 @@ export default function PublicRegistrationPage() {
     setErrorMessage("");
     setSuccessMessage("");
 
-    // Validate required fields
+    // Validate only required fields from schema
     const requiredFields = registrationSchema.filter((f) => f.required);
     for (const field of requiredFields) {
       if (!formData[field.label]?.trim?.()) {
@@ -55,22 +55,19 @@ export default function PublicRegistrationPage() {
       }
     }
 
-    // Find email and name fields from schema
-    const emailField = registrationSchema.find((f) => f.type === "Email");
-    const nameField = registrationSchema.find((f) => f.label === "Full Name" || f.label === "Full name");
+    // Try to find email and name fields, but don't enforce them if not in schema
+    const emailField = registrationSchema.find((f) => 
+      f.type === "Email" || 
+      f.label.toLowerCase().includes("email")
+    );
+    
+    const nameField = registrationSchema.find((f) => 
+      f.label.toLowerCase().includes("name") && 
+      !f.label.toLowerCase().includes("team")
+    );
 
-    if (!emailField || !nameField) {
-      setErrorMessage("Email and Full Name fields are required in the form.");
-      return;
-    }
-
-    const email = formData[emailField.label]?.trim();
-    const name = formData[nameField.label]?.trim();
-
-    if (!email || !name) {
-      setErrorMessage("Email and Full Name are required.");
-      return;
-    }
+    const email = emailField ? formData[emailField.label]?.trim() : "guest@example.com";
+    const name = nameField ? formData[nameField.label]?.trim() : "Guest User";
 
     setIsSubmitting(true);
 
@@ -95,8 +92,10 @@ export default function PublicRegistrationPage() {
 
       setSuccessMessage("Registration successful! Thank you for registering.");
       setTimeout(() => {
-        navigate("/");
-      }, 2000);
+        navigate("/registration-success", { 
+          state: { eventName: event.eventName }
+        });
+      }, 1500);
     } catch (err) {
       setErrorMessage(err.message || "Unable to complete registration.");
     } finally {

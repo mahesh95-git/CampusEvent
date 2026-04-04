@@ -33,7 +33,7 @@ export default function EventRegistrationForm({
     fields.forEach((field) => {
       if (field.required) {
         const value = responses[field.label];
-        if (!value || (typeof value === "string" && !value.trim())) {
+        if (!value || (typeof value === "string" && !value.trim()) || (Array.isArray(value) && value.length === 0)) {
           newErrors[field.label] = `${field.label} is required`;
         }
       }
@@ -136,24 +136,53 @@ export default function EventRegistrationForm({
                   required={field.required}
                 >
                   <option value="">Select {field.label.toLowerCase()}</option>
-                  {/* Options can be added later if needed */}
+                  {field.options && field.options.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
                 </select>
               )}
 
               {field.type === "Checkbox" && (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id={field.label}
-                    className="w-4 h-4 accent-indigo-500 cursor-pointer"
-                    checked={value === "true" || value === true}
-                    onChange={(e) => handleChange(field.label, e.target.checked ? "true" : "false")}
-                    required={field.required}
-                  />
-                  <label htmlFor={field.label} className={cn("text-[13px] cursor-pointer", D("text-slate-300", "text-slate-700"))}>
-                    {field.label}
-                  </label>
-                </div>
+                <>
+                  {(!field.options || field.options.length === 0) ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id={field.label}
+                        className="w-4 h-4 accent-indigo-500 cursor-pointer"
+                        checked={value === "true" || value === true}
+                        onChange={(e) => handleChange(field.label, e.target.checked ? "true" : "false")}
+                        required={field.required}
+                      />
+                      <label htmlFor={field.label} className={cn("text-[13px] cursor-pointer", D("text-slate-300", "text-slate-700"))}>
+                        {field.label}
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {field.options.map((option) => (
+                        <div key={option} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id={`${field.label}-${option}`}
+                            className="w-4 h-4 accent-indigo-500 cursor-pointer"
+                            checked={(value || []).includes(option)}
+                            onChange={(e) => {
+                              const currentValues = value || [];
+                              const newValues = e.target.checked
+                                ? [...currentValues, option]
+                                : currentValues.filter((v) => v !== option);
+                              handleChange(field.label, newValues);
+                            }}
+                          />
+                          <label htmlFor={`${field.label}-${option}`} className={cn("text-[13px] cursor-pointer", D("text-slate-300", "text-slate-700"))}>
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
 
               {field.type === "File upload" && (

@@ -10,6 +10,7 @@ import {
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import NotFound from "@/components/common/NotFound";
 import PublicRegistrationPage from "@/pages/PublicRegistrationPage";
+import RegistrationSuccessPage from "@/pages/RegistrationSuccessPage";
 import {
   Home,
   Login,
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/orgregistration" element={<OrgRegistration />} />
         <Route path="/register/:formLink" element={<PublicRegistrationPage />} />
+        <Route path="/registration-success" element={<RegistrationSuccessPage />} />
 
         <Route path="/dashboard" element={<ProtectedDashboard />}>
           <Route element={<DashboardLayout />}>

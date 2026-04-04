@@ -57,7 +57,6 @@ model User {
   updatedAt      DateTime       @updatedAt
   createdEvents  Event[]        @relation("EventCreator")
   registrations  Registration[]
-  studentPlan    StudentPlan?
 }
 
 model Event {
@@ -108,17 +107,4 @@ model Registration {
   updatedAt     DateTime @updatedAt
   event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model StudentPlan {
-  id              Int      @id @default(autoincrement())
-  userId          Int      @unique
-  term            String   @default("Semester Plan")
-  volunteerGoal   Int      @default(2)
-  milestones      Json
-  focusAreas      Json
-  recommendations Json
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

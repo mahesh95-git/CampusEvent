@@ -105,8 +105,8 @@ export default function CreateEventPage() {
   });
 
   const [fields, setFields] = useState([
-    { id: 1, label: "Full Name", type: "Text", required: true },
-    { id: 2, label: "Email", type: "Email", required: true },
+    { id: 1, label: "Full Name", type: "Text", required: true, options: [] },
+    { id: 2, label: "Email", type: "Email", required: true, options: [] },
   ]);
   const [nextFieldId, setNextId] = useState(3);
 
@@ -154,7 +154,7 @@ export default function CreateEventPage() {
   function addField() {
     setFields((current) => [
       ...current,
-      { id: nextFieldId, label: "", type: "Text", required: false },
+      { id: nextFieldId, label: "", type: "Text", required: false, options: [] },
     ]);
     setNextId((current) => current + 1);
   }
@@ -207,7 +207,12 @@ export default function CreateEventPage() {
         status: info.status,
         departmentIds: team.departments,
         registrationFormSchema: {
-          fields: fields.map((field) => ({ label: field.label, type: field.type, required: field.required })),
+          fields: fields.map((field) => ({
+            label: field.label,
+            type: field.type,
+            required: field.required,
+            ...(field.options && field.options.length > 0 && { options: field.options }),
+          })),
           volunteers,
           coCoordinators: team.coCoordinators,
         },
@@ -530,41 +535,86 @@ export default function CreateEventPage() {
 
             <div className="flex flex-col gap-3">
               {fields.map((field, index) => (
-                <div key={field.id} className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
-                  <span className={cn("text-[11px] font-bold w-5 text-center shrink-0", D("text-slate-600", "text-slate-400"))}>{index + 1}</span>
-                  <input
-                    type="text"
-                    className={cn("flex-1 bg-transparent outline-none text-[13px]", D("text-slate-200 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
-                    placeholder="Field label..."
-                    value={field.label}
-                    onChange={(event) => patchField(field.id, "label", event.target.value)}
-                  />
-                  <select
-                    className={cn("text-[12px] px-2.5 py-1.5 rounded-lg border outline-none", D("bg-deep-navy border-white/8 text-slate-300", "bg-white border-slate-200 text-slate-600"))}
-                    value={field.type}
-                    onChange={(event) => patchField(field.id, "type", event.target.value)}
-                  >
-                    {FIELD_TYPES.map((type) => (
-                      <option key={type}>{type}</option>
-                    ))}
-                  </select>
-                  <label className="flex items-center gap-1.5 cursor-pointer shrink-0">
+                <div key={field.id} className={cn("flex flex-col gap-3 px-4 py-3 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
+                  <div className="flex items-center gap-3">
+                    <span className={cn("text-[11px] font-bold w-5 text-center shrink-0", D("text-slate-600", "text-slate-400"))}>{index + 1}</span>
                     <input
-                      type="checkbox"
-                      checked={field.required}
-                      onChange={(event) => patchField(field.id, "required", event.target.checked)}
-                      className="w-3.5 h-3.5 accent-indigo-500"
+                      type="text"
+                      className={cn("flex-1 bg-transparent outline-none text-[13px]", D("text-slate-200 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
+                      placeholder="Field label..."
+                      value={field.label}
+                      onChange={(event) => patchField(field.id, "label", event.target.value)}
                     />
-                    <span className={cn("text-[11.5px] font-medium", D("text-slate-500", "text-slate-400"))}>Required</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => removeField(field.id)}
-                    disabled={fields.length === 1}
-                    className={cn("text-[11px] w-6 h-6 rounded-lg flex items-center justify-center", D("hover:bg-rose-500/10 text-rose-400", "hover:bg-rose-50 text-rose-500"), fields.length === 1 && "opacity-20 pointer-events-none")}
-                  >
-                    x
-                  </button>
+                    <select
+                      className={cn("text-[12px] px-2.5 py-1.5 rounded-lg border outline-none", D("bg-deep-navy border-white/8 text-slate-300", "bg-white border-slate-200 text-slate-600"))}
+                      value={field.type}
+                      onChange={(event) => patchField(field.id, "type", event.target.value)}
+                    >
+                      {FIELD_TYPES.map((type) => (
+                        <option key={type}>{type}</option>
+                      ))}
+                    </select>
+                    <label className="flex items-center gap-1.5 cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={field.required}
+                        onChange={(event) => patchField(field.id, "required", event.target.checked)}
+                        className="w-3.5 h-3.5 accent-indigo-500"
+                      />
+                      <span className={cn("text-[11.5px] font-medium", D("text-slate-500", "text-slate-400"))}>Required</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => removeField(field.id)}
+                      disabled={fields.length === 1}
+                      className={cn("text-[11px] w-6 h-6 rounded-lg flex items-center justify-center", D("hover:bg-rose-500/10 text-rose-400", "hover:bg-rose-50 text-rose-500"), fields.length === 1 && "opacity-20 pointer-events-none")}
+                    >
+                      x
+                    </button>
+                  </div>
+                  
+                  {(field.type === "Dropdown" || field.type === "Checkbox") && (
+                    <div className="flex flex-col gap-2 pl-8">
+                      <p className={cn("text-[11px] font-medium", D("text-slate-500", "text-slate-400"))}>Options</p>
+                      <div className="flex flex-col gap-2">
+                        {(field.options || []).map((option, optIndex) => (
+                          <div key={optIndex} className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              className={cn("flex-1 text-[12px] px-2.5 py-1.5 rounded-lg border outline-none bg-transparent", D("border-white/8 text-slate-300 placeholder:text-slate-600", "border-slate-200 text-slate-700 placeholder:text-slate-400"))}
+                              placeholder="Option..."
+                              value={option}
+                              onChange={(event) => {
+                                const newOptions = [...(field.options || [])];
+                                newOptions[optIndex] = event.target.value;
+                                patchField(field.id, "options", newOptions);
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newOptions = (field.options || []).filter((_, i) => i !== optIndex);
+                                patchField(field.id, "options", newOptions);
+                              }}
+                              className={cn("text-[10px] w-5 h-5 rounded flex items-center justify-center", D("hover:bg-rose-500/10 text-rose-400", "hover:bg-rose-50 text-rose-500"))}
+                            >
+                              x
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newOptions = [...(field.options || []), ""];
+                          patchField(field.id, "options", newOptions);
+                        }}
+                        className={cn("text-[11px] px-2 py-1 rounded-lg border text-left w-fit transition-colors", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+                      >
+                        + Add option
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
