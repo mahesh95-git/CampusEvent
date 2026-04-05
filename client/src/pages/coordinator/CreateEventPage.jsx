@@ -100,6 +100,7 @@ export default function CreateEventPage() {
     venue: "",
     maxParticipants: "",
     status: "draft",
+    isCompulsory: false,
   });
 
   const [team, setTeam] = useState({
@@ -117,7 +118,8 @@ export default function CreateEventPage() {
   const [volForm, setVolForm] = useState({
     name: "",
     email: "",
-    role: VOLUNTEER_ROLES[0],
+    taskTitle: "",
+    taskDescription: "",
   });
 
   const canGoNext = useMemo(() => {
@@ -175,7 +177,7 @@ export default function CreateEventPage() {
   }
 
   function addVolunteer() {
-    if (!volForm.name.trim() || !volForm.email.trim()) {
+    if (!volForm.name.trim() || !volForm.email.trim() || !volForm.taskTitle.trim()) {
       return;
     }
 
@@ -183,7 +185,7 @@ export default function CreateEventPage() {
       ...current,
       { id: Date.now(), ...volForm, name: volForm.name.trim(), email: volForm.email.trim() },
     ]);
-    setVolForm({ name: "", email: "", role: VOLUNTEER_ROLES[0] });
+    setVolForm({ name: "", email: "", taskTitle: "", taskDescription: "" });
   }
 
   function removeVolunteer(id) {
@@ -209,6 +211,7 @@ export default function CreateEventPage() {
         feeAmount: info.fee === "free" ? 0 : Number(info.amount || 0),
         maxParticipants: info.maxParticipants ? Number(info.maxParticipants) : null,
         status: info.status,
+        isCompulsory: info.type === "internal" ? info.isCompulsory : false,
         departmentIds: team.departments,
         registrationFormSchema: {
           fields: fields.map((field) => ({
@@ -372,25 +375,41 @@ export default function CreateEventPage() {
                 </p>
               </div>
 
-              <div>
-                <label className={labelCls}>Participation</label>
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  {["individual", "team"].map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setInfo((current) => ({ ...current, participation: value }))}
-                      className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
-                      style={{
-                        background: info.participation === value ? "linear-gradient(135deg,#6366F1,#818CF8)" : "transparent",
-                        color: info.participation === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
-                        borderColor: info.participation === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
-                      }}
-                    >
-                      {value}
-                    </button>
-                  ))}
+              <div className="flex flex-col justify-between">
+                <div>
+                  <label className={labelCls}>Participation</label>
+                  <div className="grid grid-cols-2 gap-2 mt-1">
+                    {["individual", "team"].map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => setInfo((current) => ({ ...current, participation: value }))}
+                        className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
+                        style={{
+                          background: info.participation === value ? "linear-gradient(135deg,#6366F1,#818CF8)" : "transparent",
+                          color: info.participation === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
+                          borderColor: info.participation === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
+                        }}
+                      >
+                        {value}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
+                {info.type === "internal" && (
+                  <label className="flex items-center gap-2.5 cursor-pointer mt-4">
+                    <input
+                      type="checkbox"
+                      checked={info.isCompulsory}
+                      onChange={(e) => setInfo((current) => ({ ...current, isCompulsory: e.target.checked }))}
+                      className="w-4 h-4 accent-indigo-500"
+                    />
+                    <span className={cn("text-[12.5px] font-medium", D("text-slate-300", "text-slate-700"))}>
+                      Mandatory attendance
+                    </span>
+                  </label>
+                )}
               </div>
             </div>
 
@@ -684,26 +703,26 @@ export default function CreateEventPage() {
               <p className={cn("text-[12px] font-bold mb-3", D("text-slate-400", "text-slate-500"))}>Add volunteer</p>
               <div className="grid grid-cols-3 gap-3 mb-3">
                 <div>
-                  <label className={labelCls}>Name *</label>
-                  <input className={inputCls} placeholder="Full name" value={volForm.name} onChange={(event) => setVolForm((current) => ({ ...current, name: event.target.value }))} />
+                  <label className={labelCls}>Name</label>
+                  <input className={inputCls} placeholder="Student Name" value={volForm.name} onChange={(event) => setVolForm((current) => ({ ...current, name: event.target.value }))} />
                 </div>
                 <div>
-                  <label className={labelCls}>Email *</label>
-                  <input type="email" className={inputCls} placeholder="volunteer@college.edu" value={volForm.email} onChange={(event) => setVolForm((current) => ({ ...current, email: event.target.value }))} />
+                  <label className={labelCls}>Student Email *</label>
+                  <input type="email" className={inputCls} placeholder="student@college.edu" value={volForm.email} onChange={(event) => setVolForm((current) => ({ ...current, email: event.target.value }))} />
                 </div>
                 <div>
-                  <label className={labelCls}>Role</label>
-                  <select className={inputCls} value={volForm.role} onChange={(event) => setVolForm((current) => ({ ...current, role: event.target.value }))}>
-                    {VOLUNTEER_ROLES.map((role) => (
-                      <option key={role}>{role}</option>
-                    ))}
-                  </select>
+                  <label className={labelCls}>Task Title *</label>
+                  <input className={inputCls} placeholder="e.g. Stage Manager" value={volForm.taskTitle} onChange={(event) => setVolForm((current) => ({ ...current, taskTitle: event.target.value }))} />
                 </div>
+              </div>
+              <div className="mb-3">
+                  <label className={labelCls}>Task Description (Optional)</label>
+                  <input className={inputCls} placeholder="Instructions for the task" value={volForm.taskDescription} onChange={(event) => setVolForm((current) => ({ ...current, taskDescription: event.target.value }))} />
               </div>
               <button
                 type="button"
                 onClick={addVolunteer}
-                disabled={!volForm.name.trim() || !volForm.email.trim()}
+                disabled={!volForm.name.trim() || !volForm.email.trim() || !volForm.taskTitle.trim()}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-white disabled:opacity-40 transition-all"
                 style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 3px 10px rgba(99,102,241,0.28)" }}
               >
@@ -726,7 +745,7 @@ export default function CreateEventPage() {
                       <p className={cn("text-[13px] font-semibold", D("text-slate-100", "text-slate-800"))}>{volunteer.name}</p>
                       <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>{volunteer.email}</p>
                     </div>
-                    <span className={cn("text-[11.5px] font-medium px-2.5 py-1 rounded-lg shrink-0", D("bg-white/5 text-slate-400", "bg-slate-100 text-slate-600"))}>{volunteer.role}</span>
+                    <span className={cn("text-[11.5px] font-medium px-2.5 py-1 rounded-lg shrink-0", D("bg-white/5 text-slate-400", "bg-slate-100 text-slate-600"))}>{volunteer.taskTitle}</span>
                     <button type="button" onClick={() => removeVolunteer(volunteer.id)} className={cn("text-[11px] w-6 h-6 rounded-lg flex items-center justify-center", D("hover:bg-rose-500/10 text-rose-400", "hover:bg-rose-50 text-rose-500"))}>x</button>
                   </div>
                 ))}

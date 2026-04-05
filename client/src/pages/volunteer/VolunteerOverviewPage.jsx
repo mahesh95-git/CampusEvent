@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { VOLUNTEER_EVENTS, VOLUNTEER_TASKS } from "./volunteerData";
+import { useGetVolunteerDashboardQuery, useGetVolunteerEventsQuery } from "@/store/api";
 import { StatCard } from "@/components/cards/StatCard";
 
 const STATUS_COLORS = {
@@ -13,11 +13,21 @@ export default function VolunteerOverviewPage() {
   const { dark, D } = useOutletContext();
   const navigate = useNavigate();
 
-  const totalAssigned   = VOLUNTEER_EVENTS.length;
-  const upcoming        = VOLUNTEER_EVENTS.filter((e) => e.status === "upcoming").length;
-  const totalTasks      = VOLUNTEER_TASKS.length;
-  const completedTasks  = VOLUNTEER_TASKS.filter((t) => t.status === "done").length;
+  const { data: dashboardData, isLoading: isDashboardLoading } = useGetVolunteerDashboardQuery();
+  const { data: eventsData, isLoading: isEventsLoading } = useGetVolunteerEventsQuery();
+
+  const events = eventsData?.events || [];
+  const tasks = dashboardData?.tasks || [];
+
+  const totalAssigned   = events.length;
+  const upcoming        = events.filter((e) => e.status === "upcoming" || e.status === "active").length;
+  const totalTasks      = tasks.length;
+  const completedTasks  = tasks.filter((t) => t.status === "done").length;
   const pendingTasks    = totalTasks - completedTasks;
+
+  if (isDashboardLoading || isEventsLoading) {
+    return <div className="p-8 text-slate-500">Loading dashboard...</div>;
+  }
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
@@ -81,7 +91,8 @@ export default function VolunteerOverviewPage() {
           </div>
 
           <div className="grid gap-4 p-8">
-            {VOLUNTEER_EVENTS.map((event) => {
+            {events.length === 0 && <p className="text-slate-500 text-sm">No events assigned yet.</p>}
+            {events.map((event) => {
               const s = STATUS_COLORS[event.status] ?? { label: event.status, color: "#94A3B8" };
               const progress = event.tasksTotal > 0
                 ? Math.round((event.tasksCompleted / event.tasksTotal) * 100)
@@ -113,21 +124,13 @@ export default function VolunteerOverviewPage() {
                         </span>
                       </div>
                       <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>
-                        {event.dept} · {event.location}
+                        {event.location || event.venue}
                       </p>
-                      <p
-                        className="text-[12px] mt-1 font-medium"
-                        style={{ color: "#F59E0B" }}
-                      >
-                        Role: {event.role}
-                      </p>
+
                     </div>
                     <div className="flex flex-wrap items-center gap-2 shrink-0">
                       <span className={cn("text-[11px] px-3 py-1 rounded-full border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-500"))}>
-                        {event.date}
-                      </span>
-                      <span className={cn("text-[11px] px-3 py-1 rounded-full border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-500"))}>
-                        {event.time}
+                        {new Date(event.date || event.startDate).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
@@ -155,7 +158,7 @@ export default function VolunteerOverviewPage() {
 
                   <div className="mt-4 flex gap-3">
                     <button
-                      onClick={(e) => { e.stopPropagation(); navigate("/dashboard/volunteer/attendance"); }}
+                      onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/volunteer/events/${event.id}`); }}
                       className="text-[12px] font-semibold px-3 py-1.5 rounded-lg"
                       style={{ background: "rgba(245,158,11,0.15)", color: "#F59E0B" }}
                     >

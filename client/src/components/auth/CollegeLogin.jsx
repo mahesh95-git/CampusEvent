@@ -17,6 +17,7 @@ const LOGIN_ROLE_MAP = {
   student: "student",
   coordinator: "coordinator",
   collegeadmin: "collegeAdmin",
+  volunteer: "volunteer",
 };
 // ─── College logo / avatar ──
 function CollegeLogo({ college }) {

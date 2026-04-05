@@ -20,6 +20,7 @@ function formatEventSummary(event) {
     feeAmount: Number(event.feeAmount),
     maxParticipants: event.maxParticipants,
     status: event.status,
+    isCompulsory: event.isCompulsory,
     registrationFormSchema: event.registrationFormSchema,
     departments: (event.departments ?? []).map((link) => ({
       id: link.department.id,

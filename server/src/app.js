@@ -7,6 +7,7 @@ import departmentRouter from "./routes/department.js";
 import eventRouter from "./routes/event.js";
 import studentRouter from "./routes/student.js";
 import uploadRouter from "./routes/upload.js";
+import volunteerRouter from "./routes/volunteer.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 import "./config/cloudinary.js"; // Initialize Cloudinary
 
@@ -35,6 +36,7 @@ app.use("/api/departments", departmentRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/students", studentRouter);
 app.use("/api/upload", uploadRouter);
+app.use("/api/volunteer", volunteerRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

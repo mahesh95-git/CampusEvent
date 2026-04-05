@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { VOLUNTEER_TASKS, VOLUNTEER_EVENTS } from "./volunteerData";
+import { useGetVolunteerTasksQuery, useUpdateVolunteerTaskStatusMutation } from "@/store/api";
 
 const PRIORITY_COLORS = {
   high:   { label: "High",   bg: "rgba(244,63,94,0.15)",   text: "#F43F5E" },
@@ -13,9 +13,11 @@ export default function VolunteerTasksPage() {
   const { dark, D } = useOutletContext();
   const [filterEvent, setFilterEvent] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [tasks, setTasks] = useState(VOLUNTEER_TASKS);
+  const { data, isLoading } = useGetVolunteerTasksQuery();
+  const [updateTaskStatus] = useUpdateVolunteerTaskStatusMutation();
+  const tasks = data?.tasks || [];
 
-  const events = [...new Set(VOLUNTEER_TASKS.map((t) => t.eventName))];
+  const events = [...new Set(tasks.map((t) => t.eventName))];
 
   const filtered = tasks.filter((t) => {
     const matchEvent  = filterEvent === "all"  || t.eventName === filterEvent;
@@ -24,12 +26,14 @@ export default function VolunteerTasksPage() {
   });
 
   const toggleTask = (id) => {
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === id ? { ...t, status: t.status === "done" ? "pending" : "done" } : t,
-      ),
-    );
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+    updateTaskStatus({ taskId: id, status: task.status === "done" ? "pending" : "done" });
   };
+
+  if (isLoading) {
+    return <div className="p-8 text-slate-500">Loading tasks...</div>;
+  }
 
   const done    = tasks.filter((t) => t.status === "done").length;
   const pending = tasks.filter((t) => t.status === "pending").length;

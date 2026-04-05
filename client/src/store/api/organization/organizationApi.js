@@ -131,6 +131,24 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ["Event", "Overview", "CoordinatorOverview"],
     }),
+    assignVolunteer: builder.mutation({
+      query: ({ email, eventId, title, description, priority }) => ({
+        url: "/volunteer/assign",
+        method: "POST",
+        body: { email, eventId, title, description, priority },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Event"],
+    }),
+    getEventVolunteers: builder.query({
+      query: (eventId) => ({
+        url: `/volunteer/events/${eventId}/volunteers`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, eventId) => [{ type: "Event", id: eventId }],
+    }),
     registerOrganization: builder.mutation({
       query: (organizationData) => ({
         url: "/organizations",
@@ -162,4 +180,6 @@ export const {
   useRegisterOrganizationMutation,
   useUpdateEventStatusMutation,
   useUpdateMyOrganizationMutation,
+  useAssignVolunteerMutation,
+  useGetEventVolunteersQuery,
 } = organizationApi;

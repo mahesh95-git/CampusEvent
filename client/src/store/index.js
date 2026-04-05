@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "./slices/theme";
 import userReducer from "./slices/user";
-import { authApi, organizationApi, studentApi, publicApi } from "./api";
+import { authApi, organizationApi, studentApi, publicApi, volunteerApi } from "./api";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +11,7 @@ const store = configureStore({
     [organizationApi.reducerPath]: organizationApi.reducer,
     [studentApi.reducerPath]: studentApi.reducer,
     [publicApi.reducerPath]: publicApi.reducer,
+    [volunteerApi.reducerPath]: volunteerApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -18,6 +19,7 @@ const store = configureStore({
       organizationApi.middleware,
       studentApi.middleware,
       publicApi.middleware,
+      volunteerApi.middleware,
     ),
 });
 

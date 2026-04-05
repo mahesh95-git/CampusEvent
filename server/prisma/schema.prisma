@@ -58,6 +58,7 @@ model User {
   updatedAt      DateTime       @updatedAt
   createdEvents  Event[]        @relation("EventCreator")
   registrations  Registration[]
+  tasks          Task[]
 }
 
 model Event {
@@ -76,6 +77,7 @@ model Event {
   feeAmount              Decimal           @default(0.00) @db.Decimal(10, 2)
   maxParticipants        Int?
   status                 String            @db.VarChar(20)
+  isCompulsory           Boolean           @default(false)
   organizationId         Int
   createdBy              Int
   registrationFormSchema Json?
@@ -86,6 +88,7 @@ model Event {
   creator                User              @relation("EventCreator", fields: [createdBy], references: [id])
   departments            EventDepartment[]
   registrations          Registration[]
+  tasks                  Task[]
 }
 
 model EventDepartment {
@@ -105,8 +108,25 @@ model Registration {
   paymentStatus String?  @db.VarChar(20)
   amountPaid    Decimal  @default(0.00) @db.Decimal(10, 2)
   formResponse  Json?
+  attended      Boolean  @default(false)
   registeredAt  DateTime @default(now())
   updatedAt     DateTime @updatedAt
   event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  eventId     Int
+  assignedTo  Int?
+  title       String    @db.VarChar(150)
+  description String?
+  priority    String    @default("medium") @db.VarChar(20)
+  status      String    @default("pending") @db.VarChar(20)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  assignee    User?     @relation(fields: [assignedTo], references: [id], onDelete: SetNull)
 }

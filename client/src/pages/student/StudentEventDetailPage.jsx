@@ -278,10 +278,20 @@ export default function StudentEventDetailPage() {
                       D("text-slate-50", "text-slate-900"),
                     )}
                   >
-                    {isRegistered ? "You are registered" : "Complete Your Registration"}
+                    {event.isCompulsory 
+                      ? "Mandatory Attendance" 
+                      : isRegistered ? "You are registered" : "Complete Your Registration"}
                   </h3>
 
-                  {isRegistered && (
+                  {event.isCompulsory && (
+                    <div className={cn("p-4 rounded-xl border mb-6", "bg-blue-50 border-blue-200 text-blue-700")}>
+                      <p className={cn("text-[13px] font-medium")}>
+                        This is a mandatory event for your department. You have been automatically registered. Regular attendance is required.
+                      </p>
+                    </div>
+                  )}
+
+                  {isRegistered && !event.isCompulsory && (
                     <div className={cn("p-4 rounded-xl border mb-6", "bg-emerald-50 border-emerald-200 text-emerald-700")}>
                       <p className={cn("text-[13px] font-medium")}>
                         You have successfully registered for this event. See you there!
@@ -301,7 +311,7 @@ export default function StudentEventDetailPage() {
                     </div>
                   )}
 
-                  {!isRegistered && (
+                  {!isRegistered && !event.isCompulsory && (
                     <EventRegistrationForm
                       event={event}
                       dark={dark}

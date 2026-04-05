@@ -10,6 +10,7 @@ const ROLE_ALIASES = {
   coordinator: "coordinator",
   collegestudent: "student",
   student: "student",
+  volunteer: "volunteer",
 };
 
 function buildUserResponse(user) {

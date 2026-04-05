@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma.js";
 import AppError from "../utils/AppError.js";
 import { successResponse } from "../utils/apiResponse.js";
+import bcrypt from "bcryptjs";
 
 function normalizeEvent(event) {
   return {
@@ -19,6 +20,7 @@ function normalizeEvent(event) {
     feeAmount: Number(event.feeAmount),
     maxParticipants: event.maxParticipants,
     status: event.status,
+    isCompulsory: event.isCompulsory,
     registrationFormSchema: event.registrationFormSchema,
     registrationFormLink: event.registrationFormLink,
     organizationId: event.organizationId,
@@ -64,6 +66,45 @@ function buildEventAccessWhere(user) {
   return {
     organizationId: user.organizationId,
   };
+}
+
+async function autoRegisterStudentsForCompulsoryEvent(eventId, departmentIds, organizationId) {
+  try {
+    // Find all students in the specified departments
+    const studentsInDepartments = await prisma.user.findMany({
+      where: {
+        role: "student",
+        organizationId: organizationId,
+        departmentId: {
+          in: departmentIds,
+        },
+      },
+      select: { id: true },
+    });
+
+    if (studentsInDepartments.length === 0) {
+      return;
+    }
+
+    // Auto-register each student for this event
+    const registrations = studentsInDepartments.map((student) => ({
+      userId: student.id,
+      eventId: eventId,
+      status: "registered",
+      paymentStatus: "completed",
+      amountPaid: 0,
+      formResponse: {},
+      registeredAt: new Date(),
+    }));
+
+    await prisma.registration.createMany({
+      data: registrations,
+      skipDuplicates: true,
+    });
+  } catch (error) {
+    // Log error but don't fail event creation
+    console.error("Error auto-registering students for compulsory event:", error);
+  }
 }
 
 function getMonthKey(date) {
@@ -391,6 +432,7 @@ export async function createEvent(req, res) {
     status,
     departmentIds,
     registrationFormSchema,
+    isCompulsory,
   } = req.body;
 
   if (
@@ -487,6 +529,7 @@ export async function createEvent(req, res) {
       feeAmount: normalizedFeeAmount,
       maxParticipants: maxParticipants ? Number(maxParticipants) : null,
       status: status.trim().toLowerCase(),
+      isCompulsory: isCompulsory && normalizedEventType === "internal" ? Boolean(isCompulsory) : false,
       organizationId: req.user.organizationId,
       createdBy: req.user.id,
       registrationFormSchema: normalizedRegistrationSchema,
@@ -526,6 +569,50 @@ export async function createEvent(req, res) {
       },
     },
   });
+
+  // Auto-register students if event is marked as compulsory
+  if (createdEvent.isCompulsory) {
+    await autoRegisterStudentsForCompulsoryEvent(
+      createdEvent.id,
+      uniqueDepartmentIds,
+      req.user.organizationId
+    );
+  }
+
+  // Assign volunteers (existing students) to tasks
+  const volunteers = Array.isArray(registrationFormSchema?.volunteers)
+    ? registrationFormSchema.volunteers
+    : [];
+
+  for (const vData of volunteers) {
+    if (!vData.email || !vData.taskTitle) continue;
+
+    const normalizedEmail = vData.email.trim().toLowerCase();
+
+    // Look up existing student by email within the same organization
+    const existingUser = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
+      select: { id: true, organizationId: true },
+    });
+
+    if (!existingUser || existingUser.organizationId !== req.user.organizationId) {
+      // Skip if student not found in this organization
+      continue;
+    }
+
+    // Assign the task to the existing student
+    await prisma.task.create({
+      data: {
+        eventId: createdEvent.id,
+        assignedTo: existingUser.id,
+        title: vData.taskTitle.trim(),
+        description: vData.taskDescription?.trim() || null,
+        priority: vData.priority || "medium",
+        status: "pending",
+        dueDate: start,
+      },
+    });
+  }
 
   return successResponse(
     res,
@@ -827,6 +914,7 @@ export async function getEventByFormLink(req, res) {
         feeAmount: Number(event.feeAmount),
         maxParticipants: event.maxParticipants,
         status: event.status,
+        isCompulsory: event.isCompulsory,
         registrationFormSchema: event.registrationFormSchema,
         participantCount: event._count.registrations,
       },

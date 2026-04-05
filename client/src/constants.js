@@ -28,6 +28,16 @@ const ROLES = {
     cta: "Log in",
     extra: { label: "Forgot password?", href: "/forgot-password" },
   },
+
+  volunteer: {
+    label: "Volunteer",
+    dot: "#3B82F6",
+    accent: "#3B82F6",
+    accentSoft: "rgba(59,130,246,0.12)",
+    desc: "Manage tasks and attendance",
+    cta: "Sign in",
+    extra: { label: "Forgot password?", href: "/forgot-password" },
+  },
 };
 const SHARED_FIELDS = [
   {
@@ -51,6 +61,7 @@ const ROLE_OPTIONS = [
   { value: "participant", label: "Participant", dot: "#10B981" },
   { value: "coordinator", label: "Coordinator", dot: "#0D948B" },
   { value: "collegeadmin", label: "college Admin", dot: "#F59E0B" },
+  { value: "volunteer", label: "Volunteer", dot: "#3B82F6" },
 ];
 
 const PLANS = [
@@ -190,7 +201,23 @@ const NAV_CONFIG = {
     navItems: [
       { label: "Overview", path: "/dashboard/student", icon: "grid" },
       { label: "Events", path: "/dashboard/student/events", icon: "calendar" },
+      { label: "Volunteer", path: "/dashboard/volunteer", icon: "user-add" },
       { label: "Profile", path: "/dashboard/student/profile", icon: "user-add" },
+    ],
+
+    quickPanel: null,
+  },
+
+  volunteer: {
+    label: "Volunteer",
+    emoji: "🎗️",
+    color: "blue",
+    accent: { dark: "#60A5FA", light: "#3B82F6" },
+    plan: null,
+    navItems: [
+      { label: "Overview", path: "/dashboard/volunteer", icon: "grid" },
+      { label: "Tasks", path: "/dashboard/volunteer/tasks", icon: "calendar" },
+      { label: "Events", path: "/dashboard/volunteer/events", icon: "calendar" },
     ],
 
     quickPanel: null,

@@ -30,10 +30,10 @@ router.post(
   asyncHandler(registerForEvent),
 );
 
-// Student view event details route
+// Event detail route - accessible by authenticated users with role-based filtering
 router.get(
   "/:eventId",
-  requireRole("student"),
+  asyncHandler(requireAuth),
   asyncHandler(getEventById),
 );
 
@@ -42,7 +42,6 @@ router.use(requireRole("collegeadmin", "coordinator"));
 
 router.get("/coordinator/overview", asyncHandler(getCoordinatorOverview));
 router.get("/participants", asyncHandler(listParticipants));
-router.get("/:eventId", asyncHandler(getEventById));
 router.get("/", asyncHandler(listEvents));
 router.post("/", asyncHandler(createEvent));
 router.patch(

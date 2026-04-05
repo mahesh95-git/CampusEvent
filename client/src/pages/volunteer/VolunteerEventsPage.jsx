@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { VOLUNTEER_EVENTS, VOLUNTEER_TASKS } from "./volunteerData";
+import { useGetVolunteerEventsQuery, useGetVolunteerTasksQuery } from "@/store/api";
 
 const STATUS_COLORS = {
   upcoming:  { label: "Upcoming",  color: "#818CF8" },
@@ -19,15 +19,22 @@ export default function VolunteerEventsPage() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [search, setSearch] = useState("");
 
-  const filtered = VOLUNTEER_EVENTS.filter(
+  const { data: eventsData, isLoading: isEventsLoading } = useGetVolunteerEventsQuery();
+  const { data: tasksData, isLoading } = useGetVolunteerTasksQuery();
+
+  const events = eventsData?.events || [];
+  const tasks = tasksData?.tasks || [];
+
+  const filtered = events.filter(
     (e) =>
-      e.name.toLowerCase().includes(search.toLowerCase()) ||
-      e.role.toLowerCase().includes(search.toLowerCase()),
+      e.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const eventTasks = selectedEvent
-    ? VOLUNTEER_TASKS.filter((t) => t.eventId === selectedEvent.id)
+    ? tasks.filter((t) => t.eventId === selectedEvent.id)
     : [];
+
+  if (isEventsLoading) return <div className="p-8">Loading events...</div>;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
@@ -89,8 +96,7 @@ export default function VolunteerEventsPage() {
                     {s.label}
                   </span>
                 </div>
-                <p className={cn("text-[11px] mt-1", D("text-slate-400", "text-slate-500"))}>{event.date} · {event.time}</p>
-                <p className="text-[11px] mt-0.5 font-medium" style={{ color: "#F59E0B" }}>{event.role}</p>
+                <p className={cn("text-[11px] mt-1", D("text-slate-400", "text-slate-500"))}>{new Date(event.date).toLocaleDateString()}</p>
                 <div className={cn("h-1 rounded-full mt-3 overflow-hidden", D("bg-white/[0.08]", "bg-slate-100"))}>
                   <div
                     className="h-full rounded-full"
@@ -133,17 +139,11 @@ export default function VolunteerEventsPage() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h2 className={cn("text-[18px] font-bold", D("text-slate-50", "text-slate-900"))}>{selectedEvent.name}</h2>
-                    <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>{selectedEvent.dept} · {selectedEvent.location}</p>
-                    <p className="text-[13px] mt-2 font-semibold" style={{ color: "#F59E0B" }}>
-                      Your Role: {selectedEvent.role}
-                    </p>
+                    <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>{selectedEvent.location}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     <span className={cn("text-[12px] px-3 py-1 rounded-full border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-500"))}>
-                      {selectedEvent.date}
-                    </span>
-                    <span className={cn("text-[12px] px-3 py-1 rounded-full border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-500"))}>
-                      {selectedEvent.time}
+                      {new Date(selectedEvent.date).toLocaleDateString()}
                     </span>
                     <span className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>
                       👥 {selectedEvent.participants} participants
@@ -193,7 +193,7 @@ export default function VolunteerEventsPage() {
                             </span>
                           </div>
                           <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>{task.description}</p>
-                          <p className={cn("text-[11px] mt-2", D("text-slate-500", "text-slate-400"))}>Due: {task.dueDate}</p>
+                          <p className={cn("text-[11px] mt-2", D("text-slate-500", "text-slate-400"))}>Due: {new Date(task.dueDate).toLocaleDateString()}</p>
                         </div>
                       </div>
                     );

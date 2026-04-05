@@ -32,6 +32,10 @@ import {
   StudentEventsPage,
   StudentEventDetailPage,
   StudentProfilePage,
+  VolunteerOverview,
+  VolunteerEventsPage,
+  VolunteerTasksPage,
+  VolunteerAttendancePage,
 } from "./pages";
 
 export default function App() {
@@ -100,6 +104,15 @@ export default function App() {
                 <Route path="events" element={<StudentEventsPage />} />
                 <Route path="events/:eventId" element={<StudentEventDetailPage />} />
                 <Route path="profile" element={<StudentProfilePage />} />
+              </Route>
+            </Route>
+
+            <Route element={<RoleGate allowedRoles={["student", "volunteer"]} />}>
+              <Route path="volunteer">
+                <Route index element={<VolunteerOverview />} />
+                <Route path="events" element={<VolunteerEventsPage />} />
+                <Route path="events/:eventId" element={<VolunteerAttendancePage />} />
+                <Route path="tasks" element={<VolunteerTasksPage />} />
               </Route>
             </Route>
           </Route>
