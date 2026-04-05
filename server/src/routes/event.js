@@ -30,6 +30,13 @@ router.post(
   asyncHandler(registerForEvent),
 );
 
+// Student view event details route
+router.get(
+  "/:eventId",
+  requireRole("student"),
+  asyncHandler(getEventById),
+);
+
 // All other routes require admin or coordinator role
 router.use(requireRole("collegeadmin", "coordinator"));
 

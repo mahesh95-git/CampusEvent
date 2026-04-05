@@ -162,6 +162,17 @@ export default function EventDetailPage() {
       </div>
 
       <div className="px-8 py-6 flex flex-col gap-6">
+        {/* Event Banner */}
+        {event.bannerUrl && (
+          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: D("rgba(255,255,255,0.1)", "#E2E8F0") }}>
+            <img 
+              src={event.bannerUrl} 
+              alt={event.eventName}
+              className="w-full h-64 object-cover"
+            />
+          </div>
+        )}
+
         <div className="grid grid-cols-4 gap-4">
           {[
             { label: "Registrations", value: event.participantCount, color: "#10B981" },

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { selectCurrentUser, selectIsAuthInitialized } from "@/store/slices/user";
+import { ProfilePictureUpload } from "@/components/upload/CloudinaryUpload";
 
 function initials(name) {
   return (name || "CO")
@@ -18,6 +19,7 @@ export default function CoordinatorProfilePage() {
   const { D } = useOutletContext();
   const user = useSelector(selectCurrentUser);
   const isInitialized = useSelector(selectIsAuthInitialized);
+  const [profileUrl, setProfileUrl] = useState(user?.profilePictureUrl || null);
 
   if (!isInitialized) {
     return <div className={cn("flex-1 flex items-center justify-center", D("text-slate-400", "text-slate-500"))}>Loading profile...</div>;
@@ -38,9 +40,17 @@ export default function CoordinatorProfilePage() {
 
       <div className="px-8 py-6 grid grid-cols-[1fr_320px] gap-6 items-start">
         <div className={cn("rounded-2xl border p-6 flex items-center gap-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
-            {initials(user.name)}
-          </div>
+          {profileUrl || user?.profilePictureUrl ? (
+            <img 
+              src={profileUrl || user?.profilePictureUrl}
+              alt={user.name}
+              className="w-16 h-16 rounded-2xl object-cover shadow-lg shrink-0"
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
+              {initials(user.name)}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <p className={cn("text-[18px] font-extrabold truncate", D("text-slate-50", "text-slate-900"))}>{user.name}</p>
             <p className={cn("text-[13px]", D("text-slate-400", "text-slate-500"))}>{user.email}</p>
@@ -64,6 +74,24 @@ export default function CoordinatorProfilePage() {
               <p className={cn("text-[12.5px] font-semibold", D("text-slate-200", "text-slate-700"))}>{value}</p>
             </div>
           ))}
+
+        {/* Profile Picture Upload */}
+        <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+          <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>Profile Picture</p>
+          <ProfilePictureUpload onUploadSuccess={(url) => setProfileUrl(url)} />
+          {(profileUrl || user?.profilePictureUrl) && (
+            <div className="mt-3">
+              <img 
+                src={profileUrl || user?.profilePictureUrl}
+                alt={user.name}
+                className="w-16 h-16 rounded-lg object-cover"
+              />
+              {profileUrl && (
+                <p className={cn("text-[11px] mt-2", D("text-emerald-400", "text-emerald-600"))}>✓ Profile picture updated</p>
+              )}
+            </div>
+          )}
+        </div>
         </div>
       </div>
     </div>

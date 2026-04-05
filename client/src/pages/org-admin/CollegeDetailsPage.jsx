@@ -5,6 +5,7 @@ import {
   useGetMyOrganizationQuery,
   useUpdateMyOrganizationMutation,
 } from "@/store/api";
+import { CollegeLogoUpload } from "@/components/upload/CloudinaryUpload";
 
 export default function CollegeDetailsPage() {
   const { dark, D } = useOutletContext();
@@ -28,6 +29,7 @@ export default function CollegeDetailsPage() {
     },
   });
   const [message, setMessage] = useState("");
+  const [logoUrl, setLogoUrl] = useState(null);
 
   useEffect(() => {
     if (!organization) {
@@ -250,7 +252,25 @@ export default function CollegeDetailsPage() {
               </div>
             ))}
           </div>
-        </div>
+        {/* College Logo Upload */}
+        <div className="flex flex-col gap-5">
+          <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+            <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>College Logo</p>
+            <CollegeLogoUpload organizationId={organization.id} onUploadSuccess={(url) => setLogoUrl(url)} />
+            {(logoUrl || organization.logoUrl) && (
+              <div className="mt-4">
+                <img 
+                  src={logoUrl || organization.logoUrl} 
+                  alt="College Logo"
+                  className="w-32 h-32 object-contain rounded-lg"
+                />
+                {logoUrl && (
+                  <p className={cn("text-[11px] mt-3", D("text-emerald-400", "text-emerald-600"))}>✓ Logo updated successfully!</p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>        </div>
       </div>
     </div>
   );

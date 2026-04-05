@@ -19,6 +19,7 @@ function buildUserResponse(user) {
     email: user.email,
     role: user.role,
     contactPhone: user.contactPhone,
+    profilePictureUrl: user.profilePictureUrl || null,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
     collegeSlug: user.organization?.collegeSlug ?? user.collegeSlug,
@@ -158,6 +159,7 @@ export async function updateCurrentUser(req, res) {
       name: name.trim(),
       email: normalizedEmail,
       contactPhone: contactPhone.trim(),
+
     },
     include: {
       organization: {

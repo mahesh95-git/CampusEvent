@@ -91,8 +91,25 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
 
   async function handleLogout() {
     try {
+      // Store college slug BEFORE logout clears currentUser
+      const collegeSlug = currentUser?.collegeSlug;
+      console.log("Current user before logout:", currentUser);
+      console.log("Stored collegeSlug:", collegeSlug);
+      
       await logout().unwrap();
-      navigate("/login");
+      console.log("Logged out successfully. Redirecting to login page...");
+      
+      // Use setTimeout to allow UI to update before navigation
+      setTimeout(() => {
+        if (collegeSlug) {
+          const loginUrl = `/login?college=${collegeSlug}`;
+          console.log(`Redirecting to ${loginUrl}`);
+          navigate(loginUrl);
+        } else {
+          console.log("No college slug found, redirecting to /login");
+          navigate("/login");
+        }
+      }, 100);
     } catch (error) {
       console.error("Logout failed:", error);
     }

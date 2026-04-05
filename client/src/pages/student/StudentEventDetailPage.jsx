@@ -149,15 +149,15 @@ export default function StudentEventDetailPage() {
             D("border-white/8 bg-deep-navy", "border-slate-200 bg-white"),
           )}
         >
-          {event.eventBanner && (
+          {event.bannerUrl || event.eventBanner ? (
             <div className="h-80 overflow-hidden">
               <img
-                src={event.eventBanner}
+                src={event.bannerUrl || event.eventBanner}
                 alt={event.eventName}
                 className="w-full h-full object-cover"
               />
             </div>
-          )}
+          ) : null}
           <div className="p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Event Details */}

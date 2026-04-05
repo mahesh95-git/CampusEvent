@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ProfilePictureUpload } from "@/components/upload/CloudinaryUpload";
 
 export default function RegistrationSuccessPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state || {};
   const eventName = state.eventName || "Event";
+  const [profilePictureUrl, setProfilePictureUrl] = useState(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 flex items-center justify-center px-4">
@@ -49,6 +51,22 @@ export default function RegistrationSuccessPage() {
           <div className="mb-8 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
         
             <p className="text-[12px] text-emerald-400">Please check your inbox for further details.</p>
+          </div>
+
+          {/* Profile Picture Upload */}
+          <div className="mb-8 p-4 rounded-xl bg-slate-500/5 border border-slate-500/20">
+            <p className="text-[12px] text-slate-300 mb-3">Add your profile picture (optional)</p>
+            <ProfilePictureUpload onUploadSuccess={(url) => setProfilePictureUrl(url)} />
+            {profilePictureUrl && (
+              <div className="mt-3">
+                <img 
+                  src={profilePictureUrl}
+                  alt="Profile"
+                  className="w-16 h-16 rounded-lg object-cover mx-auto mb-2"
+                />
+                <p className="text-[11px] text-emerald-400">✓ Profile picture uploaded successfully!</p>
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}

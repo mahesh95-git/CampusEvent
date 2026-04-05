@@ -180,91 +180,105 @@ export default function StudentEventsPage() {
                 key={event.id}
                 onClick={() => navigate(`/dashboard/student/events/${event.id}`)}
                 className={cn(
-                  "w-full rounded-[28px] p-6 text-left border transition hover:-translate-y-0.5",
+                  "w-full rounded-[28px] overflow-hidden border transition hover:-translate-y-0.5 text-left",
                   D(
                     "border-white/[0.06] bg-[#0D1626] hover:border-white/[0.12]",
                     "border-slate-200 bg-white hover:border-slate-300",
                   ),
                 )}
               >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p
-                      className={cn(
-                        "text-[16px] font-semibold",
-                        D("text-slate-50", "text-slate-900"),
-                      )}
-                    >
-                      {event.eventName}
-                    </p>
-                    <p
-                      className={cn(
-                        "text-[12px] mt-2",
-                        D("text-slate-400", "text-slate-600"),
-                      )}
-                    >
-                      {event.departments.map((department) => department.shortName).join(", ") || "Open"} · {TYPE_LABELS[event.eventType] || event.eventType}
-                    </p>
+                {/* Event Banner */}
+                {event.bannerUrl && (
+                  <div className="w-full h-40 overflow-hidden">
+                    <img 
+                      src={event.bannerUrl}
+                      alt={event.eventName}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform"
+                    />
                   </div>
-                  <div className="flex flex-wrap items-center gap-2">
+                )}
+
+                {/* Event Details */}
+                <div className="p-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p
+                        className={cn(
+                          "text-[16px] font-semibold",
+                          D("text-slate-50", "text-slate-900"),
+                        )}
+                      >
+                        {event.eventName}
+                      </p>
+                      <p
+                        className={cn(
+                          "text-[12px] mt-2",
+                          D("text-slate-400", "text-slate-600"),
+                        )}
+                      >
+                        {event.departments.map((department) => department.shortName).join(", ") || "Open"} · {TYPE_LABELS[event.eventType] || event.eventType}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className="text-[11px] font-semibold px-3 py-1 rounded-full"
+                        style={{
+                          background: `${status.color}20`,
+                          color: status.color,
+                        }}
+                      >
+                        {status.label}
+                      </span>
+                      <span
+                        className={cn(
+                          "text-[12px] rounded-full px-3 py-1 border",
+                          D(
+                            "border-white/[0.12] text-slate-400",
+                            "border-slate-200 text-slate-600",
+                          ),
+                        )}
+                      >
+                        {formatDate(event.startDate)}
+                      </span>
+                      <span
+                        className={cn(
+                          "text-[12px] rounded-full px-3 py-1 border",
+                          D(
+                            "border-white/[0.12] text-slate-400",
+                            "border-slate-200 text-slate-600",
+                          ),
+                        )}
+                      >
+                        {formatTime(event.startDate)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     <span
-                      className="text-[11px] font-semibold px-3 py-1 rounded-full"
-                      style={{
-                        background: `${status.color}20`,
-                        color: status.color,
-                      }}
+                      className={cn(
+                        "text-[13px] font-medium",
+                        D("text-slate-300", "text-slate-700"),
+                      )}
                     >
-                      {status.label}
+                      {event.venue}
                     </span>
                     <span
                       className={cn(
-                        "text-[12px] rounded-full px-3 py-1 border",
-                        D(
-                          "border-white/[0.12] text-slate-400",
-                          "border-slate-200 text-slate-600",
-                        ),
+                        "text-[13px] font-medium",
+                        D("text-slate-300", "text-slate-700"),
                       )}
                     >
-                      {formatDate(event.startDate)}
+                      Seats: {event.maxParticipants || "Open"}
                     </span>
                     <span
                       className={cn(
-                        "text-[12px] rounded-full px-3 py-1 border",
-                        D(
-                          "border-white/[0.12] text-slate-400",
-                          "border-slate-200 text-slate-600",
-                        ),
+                        "text-[13px] font-medium capitalize",
+                        D("text-slate-300", "text-slate-700"),
                       )}
                     >
-                      {formatTime(event.startDate)}
+                      {event.registrationType}
                     </span>
                   </div>
-                </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  <span
-                    className={cn(
-                      "text-[13px] font-medium",
-                      D("text-slate-300", "text-slate-700"),
-                    )}
-                  >
-                    {event.venue}
-                  </span>
-                  <span
-                    className={cn(
-                      "text-[13px] font-medium",
-                      D("text-slate-300", "text-slate-700"),
-                    )}
-                  >
-                    Seats: {event.maxParticipants || "Open"}
-                  </span>
-                  <span
-                    className={cn(
-                      "text-[13px] font-medium capitalize",
-                      D("text-slate-300", "text-slate-700"),
-                    )}
-                  >
-                    {event.registrationType}
-                  </span>
                 </div>
               </button>
             );

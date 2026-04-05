@@ -113,6 +113,17 @@ export default function PublicRegistrationPage() {
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 to-slate-900">
       <div className="max-w-2xl mx-auto px-4 py-8">
+        {/* Event Banner */}
+        {event.bannerUrl && (
+          <div className="mb-8 rounded-xl overflow-hidden h-48">
+            <img 
+              src={event.bannerUrl}
+              alt={event.eventName}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">

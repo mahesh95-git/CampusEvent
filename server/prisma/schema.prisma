@@ -50,6 +50,7 @@ model User {
   rollNumber     String?
   departmentId   Int?
   organizationId Int
+  profilePictureUrl String?
   department     Department?    @relation(fields: [departmentId], references: [id])
   organization   Organization   @relation(fields: [organizationId], references: [id])
   collegeSlug    String?
@@ -64,6 +65,7 @@ model Event {
   eventName              String            @db.VarChar(150)
   description            String?
   eventBanner            String?           @db.VarChar(255)
+  bannerUrl              String?
   startDate              DateTime
   endDate                DateTime
   registrationDeadline   DateTime

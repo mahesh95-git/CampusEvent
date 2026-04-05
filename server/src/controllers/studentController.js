@@ -9,6 +9,7 @@ function formatEventSummary(event) {
     eventName: event.eventName,
     description: event.description,
     eventBanner: event.eventBanner,
+    bannerUrl: event.bannerUrl,
     startDate: event.startDate,
     endDate: event.endDate,
     registrationDeadline: event.registrationDeadline,

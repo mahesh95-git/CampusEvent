@@ -10,6 +10,7 @@ import {
   selectCurrentUser,
   selectIsAuthInitialized,
 } from "@/store/slices/user";
+import { ProfilePictureUpload } from "@/components/upload/CloudinaryUpload";
 
 function getInitials(name) {
   return name
@@ -44,6 +45,7 @@ export default function ProfilePage() {
   const [profileMessage, setProfileMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [profileUrl, setProfileUrl] = useState(user?.profilePictureUrl || null);
 
   const inputCls = cn(
     "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all",
@@ -151,9 +153,17 @@ export default function ProfilePage() {
       <div className="px-8 py-6 grid grid-cols-[1fr_320px] gap-6 items-start">
         <div className="flex flex-col gap-5">
           <div className={cn("rounded-2xl border p-6 flex items-center gap-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
-              {initials}
-            </div>
+            {profileUrl || user?.profilePictureUrl ? (
+              <img 
+                src={profileUrl || user?.profilePictureUrl}
+                alt={user.name}
+                className="w-16 h-16 rounded-2xl object-cover shadow-lg shrink-0"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
+                {initials}
+              </div>
+            )}
             <div className="flex-1 min-w-0">
               <p className={cn("text-[18px] font-extrabold truncate", D("text-slate-50", "text-slate-900"))}>{user.name}</p>
               <p className={cn("text-[13px]", D("text-slate-400", "text-slate-500"))}>{user.email}</p>
@@ -257,6 +267,24 @@ export default function ProfilePage() {
                 <p className={cn("text-[12.5px] font-semibold", value === "Active" ? "text-teal-400" : D("text-slate-200", "text-slate-700"))}>{value}</p>
               </div>
             ))}
+          </div>
+
+          {/* Profile Picture Upload */}
+          <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+            <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>Profile Picture</p>
+            <ProfilePictureUpload onUploadSuccess={(url) => setProfileUrl(url)} />
+            {(profileUrl || user?.profilePictureUrl) && (
+              <div className="mt-3">
+                <img 
+                  src={profileUrl || user?.profilePictureUrl}
+                  alt={user.name}
+                  className="w-16 h-16 rounded-lg object-cover"
+                />
+                {profileUrl && (
+                  <p className={cn("text-[11px] mt-2", D("text-emerald-400", "text-emerald-600"))}>✓ Profile picture updated</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

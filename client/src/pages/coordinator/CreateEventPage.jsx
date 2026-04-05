@@ -9,6 +9,7 @@ import {
   useCreateEventMutation,
   useGetDepartmentsQuery,
 } from "@/store/api";
+import { EventBannerUpload } from "@/components/upload/CloudinaryUpload";
 
 const FIELD_TYPES = ["Text", "Number", "Email", "Dropdown", "File upload", "Checkbox"];
 const VOLUNTEER_ROLES = [
@@ -83,6 +84,8 @@ export default function CreateEventPage() {
   const [step, setStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [bannerUrl, setBannerUrl] = useState(null);
+  const [bannerDimensions, setBannerDimensions] = useState({ width: 0, height: 0 });
 
   const [info, setInfo] = useState({
     name: "",
@@ -195,6 +198,7 @@ export default function CreateEventPage() {
       await createEvent({
         eventName: info.name.trim(),
         description: info.description.trim() || null,
+        bannerUrl: bannerUrl || null,
         startDate: combineDateAndTime(info.date, info.time),
         endDate: plusOneHour(info.date, info.time),
         registrationDeadline: combineDateAndTime(info.registrationDeadline, info.time),
@@ -307,6 +311,46 @@ export default function CreateEventPage() {
                 value={info.description}
                 onChange={(event) => setInfo((current) => ({ ...current, description: event.target.value }))}
               />
+            </div>
+
+            <div>
+              <label className={labelCls}>Event Banner</label>
+              <p className={cn("text-[11.5px] mb-2.5", D("text-slate-500", "text-slate-400"))}>Recommended size: 1200×400px</p>
+              <div className={cn("rounded-xl border p-4", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+                {bannerUrl ? (
+                  <div className="flex flex-col gap-3">
+                    <div className="relative">
+                      <img 
+                        src={bannerUrl} 
+                        alt="Event banner preview" 
+                        className="w-full rounded-lg object-cover max-h-48"
+                        onLoad={(e) => setBannerDimensions({ width: e.target.naturalWidth, height: e.target.naturalHeight })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBannerUrl(null);
+                          setBannerDimensions({ width: 0, height: 0 });
+                        }}
+                        className={cn("absolute top-2 right-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium", D("bg-rose-500/90 text-white", "bg-rose-600 text-white"))}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div className="flex justify-between items-center text-[12px]">
+                      <p className={D("text-emerald-400", "text-emerald-600")}>✓ Banner ready</p>
+                      <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>
+                        {bannerDimensions.width}×{bannerDimensions.height}px
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <EventBannerUpload 
+                    eventId={null}
+                    onUploadSuccess={(url) => setBannerUrl(url)} 
+                  />
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
