@@ -1,15 +1,17 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 import { NAV_CONFIG } from "@/constants";
 import { useLogoutUserMutation } from "@/store/api";
 import { selectCurrentUser } from "@/store/slices/user";
+import { setTheme } from "@/store/slices/theme";
 
 export function Sidebar({ NAV_CONFIG, onClose }) {
   const navigate  = useNavigate();
   const location  = useLocation();
+  const dispatch  = useDispatch();
   const theme     = useSelector((s) => s.theme.value);
   const currentUser = useSelector(selectCurrentUser);
   const dark      = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -88,6 +90,7 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
   );
 
   const profilePath = `/dashboard/${currentRole}/profile`;
+  const toggleTheme = () => dispatch(setTheme(dark ? "light" : "dark"));
 
   async function handleLogout() {
     try {
@@ -145,6 +148,20 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
             <button className={cn("text-[11px] font-semibold mt-2 transition-colors", D("text-amber-400 hover:text-amber-300", "text-amber-700 hover:text-amber-800"))}>Manage →</button>
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className={cn(
+            "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] md:text-[13px] font-medium transition-all duration-150 w-full justify-center border",
+            D("border-white/[0.08] bg-white/[0.06] text-slate-200 hover:bg-white/[0.1]", "border-slate-200 bg-white text-slate-700 hover:bg-slate-50")
+          )}
+          aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+          title={dark ? "Switch to light theme" : "Switch to dark theme"}
+        >
+          <span className="hidden sm:inline">{dark ? "Light mode" : "Dark mode"}</span>
+          <span className="sm:hidden">Theme</span>
+        </button>
 
         {/* Avatar / Profile shortcut */}
         <button
