@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetStudentsQuery } from "@/store/api";
 
 function formatDate(date) {
@@ -32,6 +34,20 @@ export default function ParticipantsPage() {
   const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
   const errorMessage = error?.data?.message || "Unable to load students.";
 
+  function handleExport() {
+    downloadCsvFile(
+      "students-report.csv",
+      filtered,
+      [
+        { label: "Student", value: (student) => student.name || "Unknown" },
+        { label: "Email", value: (student) => student.email || "No email" },
+        { label: "Department", value: (student) => student.department?.name || "Unassigned" },
+        { label: "Phone", value: (student) => student.contactPhone || "Not set" },
+        { label: "Joined", value: (student) => formatDate(student.createdAt) },
+      ],
+    );
+  }
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
@@ -40,6 +56,7 @@ export default function ParticipantsPage() {
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Students from your department</p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0 || isLoading} />
           <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />

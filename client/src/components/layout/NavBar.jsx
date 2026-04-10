@@ -22,13 +22,7 @@ const PRODUCT_ITEMS = [
     desc: "Onboard your college or club to manage events",
     href: "/orgregistration",
   },
-  {
-    icon: "🎟️",
-    iconBg: "rgba(139,92,246,0.15)",
-    title: "For Participants",
-    desc: "Discover events and register with one tap",
-    href: "/events",
-  },
+  
 ];
 
 const NAV_LINKS = [

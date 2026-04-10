@@ -3,6 +3,8 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 import { StatCard } from "@/components/cards/StatCard";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import {
   useGetEventsQuery,
   useUpdateEventStatusMutation,
@@ -86,6 +88,23 @@ export default function EventsPage() {
   const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
   const errorMessage = error?.data?.message || "Unable to load events right now.";
 
+  function handleExport() {
+    downloadCsvFile(
+      "events-report.csv",
+      filteredEvents,
+      [
+        { label: "Event", value: (event) => event.eventName },
+        { label: "Departments", value: (event) => event.departments.map((department) => department.shortName).join(", ") },
+        { label: "Dates", value: (event) => formatDateRange(event.startDate, event.endDate) },
+        { label: "Registration Deadline", value: (event) => new Date(event.registrationDeadline).toLocaleDateString() },
+        { label: "Status", value: (event) => event.status },
+        { label: "Registrations", value: (event) => event.registrationCount },
+        { label: "Fee", value: (event) => formatFee(event.feeType, event.feeAmount) },
+        { label: "Created By", value: (event) => event.creator?.name || "Unknown" },
+      ],
+    );
+  }
+
   async function handleStatusChange(eventId, status) {
     setStatusMessage("");
 
@@ -107,6 +126,7 @@ export default function EventsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filteredEvents.length === 0 || eventsLoading} />
           <select
             value={filterStatus}
             onChange={(event) => setFilterStatus(event.target.value)}
@@ -174,6 +194,7 @@ export default function EventsPage() {
                 <th className={cn(thCls, "text-center")}>Fee</th>
                 <th className={thCls}>Created by</th>
                 <th className={thCls}>Lifecycle</th>
+                <th className={cn(thCls, "text-right")}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -263,13 +284,27 @@ export default function EventsPage() {
                         </select>
                       </div>
                     </td>
+                    <td className="px-4 py-3.5 text-right">
+                      <button
+                        onClick={() => navigate(`/dashboard/collegeadmin/events/${event.id}`)}
+                        className={cn(
+                          "text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors",
+                          D(
+                            "border-white/10 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30",
+                            "border-slate-200 text-slate-500 hover:text-emerald-600 hover:border-emerald-300",
+                          ),
+                        )}
+                      >
+                        View
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
 
               {eventsLoading && (
                 <tr>
-                  <td colSpan={8} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
+                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
                     Loading events...
                   </td>
                 </tr>
@@ -277,7 +312,7 @@ export default function EventsPage() {
 
               {!eventsLoading && eventsError && (
                 <tr>
-                  <td colSpan={8} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
+                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
                     {errorMessage}
                   </td>
                 </tr>
@@ -285,7 +320,7 @@ export default function EventsPage() {
 
               {!eventsLoading && !eventsError && filteredEvents.length === 0 && (
                 <tr>
-                  <td colSpan={8} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
                     <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No events found</p>
                     <p className={cn("text-[13px] mt-1", D("text-slate-600", "text-slate-400"))}>Create your first event or try a different filter.</p>
                   </td>

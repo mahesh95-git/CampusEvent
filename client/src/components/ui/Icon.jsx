@@ -8,6 +8,7 @@ export function Icon({ name, size = 15, color = "currentColor" }) {
     "user-add":<><circle cx="6" cy="5" r="2.5" {...p}/><path d="M1 13c0-2.8 2.2-5 5-5" {...p}/><path d="M11 9v5M8.5 11.5h5" {...p}/></>,
     calendar:  <><rect x="1.5" y="2.5" width="12" height="11" rx="2" {...p}/><path d="M5 1v3M10 1v3M1.5 6.5h12" {...p}/></>,
     chart:     <><path d="M2 13L5.5 8.5 8.5 10.5 13 4" {...p}/><path d="M2 13h11" {...p}/></>,
+    download:  <><path d="M7.5 2v6.5" {...p}/><path d="M4.5 6.5L7.5 9.5 10.5 6.5" {...p}/><path d="M2.5 12.5h10" {...p}/></>,
     check:     <path d="M3 7.5l2.5 2.5L12 4.5" {...p} strokeLinejoin="round"/>,
     task:      <><rect x="2" y="2" width="11" height="11" rx="2" {...p}/><path d="M5 5.5h5M5 8h5M5 10.5h3" {...p}/></>,
     settings:  <><circle cx="7.5" cy="7.5" r="2" {...p}/><path d="M12.5 5.2l-.5-.9c-.2-.4-.7-.6-1.1-.4l-.6.2a3.5 3.5 0 0 0-.6-.4l-.1-.7A1 1 0 0 0 8.7 2H6.8a1 1 0 0 0-.9.9l-.1.7a3.5 3.5 0 0 0-.6.4l-.6-.2A1 1 0 0 0 3.5 4.3l-.9 1.6a1 1 0 0 0 .2 1.2l.6.4v.8l-.6.4A1 1 0 0 0 3 9.8l.9 1.6a1 1 0 0 0 1.1.4l.6-.2.6.4.1.7c.1.5.5.9 1 .9H9c.5 0 .9-.4 1-.9l.1-.7.6-.4.6.2a1 1 0 0 0 1.1-.4l.9-1.6a1 1 0 0 0-.2-1.2l-.6-.4v-.8l.6-.4a1 1 0 0 0-.1-1.3z" {...p} strokeWidth="1.1"/></>,

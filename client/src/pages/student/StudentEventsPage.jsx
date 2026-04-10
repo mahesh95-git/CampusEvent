@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetStudentEventsQuery } from "@/store/api";
 
 const TYPE_LABELS = { internal: "Internal event", public: "Public event" };
@@ -51,6 +53,23 @@ export default function StudentEventsPage() {
     [events, search, type],
   );
 
+  function handleExport() {
+    downloadCsvFile(
+      "student-events-report.csv",
+      filtered,
+      [
+        { label: "Event", value: (event) => event.eventName },
+        { label: "Departments", value: (event) => event.departments.map((department) => department.shortName).join(", ") || "Open" },
+        { label: "Type", value: (event) => TYPE_LABELS[event.eventType] || event.eventType },
+        { label: "Venue", value: (event) => event.venue },
+        { label: "Date", value: (event) => formatDate(event.startDate) },
+        { label: "Time", value: (event) => formatTime(event.startDate) },
+        { label: "Seats", value: (event) => event.maxParticipants || "Open" },
+        { label: "Registration Type", value: (event) => event.registrationType },
+      ],
+    );
+  }
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       <div
@@ -78,6 +97,7 @@ export default function StudentEventsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0 || isLoading} />
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}

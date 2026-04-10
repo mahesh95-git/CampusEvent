@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetVolunteerTasksQuery, useUpdateVolunteerTaskStatusMutation } from "@/store/api";
 
 const PRIORITY_COLORS = {
@@ -38,6 +40,21 @@ export default function VolunteerTasksPage() {
   const done    = tasks.filter((t) => t.status === "done").length;
   const pending = tasks.filter((t) => t.status === "pending").length;
 
+  function handleExport() {
+    downloadCsvFile(
+      "volunteer-tasks-report.csv",
+      filtered,
+      [
+        { label: "Task", value: (task) => task.title },
+        { label: "Event", value: (task) => task.eventName },
+        { label: "Description", value: (task) => task.description },
+        { label: "Priority", value: (task) => task.priority },
+        { label: "Status", value: (task) => task.status },
+        { label: "Due Date", value: (task) => task.dueDate },
+      ],
+    );
+  }
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       {/* Header */}
@@ -49,6 +66,7 @@ export default function VolunteerTasksPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0} />
           <select
             value={filterEvent}
             onChange={(e) => setFilterEvent(e.target.value)}

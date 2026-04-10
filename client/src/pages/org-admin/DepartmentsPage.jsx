@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import {
   useCreateDepartmentMutation,
   useGetDepartmentsQuery,
@@ -87,6 +89,22 @@ function DepartmentsPage() {
 
   const errorMessage = error?.data?.message || "Unable to load departments right now.";
 
+  function handleExport() {
+    downloadCsvFile(
+      "departments-report.csv",
+      filteredDepartments,
+      [
+        { label: "Department", value: (department) => department.name },
+        { label: "Short Name", value: (department) => department.shortName },
+        { label: "Coordinator", value: (department) => department.coordinator?.name || "Unassigned" },
+        { label: "Coordinator Email", value: (department) => department.coordinator?.email || "Unassigned" },
+        { label: "Students", value: (department) => department.studentCount },
+        { label: "Users", value: (department) => department.userCount },
+        { label: "Created At", value: (department) => new Date(department.createdAt).toLocaleDateString() },
+      ],
+    );
+  }
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
@@ -97,6 +115,7 @@ function DepartmentsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filteredDepartments.length === 0 || isLoading} />
           <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />

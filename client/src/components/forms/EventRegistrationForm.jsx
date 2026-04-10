@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 
 export default function EventRegistrationForm({
   event,
-  D,
   onSubmit,
   isLoading,
 }) {
@@ -54,21 +53,17 @@ export default function EventRegistrationForm({
   }
 
   const inputCls = cn(
-    "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all",
-    D(
-      "bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-indigo-500",
-      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500",
-    ),
+    "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500",
   );
 
-  const labelCls = cn("block text-[12px] font-medium mb-1.5", D("text-slate-400", "text-slate-500"));
-  const errorCls = cn("text-[11px] mt-1", "text-rose-400");
+  const labelCls = "block text-[12px] font-medium mb-1.5 text-slate-500";
+  const errorCls = "text-[11px] mt-1 text-rose-500";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {fields.length === 0 ? (
-        <div className={cn("p-4 rounded-xl border text-center", D("border-white/10", "border-slate-200"))}>
-          <p className={cn("text-[13px]", D("text-slate-400", "text-slate-500"))}>
+        <div className="p-4 rounded-xl border border-slate-200 text-center bg-slate-50">
+          <p className="text-[13px] text-slate-500">
             No fields configured for this event registration
           </p>
         </div>
@@ -154,7 +149,7 @@ export default function EventRegistrationForm({
                         onChange={(e) => handleChange(field.label, e.target.checked ? "true" : "false")}
                         required={field.required}
                       />
-                      <label htmlFor={field.label} className={cn("text-[13px] cursor-pointer", D("text-slate-300", "text-slate-700"))}>
+                      <label htmlFor={field.label} className="text-[13px] cursor-pointer text-slate-700">
                         {field.label}
                       </label>
                     </div>
@@ -175,7 +170,7 @@ export default function EventRegistrationForm({
                               handleChange(field.label, newValues);
                             }}
                           />
-                          <label htmlFor={`${field.label}-${option}`} className={cn("text-[13px] cursor-pointer", D("text-slate-300", "text-slate-700"))}>
+                          <label htmlFor={`${field.label}-${option}`} className="text-[13px] cursor-pointer text-slate-700">
                             {option}
                           </label>
                         </div>

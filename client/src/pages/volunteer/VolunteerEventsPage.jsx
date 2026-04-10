@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetVolunteerEventsQuery, useGetVolunteerTasksQuery } from "@/store/api";
 
 const STATUS_COLORS = {
@@ -34,6 +36,22 @@ export default function VolunteerEventsPage() {
     ? tasks.filter((t) => t.eventId === selectedEvent.id)
     : [];
 
+  function handleExport() {
+    downloadCsvFile(
+      "volunteer-events-report.csv",
+      filtered,
+      [
+        { label: "Event", value: (event) => event.name },
+        { label: "Date", value: (event) => new Date(event.date).toLocaleDateString() },
+        { label: "Location", value: (event) => event.location },
+        { label: "Status", value: (event) => event.status },
+        { label: "Tasks Completed", value: (event) => event.tasksCompleted },
+        { label: "Tasks Total", value: (event) => event.tasksTotal },
+        { label: "Participants", value: (event) => event.participants },
+      ],
+    );
+  }
+
   if (isEventsLoading) return <div className="p-8">Loading events...</div>;
 
   return (
@@ -53,18 +71,21 @@ export default function VolunteerEventsPage() {
             Events assigned to you as a volunteer. Click to view tasks.
           </p>
         </div>
-        <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
-          <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
-            <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3"/>
-            <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search events…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className={cn("bg-transparent outline-none w-[160px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
-          />
+        <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0} />
+          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+            <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
+              <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3"/>
+              <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search events…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={cn("bg-transparent outline-none w-[160px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
+            />
+          </div>
         </div>
       </div>
 

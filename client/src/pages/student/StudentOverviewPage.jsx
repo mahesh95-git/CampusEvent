@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useGetStudentOverviewQuery } from "@/store/api";
 import { StatCard } from "@/components/cards/StatCard";
+import { PdfExportButton } from "@/components/ui/PdfExportButton";
 
 function formatDate(value) {
   return new Date(value).toLocaleDateString("en-IN", {
@@ -53,6 +54,30 @@ export default function StudentOverviewPage() {
             Browse college events and view your latest participation updates.
           </p>
         </div>
+        <PdfExportButton
+          fileName="student-overview-report.pdf"
+          label="Export PDF"
+          disabled={isLoading || isError}
+          buildReport={() => ({
+            title: "Student Overview Report",
+            subtitle: "Browsing events and recent participation updates",
+            generatedAt: new Date().toLocaleString("en-IN"),
+            cards: [
+              { label: "Registered Events", value: stats?.registeredCount ?? 0 },
+              { label: "Upcoming Events", value: stats?.upcomingCount ?? 0 },
+              { label: "College Events", value: stats?.collegeCount ?? 0 },
+            ],
+            sections: [
+              {
+                title: "New & Recent Events",
+                table: {
+                  headers: ["Event", "Date", "Time", "Venue"],
+                  rows: recentEvents.map((event) => [event.eventName, new Date(event.startDate).toLocaleDateString("en-IN"), new Date(event.startDate).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" }), event.venue]),
+                },
+              },
+            ],
+          })}
+        />
       </div>
 
       <div className="grid grid-cols-3 gap-4 px-8 py-6">

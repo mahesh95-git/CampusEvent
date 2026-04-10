@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useGetVolunteerDashboardQuery, useGetVolunteerEventsQuery } from "@/store/api";
 import { StatCard } from "@/components/cards/StatCard";
+import { PdfExportButton } from "@/components/ui/PdfExportButton";
 
 const STATUS_COLORS = {
   upcoming: { label: "Upcoming", color: "#818CF8" },
@@ -51,13 +52,47 @@ export default function VolunteerOverviewPage() {
             Your assigned events, tasks, and attendance overview.
           </p>
         </div>
-        <button
-          onClick={() => navigate("/dashboard/volunteer/events")}
-          className="rounded-xl px-4 py-2.5 font-semibold text-[13px] text-white"
-          style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
-        >
-          My Events
-        </button>
+        <div className="flex items-center gap-3">
+          <PdfExportButton
+            fileName="volunteer-dashboard-report.pdf"
+            label="Export PDF"
+            disabled={isDashboardLoading || isEventsLoading}
+            buildReport={() => ({
+              title: "Volunteer Dashboard Report",
+              subtitle: "Assigned events, tasks, and attendance overview",
+              generatedAt: new Date().toLocaleString("en-IN"),
+              cards: [
+                { label: "Assigned Events", value: totalAssigned },
+                { label: "Upcoming Events", value: upcoming },
+                { label: "Total Tasks", value: totalTasks },
+                { label: "Pending Tasks", value: pendingTasks },
+              ],
+              sections: [
+                {
+                  title: "Assigned Events",
+                  table: {
+                    headers: ["Event", "Date", "Status", "Tasks"],
+                    rows: events.map((event) => [event.name, new Date(event.date || event.startDate).toLocaleDateString("en-IN"), event.status, `${event.tasksCompleted}/${event.tasksTotal}`]),
+                  },
+                },
+                {
+                  title: "Tasks",
+                  table: {
+                    headers: ["Task", "Event", "Priority", "Status", "Due"],
+                    rows: tasks.map((task) => [task.title, task.eventName, task.priority, task.status, task.dueDate]),
+                  },
+                },
+              ],
+            })}
+          />
+          <button
+            onClick={() => navigate("/dashboard/volunteer/events")}
+            className="rounded-xl px-4 py-2.5 font-semibold text-[13px] text-white"
+            style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
+          >
+            My Events
+          </button>
+        </div>
       </div>
 
       {/* Stat cards */}

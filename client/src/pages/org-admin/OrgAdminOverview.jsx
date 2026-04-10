@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
 import { CustomTooltip } from "@/components/ui/CustomTooltip";
 import { StatCard } from "@/components/cards/StatCard";
+import { PdfExportButton } from "@/components/ui/PdfExportButton";
 import { useGetOrganizationOverviewQuery } from "@/store/api";
 
 const STATUS_META = {
@@ -52,14 +53,63 @@ export default function OrgAdminOverview() {
             Welcome back, {adminName} · {collegeName}
           </p>
         </div>
-        <button
-          onClick={() => navigate("/dashboard/collegeadmin/events/create")}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-          style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
-        >
-          <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
-          Create event
-        </button>
+        <div className="flex items-center gap-3">
+          <PdfExportButton
+            fileName="college-overview-report.pdf"
+            label="Export PDF"
+            disabled={!overview}
+            buildReport={() => ({
+              title: "College Overview Report",
+              subtitle: `${adminName} · ${collegeName}`,
+              generatedAt: new Date().toLocaleString("en-IN"),
+              cards: [
+                { label: "Total events", value: stats?.totalEvents ?? 0, note: `${stats?.activeEvents ?? 0} active now` },
+                { label: "Coordinators", value: stats?.coordinators ?? 0, note: `${stats?.departments ?? 0} departments` },
+                { label: "Upcoming events", value: stats?.upcomingEvents ?? 0, note: `${stats?.completedEvents ?? 0} completed` },
+                { label: "Registrations", value: stats?.registrations ?? 0, note: `${stats?.totalEvents ?? 0} events tracked` },
+              ],
+              sections: [
+                {
+                  title: "Monthly Activity",
+                  subtitle: "Events and registrations over the last 6 months",
+                  table: {
+                    headers: ["Month", "Events", "Registrations"],
+                    rows: overview?.monthlyEvents?.map((item) => [item.month, item.events, item.registrations]) ?? [],
+                  },
+                },
+                {
+                  title: "Recent Events",
+                  table: {
+                    headers: ["Event", "Date", "Status", "Registrations"],
+                    rows: overview?.recentEvents?.map((event) => [event.name, new Date(event.date).toLocaleDateString("en-IN"), event.status, event.reg]) ?? [],
+                  },
+                },
+                {
+                  title: "Departments",
+                  items: overview?.departments?.slice(0, 5).map((department) => ({
+                    title: department.name,
+                    subtitle: `${department.coordinator?.name || department.coordinator || "Coordinator not assigned"} · ${department.events} events`,
+                  })) ?? [],
+                },
+                {
+                  title: "Top Departments",
+                  table: {
+                    headers: ["Department", "Events", "Registrations"],
+                    rows: overview?.departmentPerformance?.slice(0, 5).map((department) => [department.name, department.events, department.registrations]) ?? [],
+                  },
+                },
+              ],
+            })}
+          />
+          <button
+            onClick={() => navigate("/dashboard/collegeadmin/events/create")}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
+            style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+          >
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
+            Create event
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 overflow-y-auto px-8 py-6">

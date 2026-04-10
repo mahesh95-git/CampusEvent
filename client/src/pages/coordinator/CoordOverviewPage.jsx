@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
 import { CustomTooltip } from "@/components/ui/CustomTooltip";
+import { PdfExportButton } from "@/components/ui/PdfExportButton";
 import {
   BarChart,
   Bar,
@@ -53,14 +54,48 @@ export default function CoordOverview() {
             {coordinator?.department?.name || "Department"} | {coordinator?.organization?.name || "College"}
           </p>
         </div>
-        <button
-          onClick={() => navigate("/dashboard/coordinator/events/create")}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-          style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.32)" }}
-        >
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
-          Create event
-        </button>
+        <div className="flex items-center gap-3">
+          <PdfExportButton
+            fileName="coordinator-overview-report.pdf"
+            label="Export PDF"
+            disabled={!overview}
+            buildReport={() => ({
+              title: "Coordinator Overview Report",
+              subtitle: `${coordinator?.name || "Coordinator"} · ${coordinator?.department?.name || "Department"}`,
+              generatedAt: new Date().toLocaleString("en-IN"),
+              cards: [
+                { label: "Total events", value: stats?.totalEvents ?? 0 },
+                { label: "Active events", value: stats?.activeEvents ?? 0 },
+                { label: "Total registrations", value: stats?.totalRegistrations ?? 0 },
+              ],
+              sections: [
+                {
+                  title: "Monthly Events",
+                  subtitle: "Department events over the last 6 months",
+                  table: {
+                    headers: ["Month", "Events"],
+                    rows: monthlyData.map((item) => [item.month, item.events]),
+                  },
+                },
+                {
+                  title: "Recent Events",
+                  table: {
+                    headers: ["Event", "Date", "Status", "Registrations"],
+                    rows: recentEvents.map((event) => [event.name, new Date(event.date).toLocaleDateString("en-IN"), event.status, event.registrations]),
+                  },
+                },
+              ],
+            })}
+          />
+          <button
+            onClick={() => navigate("/dashboard/coordinator/events/create")}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
+            style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.32)" }}
+          >
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
+            Create event
+          </button>
+        </div>
       </header>
 
       <div className="px-8 py-6">

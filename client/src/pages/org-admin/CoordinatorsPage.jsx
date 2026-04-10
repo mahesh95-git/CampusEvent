@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetCoordinatorsQuery } from "@/store/api";
 
 const STATUS_MAP = {
@@ -44,6 +46,21 @@ export default function CoordinatorsPage() {
   const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
   const errorMessage = error?.data?.message || "Unable to load coordinators right now.";
 
+  function handleExport() {
+    downloadCsvFile(
+      "coordinators-report.csv",
+      filtered,
+      [
+        { label: "Coordinator", value: (coordinator) => coordinator.name },
+        { label: "Email", value: (coordinator) => coordinator.email },
+        { label: "Department", value: (coordinator) => coordinator.department?.name || "Unassigned" },
+        { label: "Status", value: (coordinator) => coordinator.status },
+        { label: "Assigned Date", value: (coordinator) => formatDate(coordinator.assignedDate) },
+        { label: "Events Managed", value: (coordinator) => coordinator.eventsManaged },
+      ],
+    );
+  }
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
@@ -53,18 +70,21 @@ export default function CoordinatorsPage() {
             Live coordinator data across all departments
           </p>
         </div>
-        <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
-          <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
-            <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />
-            <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Search coordinators..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            className={cn("bg-transparent outline-none w-[180px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
-          />
+        <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0 || isLoading} />
+          <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+            <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
+              <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />
+              <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search coordinators..."
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              className={cn("bg-transparent outline-none w-[180px] text-[13px]", D("text-slate-300 placeholder:text-slate-600", "text-slate-700 placeholder:text-slate-400"))}
+            />
+          </div>
         </div>
       </div>
 

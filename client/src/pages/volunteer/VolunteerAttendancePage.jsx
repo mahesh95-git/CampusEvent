@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetVolunteerEventsQuery, useGetEventParticipantsQuery, useMarkAttendanceMutation } from "@/store/api";
 
 export default function VolunteerAttendancePage() {
@@ -72,6 +74,23 @@ export default function VolunteerAttendancePage() {
   const thCls = cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"));
   const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
 
+  function handleExport() {
+    downloadCsvFile(
+      `attendance-report-${selectedEventId || "event"}.csv`,
+      filtered,
+      [
+        { label: "Name", value: (participant) => participant.name || "Unknown" },
+        { label: "Email", value: (participant) => participant.email || "No email" },
+        { label: "Department", value: (participant) => participant.dept || "Unassigned" },
+        { label: "Status", value: (participant) => (participant.attended ? "Present" : "Absent") },
+        ...formFields.map((field) => ({
+          label: field.label,
+          value: (participant) => participant.formResponse?.[field.label] ?? "",
+        })),
+      ],
+    );
+  }
+
   if (eventsLoading) return <div className="p-8 text-slate-500">Loading attendance...</div>;
 
   return (
@@ -85,6 +104,7 @@ export default function VolunteerAttendancePage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0} />
           <select
             value={selectedEventId}
             onChange={(e) => setSelectedEventId(parseInt(e.target.value))}

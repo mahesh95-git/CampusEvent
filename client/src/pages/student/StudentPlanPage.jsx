@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { PdfExportButton } from "@/components/ui/PdfExportButton";
 import { useGetStudentPlanQuery } from "@/store/api";
 import { selectCurrentUser } from "@/store/slices/user";
 
@@ -84,6 +85,44 @@ export default function StudentPlanPage() {
         </div>
 
         <div className="flex flex-wrap gap-3">
+          <PdfExportButton
+            fileName="student-plan-report.pdf"
+            label="Export PDF"
+            disabled={isLoading || isError}
+            buildReport={() => ({
+              title: "Student Plan Report",
+              subtitle: `${profile?.name || currentUser?.name || "Student"} · ${profile?.department?.name || currentUser?.department?.DepartmentName || "Department"}`,
+              generatedAt: new Date().toLocaleString("en-IN"),
+              cards: [
+                { label: "Registered this semester", value: stats?.registeredCount ?? 0 },
+                { label: "Attendance score", value: `${stats?.attendanceScore ?? 0}%` },
+                { label: "Volunteer target", value: plan?.volunteerGoal || "0 events" },
+              ],
+              sections: [
+                {
+                  title: "Semester Roadmap",
+                  items: (plan?.milestones ?? []).map((item) => ({
+                    title: item.title,
+                    subtitle: `${item.status} - ${item.description}`,
+                  })),
+                },
+                {
+                  title: "Focus Areas",
+                  items: (plan?.focusAreas ?? []).map((item) => ({
+                    title: item.label,
+                    subtitle: item.progress,
+                  })),
+                },
+                {
+                  title: "Recommended Next Steps",
+                  items: (plan?.recommendations ?? []).map((item) => ({
+                    title: item.title,
+                    subtitle: item.description,
+                  })),
+                },
+              ],
+            })}
+          />
           <button
             onClick={() => navigate("/dashboard/student/events")}
             className="rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white"
