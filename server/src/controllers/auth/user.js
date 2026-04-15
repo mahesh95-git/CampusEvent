@@ -19,6 +19,7 @@ function buildUserResponse(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+    isApproved: user.isApproved,
     contactPhone: user.contactPhone,
     profilePictureUrl: user.profilePictureUrl || null,
     createdAt: user.createdAt,
@@ -99,6 +100,13 @@ export async function loginUser(req, res) {
   ) {
     throw new AppError(
       "This account does not belong to the selected college.",
+      403,
+    );
+  }
+
+  if (user.role === "student" && !user.isApproved) {
+    throw new AppError(
+      "Your account is pending coordinator approval. Please wait before logging in.",
       403,
     );
   }

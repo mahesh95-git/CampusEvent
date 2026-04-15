@@ -92,7 +92,9 @@ function Register() {
         password: data.password,
       }).unwrap();
 
-      navigate(`/login?college=${collegeSlug}&role=participant`);
+      navigate(`/login?college=${collegeSlug}&role=participant`, {
+        state: { pendingApproval: true },
+      });
     } catch (err) {
       setServerError(err?.data?.message || "Registration failed. Please try again.");
     }

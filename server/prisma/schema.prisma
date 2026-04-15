@@ -46,6 +46,7 @@ model User {
   contactPhone   String
   password       String
   role           String
+  isApproved     Boolean        @default(true)
   yearOfStudy    String?
   rollNumber     String?
   departmentId   Int?

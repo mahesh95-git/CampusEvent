@@ -6,6 +6,7 @@ import { ExportButton } from "@/components/ui/ExportButton";
 import { downloadCsvFile } from "@/lib/reportExport";
 import {
   useCreateDepartmentMutation,
+  useDeleteDepartmentMutation,
   useGetDepartmentsQuery,
 } from "@/store/api";
 
@@ -29,6 +30,9 @@ function DepartmentsPage() {
   const { dark, D } = useOutletContext();
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [deletingDepartmentId, setDeletingDepartmentId] = useState(null);
+  const [actionMessage, setActionMessage] = useState("");
+  const [deleteDepartment, { isLoading: isDeletingDepartment }] = useDeleteDepartmentMutation();
 
   const {
     data,
@@ -37,7 +41,7 @@ function DepartmentsPage() {
     error,
   } = useGetDepartmentsQuery();
 
-  const departments = data?.departments ?? [];
+  const departments = useMemo(() => data?.departments ?? [], [data?.departments]);
 
   const filteredDepartments = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -88,6 +92,28 @@ function DepartmentsPage() {
   );
 
   const errorMessage = error?.data?.message || "Unable to load departments right now.";
+
+  async function handleDeleteDepartment(department) {
+    const confirmed = window.confirm(
+      `Delete ${department.name}? This will remove the department and its coordinator account, and unassign students from the department.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setActionMessage("");
+    setDeletingDepartmentId(department.id);
+
+    try {
+      await deleteDepartment(department.id).unwrap();
+      setActionMessage(`Department "${department.name}" deleted successfully.`);
+    } catch (deleteError) {
+      setActionMessage(deleteError?.data?.message || "Unable to delete department.");
+    } finally {
+      setDeletingDepartmentId(null);
+    }
+  }
 
   function handleExport() {
     downloadCsvFile(
@@ -164,6 +190,7 @@ function DepartmentsPage() {
                 <th className={cn(thCls, "text-center")}>Students</th>
                 <th className={cn(thCls, "text-center")}>Users</th>
                 <th className={thCls}>Created</th>
+                <th className={cn(thCls, "text-right")}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -214,6 +241,22 @@ function DepartmentsPage() {
                   <td className={tdCls}>
                     {new Date(department.createdAt).toLocaleDateString()}
                   </td>
+                  <td className="px-4 py-3.5 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteDepartment(department)}
+                      disabled={isDeletingDepartment && deletingDepartmentId === department.id}
+                      className={cn(
+                        "text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-60",
+                        D(
+                          "border-rose-500/20 text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/40",
+                          "border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300",
+                        ),
+                      )}
+                    >
+                      {isDeletingDepartment && deletingDepartmentId === department.id ? "Deleting..." : "Delete"}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -241,6 +284,14 @@ function DepartmentsPage() {
           )}
         </div>
       </div>
+
+      {actionMessage && (
+        <div className="px-8 pb-4">
+          <div className={cn("rounded-xl px-3.5 py-2.5 text-[13px] border", actionMessage.toLowerCase().includes("success") ? D("bg-emerald-500/10 border-emerald-500/20 text-emerald-400", "bg-emerald-50 border-emerald-200 text-emerald-600") : D("bg-rose-500/10 border-rose-500/20 text-rose-400", "bg-rose-50 border-rose-200 text-rose-600"))}>
+            {actionMessage}
+          </div>
+        </div>
+      )}
 
       {showAddModal && (
         <AddDeptModal

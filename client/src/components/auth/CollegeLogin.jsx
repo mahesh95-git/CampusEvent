@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
 import { FieldLabel, FieldError, inputCls, EyeIcon } from "@/components/ui/form-helpers";
@@ -90,6 +90,7 @@ function RoleTabs({ value, onChange, dark }) {
 
 function CollegeLogin() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const theme = useSelector((state) => state.theme.value);
@@ -119,6 +120,7 @@ function CollegeLogin() {
 
   const config = ROLES[role];
   const college = collegeResponse?.college ?? null;
+  const pendingApproval = location.state?.pendingApproval;
 
   const {
     register,
@@ -271,6 +273,12 @@ function CollegeLogin() {
               {config.desc}
             </span>
           </div>
+
+          {pendingApproval && role === "participant" && (
+            <div className={cn("mb-5 rounded-xl border px-4 py-3 text-[13px]", D("bg-amber-500/10 border-amber-500/20 text-amber-300", "bg-amber-50 border-amber-200 text-amber-700"))}>
+              Your student account has been created and is waiting for coordinator approval. You can log in after approval.
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">

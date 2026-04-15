@@ -342,16 +342,17 @@ export async function registerStudentForOrganization(req, res) {
   const passwordHash = await bcrypt.hash(password.trim(), 10);
 
   const student = await prisma.user.create({
-    data: {
-      name: fullName.trim(),
-      email: normalizedEmail,
-      contactPhone: phone.trim(),
-      password: passwordHash,
-      role: "student",
-      yearOfStudy: year.trim(),
-      rollNumber: rollNumber?.trim() || null,
-      organizationId: organization.id,
-      departmentId: department.id,
+      data: {
+        name: fullName.trim(),
+        email: normalizedEmail,
+        contactPhone: phone.trim(),
+        password: passwordHash,
+        role: "student",
+        isApproved: false,
+        yearOfStudy: year.trim(),
+        rollNumber: rollNumber?.trim() || null,
+        organizationId: organization.id,
+        departmentId: department.id,
       collegeSlug: organization.collegeSlug,
     },
     select: {

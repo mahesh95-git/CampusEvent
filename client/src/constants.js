@@ -161,7 +161,6 @@ const NAV_CONFIG = {
     emoji: "🎯",
     color: "teal",
     accent: { dark: "#14B8A6", light: "#0D948B" },
-    plan: { label: "Organisation plan", expiry: "Expires Mar 31, 2026" },
     navItems: [
       { label: "Overview", path: "/dashboard/collegeadmin", icon: "grid" },
       { label: "College Details", path: "/dashboard/collegeadmin/college", icon: "building" },

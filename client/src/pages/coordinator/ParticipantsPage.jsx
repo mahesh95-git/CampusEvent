@@ -4,7 +4,15 @@ import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
 import { ExportButton } from "@/components/ui/ExportButton";
 import { downloadCsvFile } from "@/lib/reportExport";
-import { useGetStudentsQuery } from "@/store/api";
+import {
+  useApproveStudentMutation,
+  useGetStudentsQuery,
+} from "@/store/api";
+
+const APPROVAL_STATUS = {
+  true: { label: "Approved", bg: "rgba(16,185,129,0.15)", text: "#10B981", dot: "#059669" },
+  false: { label: "Pending", bg: "rgba(245,158,11,0.15)", text: "#F59E0B", dot: "#D97706" },
+};
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString("en-IN", {
@@ -17,9 +25,12 @@ function formatDate(date) {
 export default function ParticipantsPage() {
   const { dark, D } = useOutletContext();
   const [search, setSearch] = useState("");
+  const [approvingStudentId, setApprovingStudentId] = useState(null);
+  const [actionMessage, setActionMessage] = useState("");
+  const [approveStudent, { isLoading: isApprovingStudent }] = useApproveStudentMutation();
   const { data, isLoading, isError, error } = useGetStudentsQuery();
 
-  const students = data?.students ?? [];
+  const students = useMemo(() => data?.students ?? [], [data?.students]);
   const departments = [...new Set(students.map((student) => student.department?.name).filter(Boolean))];
   const filtered = useMemo(() => {
     return students.filter((student) => {
@@ -33,6 +44,24 @@ export default function ParticipantsPage() {
   const thCls = cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"));
   const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
   const errorMessage = error?.data?.message || "Unable to load students.";
+
+  async function handleApprove(student) {
+    if (student.isApproved) {
+      return;
+    }
+
+    setActionMessage("");
+    setApprovingStudentId(student.id);
+
+    try {
+      await approveStudent(student.id).unwrap();
+      setActionMessage(`Student "${student.name}" approved successfully.`);
+    } catch (approveError) {
+      setActionMessage(approveError?.data?.message || "Unable to approve student.");
+    } finally {
+      setApprovingStudentId(null);
+    }
+  }
 
   function handleExport() {
     downloadCsvFile(
@@ -91,6 +120,8 @@ export default function ParticipantsPage() {
                 <th className={thCls}>Department</th>
                 <th className={thCls}>Phone</th>
                 <th className={thCls}>Joined</th>
+                <th className={cn(thCls, "text-center")}>Status</th>
+                <th className={cn(thCls, "text-right")}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -110,12 +141,39 @@ export default function ParticipantsPage() {
                   <td className={tdCls}>{student.department?.name || "Unassigned"}</td>
                   <td className={tdCls}>{student.contactPhone || "Not set"}</td>
                   <td className={cn(tdCls, D("text-slate-400", "text-slate-500"))}>{formatDate(student.createdAt)}</td>
+                  <td className={cn(tdCls, "text-center")}>
+                    {(() => {
+                      const status = APPROVAL_STATUS[student.isApproved ? "true" : "false"];
+                      return (
+                        <span className="text-[11px] font-medium px-2.5 py-1 rounded-full inline-flex items-center gap-1.5" style={{ background: status.bg, color: status.text }}>
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: status.dot }} />
+                          {status.label}
+                        </span>
+                      );
+                    })()}
+                  </td>
+                  <td className="px-4 py-3.5 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleApprove(student)}
+                      disabled={student.isApproved || (isApprovingStudent && approvingStudentId === student.id)}
+                      className={cn(
+                        "text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-60",
+                        D(
+                          "border-teal-500/20 text-teal-400 hover:bg-teal-500/10 hover:border-teal-500/40",
+                          "border-teal-200 text-teal-600 hover:bg-teal-50 hover:border-teal-300",
+                        ),
+                      )}
+                    >
+                      {student.isApproved ? "Approved" : isApprovingStudent && approvingStudentId === student.id ? "Approving..." : "Approve"}
+                    </button>
+                  </td>
                 </tr>
               ))}
 
               {isLoading && (
                 <tr>
-                  <td colSpan={4} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
+                  <td colSpan={6} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
                     Loading students...
                   </td>
                 </tr>
@@ -123,7 +181,7 @@ export default function ParticipantsPage() {
 
               {!isLoading && isError && (
                 <tr>
-                  <td colSpan={4} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
+                  <td colSpan={6} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
                     {errorMessage}
                   </td>
                 </tr>
@@ -131,7 +189,7 @@ export default function ParticipantsPage() {
 
               {!isLoading && !isError && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={4} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                  <td colSpan={6} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
                     <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No students found</p>
                   </td>
                 </tr>
@@ -140,6 +198,14 @@ export default function ParticipantsPage() {
           </table>
         </div>
       </div>
+
+      {actionMessage && (
+        <div className="px-8 pb-4">
+          <div className={cn("rounded-xl px-3.5 py-2.5 text-[13px] border", actionMessage.toLowerCase().includes("success") ? D("bg-emerald-500/10 border-emerald-500/20 text-emerald-400", "bg-emerald-50 border-emerald-200 text-emerald-600") : D("bg-rose-500/10 border-rose-500/20 text-rose-400", "bg-rose-50 border-rose-200 text-rose-600"))}>
+            {actionMessage}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

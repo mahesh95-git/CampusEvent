@@ -74,6 +74,13 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ["Department", "Coordinator", "Overview"],
     }),
+    deleteDepartment: builder.mutation({
+      query: (departmentId) => ({
+        url: `/departments/${departmentId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Department", "Coordinator", "Overview"],
+    }),
     getEvents: builder.query({
       query: () => ({
         url: "/events",
@@ -108,6 +115,20 @@ export const organizationApi = createApi({
         method: "GET",
       }),
       providesTags: ["Participant"],
+    }),
+    approveStudent: builder.mutation({
+      query: (studentId) => ({
+        url: `/departments/students/${studentId}/approve`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Participant", "Department"],
+    }),
+    deleteCoordinator: builder.mutation({
+      query: (coordinatorId) => ({
+        url: `/departments/coordinators/${coordinatorId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Department", "Coordinator", "Overview"],
     }),
     createEvent: builder.mutation({
       query: (eventData) => ({
@@ -166,6 +187,8 @@ export const organizationApi = createApi({
 export const {
   useCreateDepartmentMutation,
   useCreateEventMutation,
+  useDeleteCoordinatorMutation,
+  useDeleteDepartmentMutation,
   useGetCoordinatorOverviewQuery,
   useGetCoordinatorsQuery,
   useGetDepartmentsQuery,
@@ -176,6 +199,7 @@ export const {
   useGetOrganizationOverviewQuery,
   useGetParticipantsQuery,
   useGetStudentsQuery,
+  useApproveStudentMutation,
   useRegisterStudentForCollegeMutation,
   useRegisterOrganizationMutation,
   useUpdateEventStatusMutation,

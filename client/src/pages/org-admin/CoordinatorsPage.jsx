@@ -4,7 +4,10 @@ import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
 import { ExportButton } from "@/components/ui/ExportButton";
 import { downloadCsvFile } from "@/lib/reportExport";
-import { useGetCoordinatorsQuery } from "@/store/api";
+import {
+  useDeleteCoordinatorMutation,
+  useGetCoordinatorsQuery,
+} from "@/store/api";
 
 const STATUS_MAP = {
   active: { label: "Active", bg: "rgba(16,185,129,0.15)", text: "#10B981", dot: "#059669" },
@@ -22,9 +25,12 @@ function formatDate(date) {
 export default function CoordinatorsPage() {
   const { dark, D } = useOutletContext();
   const [search, setSearch] = useState("");
+  const [deletingCoordinatorId, setDeletingCoordinatorId] = useState(null);
+  const [actionMessage, setActionMessage] = useState("");
+  const [deleteCoordinator, { isLoading: isDeletingCoordinator }] = useDeleteCoordinatorMutation();
   const { data, isLoading, isError, error } = useGetCoordinatorsQuery();
 
-  const coordinators = data?.coordinators ?? [];
+  const coordinators = useMemo(() => data?.coordinators ?? [], [data?.coordinators]);
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
 
@@ -45,6 +51,28 @@ export default function CoordinatorsPage() {
   );
   const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
   const errorMessage = error?.data?.message || "Unable to load coordinators right now.";
+
+  async function handleDeleteCoordinator(coordinator) {
+    const confirmed = window.confirm(
+      `Delete ${coordinator.name}? This will remove the coordinator account and transfer any events they created to you.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setActionMessage("");
+    setDeletingCoordinatorId(coordinator.id);
+
+    try {
+      await deleteCoordinator(coordinator.id).unwrap();
+      setActionMessage(`Coordinator "${coordinator.name}" deleted successfully.`);
+    } catch (deleteError) {
+      setActionMessage(deleteError?.data?.message || "Unable to delete coordinator.");
+    } finally {
+      setDeletingCoordinatorId(null);
+    }
+  }
 
   function handleExport() {
     downloadCsvFile(
@@ -108,6 +136,7 @@ export default function CoordinatorsPage() {
                 <th className={thCls}>Status</th>
                 <th className={thCls}>Assigned</th>
                 <th className={cn(thCls, "text-center")}>Events Managed</th>
+                <th className={cn(thCls, "text-right")}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -142,13 +171,29 @@ export default function CoordinatorsPage() {
                     </td>
                     <td className={tdCls}>{formatDate(coordinator.assignedDate)}</td>
                     <td className={cn(tdCls, "text-center font-semibold")} style={{ color: "#6366F1" }}>{coordinator.eventsManaged}</td>
+                    <td className="px-4 py-3.5 text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCoordinator(coordinator)}
+                        disabled={isDeletingCoordinator && deletingCoordinatorId === coordinator.id}
+                        className={cn(
+                          "text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-60",
+                          D(
+                            "border-rose-500/20 text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/40",
+                            "border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300",
+                          ),
+                        )}
+                      >
+                        {isDeletingCoordinator && deletingCoordinatorId === coordinator.id ? "Deleting..." : "Delete"}
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
 
               {isLoading && (
                 <tr>
-                  <td colSpan={5} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
+                  <td colSpan={6} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
                     Loading coordinators...
                   </td>
                 </tr>
@@ -156,7 +201,7 @@ export default function CoordinatorsPage() {
 
               {!isLoading && isError && (
                 <tr>
-                  <td colSpan={5} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
+                  <td colSpan={6} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
                     {errorMessage}
                   </td>
                 </tr>
@@ -164,7 +209,7 @@ export default function CoordinatorsPage() {
 
               {!isLoading && !isError && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={5} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                  <td colSpan={6} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
                     <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No coordinators found</p>
                     <p className={cn("text-[13px] mt-1", D("text-slate-600", "text-slate-400"))}>Try a different search term.</p>
                   </td>
@@ -174,6 +219,14 @@ export default function CoordinatorsPage() {
           </table>
         </div>
       </div>
+
+      {actionMessage && (
+        <div className="px-8 pb-4">
+          <div className={cn("rounded-xl px-3.5 py-2.5 text-[13px] border", actionMessage.toLowerCase().includes("success") ? D("bg-emerald-500/10 border-emerald-500/20 text-emerald-400", "bg-emerald-50 border-emerald-200 text-emerald-600") : D("bg-rose-500/10 border-rose-500/20 text-rose-400", "bg-rose-50 border-rose-200 text-rose-600"))}>
+            {actionMessage}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

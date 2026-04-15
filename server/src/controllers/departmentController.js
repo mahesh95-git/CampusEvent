@@ -53,6 +53,7 @@ function normalizeStudent(user) {
     name: user.name,
     email: user.email,
     contactPhone: user.contactPhone,
+    isApproved: user.isApproved,
     createdAt: user.createdAt,
     department: user.department
       ? {
@@ -62,6 +63,23 @@ function normalizeStudent(user) {
         }
       : null,
   };
+}
+
+async function transferCreatedEvents(tx, sourceUserIds, targetUserId) {
+  if (!sourceUserIds.length) {
+    return;
+  }
+
+  await tx.event.updateMany({
+    where: {
+      createdBy: {
+        in: sourceUserIds,
+      },
+    },
+    data: {
+      createdBy: targetUserId,
+    },
+  });
 }
 
 export async function listDepartments(req, res) {
@@ -232,6 +250,76 @@ export async function createDepartment(req, res) {
   );
 }
 
+export async function deleteDepartment(req, res) {
+  const departmentId = Number(req.params.id);
+
+  if (!departmentId) {
+    throw new AppError("Department id is required.", 400);
+  }
+
+  const department = await prisma.department.findFirst({
+    where: {
+      id: departmentId,
+      organizationId: req.user.organizationId,
+    },
+    include: {
+      users: {
+        select: {
+          id: true,
+          role: true,
+          createdEvents: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!department) {
+    throw new AppError("Department not found.", 404);
+  }
+
+  const coordinatorIds = department.users
+    .filter((user) => user.role === "coordinator")
+    .map((user) => user.id);
+  const sourceUserIds = department.users
+    .filter((user) => user.createdEvents.length > 0)
+    .map((user) => user.id);
+
+  await prisma.$transaction(async (tx) => {
+    await tx.user.updateMany({
+      where: {
+        departmentId: department.id,
+      },
+      data: {
+        departmentId: null,
+      },
+    });
+
+    await transferCreatedEvents(tx, sourceUserIds, req.user.id);
+
+    if (coordinatorIds.length > 0) {
+      await tx.user.deleteMany({
+        where: {
+          id: {
+            in: coordinatorIds,
+          },
+        },
+      });
+    }
+
+    await tx.department.delete({
+      where: {
+        id: department.id,
+      },
+    });
+  });
+
+  return successResponse(res, {}, "Department deleted successfully", 200);
+}
+
 export async function listCoordinators(req, res) {
   const coordinators = await prisma.user.findMany({
     where: {
@@ -267,6 +355,45 @@ export async function listCoordinators(req, res) {
   );
 }
 
+export async function deleteCoordinator(req, res) {
+  const coordinatorId = Number(req.params.id);
+
+  if (!coordinatorId) {
+    throw new AppError("Coordinator id is required.", 400);
+  }
+
+  const coordinator = await prisma.user.findFirst({
+    where: {
+      id: coordinatorId,
+      organizationId: req.user.organizationId,
+      role: "coordinator",
+    },
+    include: {
+      createdEvents: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  if (!coordinator) {
+    throw new AppError("Coordinator not found.", 404);
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await transferCreatedEvents(tx, coordinator.createdEvents.length > 0 ? [coordinator.id] : [], req.user.id);
+
+    await tx.user.delete({
+      where: {
+        id: coordinator.id,
+      },
+    });
+  });
+
+  return successResponse(res, {}, "Coordinator deleted successfully", 200);
+}
+
 export async function listStudents(req, res) {
   const students = await prisma.user.findMany({
     where: {
@@ -296,6 +423,65 @@ export async function listStudents(req, res) {
       students: students.map(normalizeStudent),
     },
     "Students fetched successfully",
+    200,
+  );
+}
+
+export async function approveStudent(req, res) {
+  const studentId = Number(req.params.id);
+
+  if (!studentId) {
+    throw new AppError("Student id is required.", 400);
+  }
+
+  const student = await prisma.user.findFirst({
+    where: {
+      id: studentId,
+      organizationId: req.user.organizationId,
+      role: "student",
+      ...(req.user.role === "coordinator" && req.user.departmentId
+        ? { departmentId: req.user.departmentId }
+        : {}),
+    },
+    include: {
+      department: {
+        select: {
+          id: true,
+          DepartmentName: true,
+          ShortName: true,
+        },
+      },
+    },
+  });
+
+  if (!student) {
+    throw new AppError("Student not found.", 404);
+  }
+
+  const updatedStudent = await prisma.user.update({
+    where: {
+      id: student.id,
+    },
+    data: {
+      isApproved: true,
+    },
+    include: {
+      department: {
+        select: {
+          id: true,
+          DepartmentName: true,
+          ShortName: true,
+        },
+      },
+    },
+  });
+
+  return successResponse(
+    res,
+    {
+      student: normalizeStudent(updatedStudent),
+    },
+    "Student approved successfully",
     200,
   );
 }

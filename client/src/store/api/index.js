@@ -15,6 +15,9 @@ export const {
 export const {
   useCreateDepartmentMutation,
   useCreateEventMutation,
+  useApproveStudentMutation,
+  useDeleteCoordinatorMutation,
+  useDeleteDepartmentMutation,
   useGetCoordinatorOverviewQuery,
   useGetCoordinatorsQuery,
   useGetDepartmentsQuery,
