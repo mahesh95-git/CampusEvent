@@ -3,8 +3,8 @@ import multer from "multer";
 // In-memory storage for file uploads
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
-  // Allowed mime types
+const imageFileFilter = (req, file, cb) => {
+  // Allowed mime types for images only
   const allowedMimes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
   if (allowedMimes.includes(file.mimetype)) {
@@ -16,7 +16,7 @@ const fileFilter = (req, file, cb) => {
 
 export const upload = multer({
   storage,
-  fileFilter,
+  fileFilter: imageFileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },

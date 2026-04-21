@@ -16,6 +16,8 @@ function getDashboardPathForRole(role) {
       return "/dashboard/student";
     case "volunteer":
       return "/dashboard/volunteer";
+    case "judge":
+      return "/dashboard/judge";
     default:
       return "/login";
   }

@@ -74,7 +74,7 @@ export default function StudentEventDetailPage() {
           <button
             onClick={() => navigate("/dashboard/student/events")}
             className="mt-6 rounded-xl px-4 py-2.5 font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
+            style={{ background: "#F59E0B" }}
           >
             Back to events
           </button>
@@ -112,7 +112,7 @@ export default function StudentEventDetailPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D("border-white/6", "border-slate-200"),
+          D("bg-[#111827] border-white/6", "bg-amber-50 border-slate-200"),
         )}
       >
         <div>
@@ -136,7 +136,7 @@ export default function StudentEventDetailPage() {
         <button
           onClick={() => navigate("/dashboard/student/events")}
           className="rounded-xl px-4 py-2.5 font-semibold text-white"
-          style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
+          style={{ background: "#F59E0B" }}
         >
           Back to list
         </button>

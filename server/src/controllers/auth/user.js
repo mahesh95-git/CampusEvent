@@ -8,6 +8,7 @@ const ROLE_ALIASES = {
   orgadmin: "collegeadmin",
   collegeadmin: "collegeadmin",
   coordinator: "coordinator",
+  judge: "judge",
   collegestudent: "student",
   student: "student",
   volunteer: "volunteer",
@@ -50,7 +51,7 @@ export async function loginUser(req, res) {
 
   if (role && !normalizedRole) {
     throw new AppError(
-      "Invalid role. Use , collegeAdmin, coordinator, or Student.",
+      "Invalid role. Use collegeAdmin, coordinator, judge, Student, or volunteer.",
       400,
     );
   }

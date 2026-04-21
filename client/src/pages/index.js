@@ -27,3 +27,8 @@ export { default as VolunteerOverview } from "./volunteer/VolunteerOverviewPage"
 export { default as VolunteerEventsPage } from "./volunteer/VolunteerEventsPage";
 export { default as VolunteerTasksPage } from "./volunteer/VolunteerTasksPage";
 export { default as VolunteerAttendancePage } from "./volunteer/VolunteerAttendancePage";
+
+export { default as JudgeOverview } from "./judge/JudgeOverviewPage";
+export { default as JudgeEventsPage } from "./judge/JudgeEventsPage";
+export { default as JudgeEventDetailPage } from "./judge/JudgeEventDetailPage";
+export { default as JudgeProfilePage } from "./judge/JudgeProfilePage";

@@ -31,7 +31,13 @@ export default function CoordinatorProfilePage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b",
+        D(
+          "bg-[#0D1626] border-white/[0.06]",
+          "bg-blue-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Profile</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Coordinator account information</p>
@@ -47,7 +53,7 @@ export default function CoordinatorProfilePage() {
               className="w-16 h-16 rounded-2xl object-cover shadow-lg shrink-0"
             />
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
               {initials(user.name)}
             </div>
           )}

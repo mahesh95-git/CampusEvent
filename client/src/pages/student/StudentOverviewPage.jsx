@@ -33,7 +33,10 @@ export default function StudentOverviewPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D("border-white/[0.06]", "border-slate-200"),
+          D(
+            "bg-[#111827] border-white/[0.06]",
+            "bg-amber-50 border-slate-200",
+          ),
         )}
       >
         <div>

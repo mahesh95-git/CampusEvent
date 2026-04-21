@@ -60,7 +60,10 @@ export default function VolunteerEventsPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D("border-white/[0.06]", "border-slate-200"),
+          D(
+            "bg-[#111827] border-white/[0.06]",
+            "bg-slate-50 border-slate-200",
+          ),
         )}
       >
         <div>
@@ -119,13 +122,13 @@ export default function VolunteerEventsPage() {
                 </div>
                 <p className={cn("text-[11px] mt-1", D("text-slate-400", "text-slate-500"))}>{new Date(event.date).toLocaleDateString()}</p>
                 <div className={cn("h-1 rounded-full mt-3 overflow-hidden", D("bg-white/[0.08]", "bg-slate-100"))}>
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${progress}%`,
-                      background: progress === 100 ? "#10B981" : "linear-gradient(90deg,#F59E0B,#FBBF24)",
-                    }}
-                  />
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progress}%`,
+                          background: progress === 100 ? "#10B981" : "#F59E0B",
+                        }}
+                      />
                 </div>
                 <p className={cn("text-[10px] mt-1", D("text-slate-500", "text-slate-400"))}>
                   {event.tasksCompleted}/{event.tasksTotal} tasks done

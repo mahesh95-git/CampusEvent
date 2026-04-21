@@ -118,7 +118,13 @@ export default function ProfilePage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b",
+        D(
+          "bg-[#0F1B30] border-white/[0.06]",
+          "bg-teal-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Profile</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -129,7 +135,7 @@ export default function ProfilePage() {
           <button
             onClick={startEdit}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+            style={{ background: "#0D948B", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
           >
             Edit profile
           </button>
@@ -142,7 +148,7 @@ export default function ProfilePage() {
               onClick={handleProfileSave}
               disabled={isSavingProfile}
               className="px-4 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+              style={{ background: "#0D948B", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
             >
               {isSavingProfile ? "Saving..." : "Save changes"}
             </button>
@@ -160,7 +166,7 @@ export default function ProfilePage() {
                 className="w-16 h-16 rounded-2xl object-cover shadow-lg shrink-0"
               />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
+              <div className="w-16 h-16 rounded-2xl bg-teal-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
                 {initials}
               </div>
             )}
@@ -246,7 +252,7 @@ export default function ProfilePage() {
               onClick={handlePasswordSave}
               disabled={isSavingPassword}
               className="mt-5 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}
+              style={{ background: "#6366F1", boxShadow: "0 4px 12px rgba(99,102,241,0.22)" }}
             >
               {isSavingPassword ? "Updating..." : "Update password"}
             </button>

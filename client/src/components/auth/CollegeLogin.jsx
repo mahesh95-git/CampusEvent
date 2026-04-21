@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
+import { Select } from "@/components/ui/select";
 import { FieldLabel, FieldError, inputCls, EyeIcon } from "@/components/ui/form-helpers";
 import loginSchema from "@/zod/login";
 import { ROLES, SHARED_FIELDS, ROLE_OPTIONS } from "@/constants";
@@ -18,6 +19,7 @@ const LOGIN_ROLE_MAP = {
   coordinator: "coordinator",
   collegeadmin: "collegeAdmin",
   volunteer: "volunteer",
+  judge: "judge",
 };
 // ─── College logo / avatar ──
 function CollegeLogo({ college }) {
@@ -43,48 +45,7 @@ function CollegeLogo({ college }) {
   );
 }
 
-// ─── Role selector tabs ──────────────
-function RoleTabs({ value, onChange, dark }) {
-  const D = (d, l) => (dark ? d : l);
-  return (
-    <div
-      className={cn(
-        "flex rounded-xl p-1 gap-1",
-        D("bg-[#111827]", "bg-slate-100")
-      )}
-    >
-      {ROLE_OPTIONS.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          className={cn(
-            "flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-medium transition-all duration-200",
-            value === opt.value
-              ? D(
-                  "bg-[#0D1626] text-white shadow-sm border border-white/[0.08]",
-                  "bg-white text-slate-800 shadow-sm border border-slate-200"
-                )
-              : D(
-                  "text-slate-500 hover:text-slate-300",
-                  "text-slate-400 hover:text-slate-600"
-                )
-          )}
-        >
-          <span
-            className="w-2 h-2 rounded-full shrink-0 transition-opacity"
-            style={{
-              background: opt.dot,
-              opacity: value === opt.value ? 1 : 0.4,
-            }}
-          />
-          <span className="hidden sm:inline">{opt.label} </span>
-          <span className="sm:hidden">{opt.label.slice(0, 3)}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
+
 
 // ─── Main CollegeLogin ─────────────────────
 
@@ -258,12 +219,38 @@ function CollegeLogin() {
             D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200 shadow-xl shadow-black/[0.06]")
           )}
         >
-          {/* Role selector */}
+          {/* Role selector dropdown */}
           <div className="mb-6">
             <p className={cn("text-[11px] font-semibold uppercase tracking-[0.07em] mb-2.5", D("text-slate-500", "text-slate-400"))}>
               Select your role
             </p>
-            <RoleTabs value={role} onChange={handleRoleChange} dark={dark} />
+            <div className="relative">
+              <Select
+                value={role}
+                onChange={(e) => handleRoleChange(e.target.value)}
+                className={cn(
+                  "w-full pr-10",
+                  D(
+                    "bg-[#111827] border-white/[0.1] text-slate-100 focus:ring-teal-500/30 focus:border-white/[0.2]",
+                    "bg-white border-slate-200 text-slate-900 focus:ring-teal-400/30 focus:border-slate-300"
+                  )
+                )}
+              >
+                {ROLE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value} style={{ background: dark ? "#0D1626" : "#ffffff", color: dark ? "#e2e8f0" : "#000000" }}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Select>
+              <svg
+                className={cn("absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none", D("text-slate-500", "text-slate-400"))}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
           </div>
 
           {/* Role description badge */}

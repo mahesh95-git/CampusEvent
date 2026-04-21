@@ -17,6 +17,22 @@ const EVENT_TYPE_LABELS = {
   public: "Public event",
 };
 
+function hexToRgba(hex, alpha) {
+  if (!hex || typeof hex !== "string") return `rgba(13,148,136,${alpha})`;
+  const normalized = hex.replace("#", "");
+  if (normalized.length !== 6) return `rgba(13,148,136,${alpha})`;
+
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+
+  if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) {
+    return `rgba(13,148,136,${alpha})`;
+  }
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 function FormResponseCell({ formResponse, fieldName, dark: D }) {
   if (!formResponse || !formResponse[fieldName]) {
     return <span className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>—</span>;
@@ -51,7 +67,7 @@ function FormResponseModal({ participant, event, dark: D, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className={cn("rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto", D("bg-deep-navy", "bg-white"))}>
-        <div className={cn("sticky top-0 flex items-center justify-between px-6 py-4 border-b", D("bg-deep-navy border-white/7", "bg-slate-50 border-slate-200"))}>
+        <div className={cn("sticky top-0 flex items-center justify-between px-6 py-4 border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
           <div>
             <p className={cn("text-[16px] font-bold", D("text-slate-100", "text-slate-800"))}>
               Form Response: {participant.participant?.name || participant.formResponse?.["Full Name"]}
@@ -171,7 +187,7 @@ export default function EventDetailPage() {
           <button
             onClick={() => navigate(backPath)}
             className="mt-6 rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)" }}
+            style={{ background: "#6366F1" }}
           >
             Back to events
           </button>
@@ -230,7 +246,15 @@ export default function EventDetailPage() {
             { label: "Volunteers", value: event?.volunteerCount ?? 0, color: "#6366F1" },
             { label: "Departments", value: departments.length, color: "#F59E0B" },
           ].map((card) => (
-            <div key={card.label} className={cn("rounded-2xl border p-5", D("bg-deep-navy border-white/7", "bg-white border-slate-200 shadow-sm"))}>
+            <div
+              key={card.label}
+              className={cn("relative overflow-hidden rounded-2xl border p-5 shadow-sm", D("border-white/[0.08]", "border-slate-200"))}
+              style={{
+                background: D(hexToRgba(card.color, 0.16), hexToRgba(card.color, 0.12)),
+                boxShadow: D(`0 14px 32px ${hexToRgba(card.color, 0.12)}`, "0 10px 24px rgba(15, 23, 42, 0.06)"),
+              }}
+            >
+              <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl" style={{ background: card.color }} />
               <div className="flex items-center justify-between mb-3">
                 <p className={cn("text-[12px] font-medium", D("text-slate-500", "text-slate-400"))}>{card.label}</p>
                 <span className="w-2 h-2 rounded-full" style={{ background: card.color }} />
@@ -302,22 +326,22 @@ export default function EventDetailPage() {
         </div>
 
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/7", "border-slate-200"))}>
-          <div className={cn("px-6 py-4 border-b", D("bg-deep-navy border-white/7", "bg-slate-50 border-slate-200"))}>
+          <div className={cn("px-6 py-4 border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
             <p className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Participants & Form Responses</p>
             <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>View participant details and their form submissions</p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse min-w-max">
               <thead>
-                <tr className={cn("border-b", D("bg-deep-navy border-white/7", "bg-slate-50 border-slate-200"))}>
+                <tr className="border-b bg-slate-900 text-slate-100">
                   {formFields.length > 0 ? (
                     formFields.map((field, idx) => (
-                      <th key={idx} className={cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"))}>
+                      <th key={idx} className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700">
                         {field.label}
                       </th>
                     ))
                   ) : (
-                    <th className={cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"))}>
+                    <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700">
                       No form fields
                     </th>
                   )}
@@ -354,6 +378,35 @@ export default function EventDetailPage() {
             </table>
           </div>
         </div>
+
+        {event?.judgeResults && event.judgeResults.length > 0 && (
+          <div className={cn("rounded-2xl border overflow-hidden", D("border-white/7", "border-slate-200"))}>
+            <div className={cn("px-6 py-4 border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
+              <p className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Judge Results</p>
+              <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Result files uploaded by judges for different rounds</p>
+            </div>
+            <div className={cn("px-6 py-4", D("bg-deep-navy", "bg-white"))}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {event.judgeResults.map((result) => (
+                  <a
+                    key={result.id}
+                    href={result.fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={cn("rounded-xl border p-4 transition-colors hover:no-underline", D("border-white/[0.06] bg-white/[0.03] hover:bg-white/[0.05]", "border-slate-200 bg-slate-50 hover:bg-slate-100"))}
+                  >
+                    <p className={cn("text-[13px] font-semibold truncate", D("text-slate-100", "text-slate-800"))}>{result.title}</p>
+                    <p className={cn("text-[11px] mt-2", D("text-slate-500", "text-slate-400"))}>{result.roundLabel}</p>
+                    <p className={cn("text-[11px] mt-1", D("text-slate-600", "text-slate-500"))}>{result.fileType}</p>
+                    {result.summary && (
+                      <p className={cn("text-[11px] mt-2 line-clamp-2", D("text-slate-400", "text-slate-600"))}>{result.summary}</p>
+                    )}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -86,8 +86,13 @@ export default function VolunteersPage() {
     }
   }
 
-  const thCls = cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"));
-  const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
+  const thCls = cn(
+    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
+  );
+  const tdCls = cn(
+    "px-4 py-3.5 text-[13px] border-r last:border-r-0",
+    D("text-slate-200 border-white/[0.04]", "text-slate-700 border-slate-100"),
+  );
   const inputCls = cn(
     "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all",
     D("bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-indigo-500",
@@ -99,7 +104,13 @@ export default function VolunteersPage() {
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       {/* ── Header ── */}
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D(
+          "bg-[#0D1626] border-white/[0.06]",
+          "bg-blue-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Volunteers</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Assign and manage volunteers for your events</p>
@@ -129,7 +140,7 @@ export default function VolunteersPage() {
           <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold"
-            style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.3)" }}
+            style={{ background: "#6366F1", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
           >
             <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
             Add volunteer
@@ -151,7 +162,7 @@ export default function VolunteersPage() {
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+              <tr className="border-b bg-slate-900 text-slate-100">
                 <th className={thCls}>Volunteer</th>
                 <th className={thCls}>Role / Task</th>
                 <th className={thCls}>Department</th>
@@ -159,14 +170,14 @@ export default function VolunteersPage() {
               </tr>
             </thead>
             <tbody>
-              {volunteersLoading && <tr><td colSpan={4} className="p-8 text-center text-slate-500">Loading volunteers...</td></tr>}
+              {volunteersLoading && <tr><td colSpan={4} className="p-8 text-center bg-slate-900 text-slate-400">Loading volunteers...</td></tr>}
               {filtered.map(v => {
                 const s = STATUS_MAP[v.status] || STATUS_MAP.pending;
                 return (
                   <tr key={v.taskId} className={cn("border-b last:border-0 transition-colors", D("border-white/[0.04] hover:bg-white/[0.03]", "border-slate-100 hover:bg-slate-50"))}>
                     <td className={tdCls}>
                       <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                           {v.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                         </div>
                         <div>
@@ -179,7 +190,7 @@ export default function VolunteersPage() {
                       <span className={cn("text-[12px] font-medium px-2.5 py-1 rounded-lg", D("bg-white/[0.05] text-slate-300", "bg-slate-100 text-slate-600"))}>{v.role}</span>
                     </td>
                     <td className={tdCls}>{v.department}</td>
-                    <td className="px-4 py-3.5 text-center">
+                    <td className="px-4 py-3.5 text-center border-r last:border-r-0">
                       <span className="text-[11px] font-medium px-2.5 py-1 rounded-full inline-flex items-center gap-1.5" style={{ background: s.bg, color: s.text }}>
                         <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.dot }} />
                         {s.label}
@@ -266,7 +277,7 @@ export default function VolunteersPage() {
                 onClick={addVolunteer}
                 disabled={!form.email || !form.role || isAssigning}
                 className="flex-1 py-2.5 rounded-xl text-[13.5px] font-bold text-white disabled:opacity-40"
-                style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 4px 14px rgba(99,102,241,0.3)" }}
+                style={{ background: "#6366F1", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
               >
                 {isAssigning ? "Assigning..." : "Assign Volunteer"}
               </button>

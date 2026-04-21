@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma.js";
 import AppError from "../utils/AppError.js";
 import { successResponse } from "../utils/apiResponse.js";
 import bcrypt from "bcryptjs";
+import { randomUUID } from "crypto";
 
 function normalizeEvent(event) {
   return {
@@ -152,6 +153,7 @@ function normalizeParticipant(registration) {
 function normalizeEventDetail(event) {
   const baseEvent = normalizeEvent(event);
   const registrations = event.registrations ?? [];
+  const judgeResults = event.judgeResults ?? [];
   const volunteers = Array.isArray(event.registrationFormSchema?.volunteers)
     ? event.registrationFormSchema.volunteers
     : [];
@@ -162,6 +164,19 @@ function normalizeEventDetail(event) {
     volunteers,
     participantCount: registrations.length,
     volunteerCount: volunteers.length,
+    judgeResults: judgeResults.map((result) => ({
+      id: result.id,
+      eventId: result.eventId,
+      judgeId: result.judgeId,
+      roundLabel: result.roundLabel,
+      title: result.title,
+      fileUrl: result.fileUrl,
+      fileName: result.fileName,
+      fileType: result.fileType,
+      summary: result.summary,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+    })),
   };
 }
 
@@ -266,6 +281,11 @@ export async function getEventById(req, res) {
         },
         orderBy: {
           registeredAt: "desc",
+        },
+      },
+      judgeResults: {
+        orderBy: {
+          updatedAt: "desc",
         },
       },
       _count: {
@@ -433,6 +453,10 @@ export async function createEvent(req, res) {
     departmentIds,
     registrationFormSchema,
     isCompulsory,
+    judgeName,
+    judgeEmail,
+    judgePhone,
+    judgePassword,
   } = req.body;
 
   if (
@@ -510,8 +534,31 @@ export async function createEvent(req, res) {
         }
       : null;
 
+  const trimmedJudgeName = judgeName?.trim() || "";
+  const trimmedJudgeEmail = judgeEmail?.trim().toLowerCase() || "";
+  const trimmedJudgePhone = judgePhone?.trim() || "";
+  const trimmedJudgePassword = judgePassword?.trim() || "";
+  const hasJudgeInput =
+    trimmedJudgeName ||
+    trimmedJudgeEmail ||
+    trimmedJudgePhone ||
+    trimmedJudgePassword;
+
+  if (
+    hasJudgeInput &&
+    (!trimmedJudgeName ||
+      !trimmedJudgeEmail ||
+      !trimmedJudgePhone ||
+      !trimmedJudgePassword)
+  ) {
+    throw new AppError(
+      "To create a judge account, name, email, phone, and password are all required.",
+      400,
+    );
+  }
+
   // Generate unique registration form link
-  const registrationFormLink = `${crypto.randomUUID().substring(0, 12)}`;
+  const registrationFormLink = `${randomUUID().substring(0, 12)}`;
 
   const createdEvent = await prisma.event.create({
     data: {
@@ -610,6 +657,50 @@ export async function createEvent(req, res) {
         priority: vData.priority || "medium",
         status: "pending",
         dueDate: start,
+      },
+    });
+  }
+
+  if (hasJudgeInput) {
+    const existingJudge = await prisma.user.findUnique({
+      where: { email: trimmedJudgeEmail },
+      select: {
+        id: true,
+        role: true,
+        organizationId: true,
+      },
+    });
+
+    if (existingJudge && existingJudge.organizationId !== req.user.organizationId) {
+      throw new AppError("Judge email already belongs to another college.", 409);
+    }
+
+    if (existingJudge && existingJudge.role !== "judge") {
+      throw new AppError("A user with this email already exists.", 409);
+    }
+
+    const judgeUser =
+      existingJudge ??
+      (await prisma.user.create({
+        data: {
+          name: trimmedJudgeName,
+          email: trimmedJudgeEmail,
+          contactPhone: trimmedJudgePhone,
+          password: await bcrypt.hash(trimmedJudgePassword, 10),
+          role: "judge",
+          isApproved: true,
+          organizationId: req.user.organizationId,
+          collegeSlug: req.user.organization?.collegeSlug ?? req.user.collegeSlug,
+        },
+        select: {
+          id: true,
+        },
+      }));
+
+    await prisma.eventJudgeAssignment.create({
+      data: {
+        eventId: createdEvent.id,
+        judgeId: judgeUser.id,
       },
     });
   }

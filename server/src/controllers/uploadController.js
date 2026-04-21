@@ -197,6 +197,57 @@ export async function uploadProfilePicture(req, res) {
   }
 }
 
+export async function uploadJudgeResultFile(req, res) {
+  const file = req.files?.[0];
+
+  if (!file) {
+    throw new AppError("No file provided", 400);
+  }
+
+  const { eventId, roundLabel } = req.body;
+
+  if (!eventId || !roundLabel?.trim()) {
+    throw new AppError("Event ID and round label are required", 400);
+  }
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "campus-event/judge-results",
+          resource_type: "auto",
+          public_id: `event-${eventId}-round-${roundLabel.trim().replace(/\s+/g, "-").toLowerCase()}-${Date.now()}`,
+        },
+        (error, uploadResult) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(uploadResult);
+          }
+        },
+      );
+
+      uploadStream.end(file.buffer);
+    });
+
+    return successResponse(
+      res,
+      {
+        data: {
+          fileUrl: result.secure_url,
+          fileName: file.originalname,
+          fileType: file.mimetype,
+          publicId: result.public_id,
+        },
+      },
+      "Judge result file uploaded successfully",
+      200,
+    );
+  } catch (error) {
+    throw new AppError("File upload failed: " + error.message, 500);
+  }
+}
+
 
 export async function deleteFromCloudinary(publicId) {
   try {

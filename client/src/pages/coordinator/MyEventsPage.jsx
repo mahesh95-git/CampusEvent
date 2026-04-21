@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { StatCard } from "@/components/cards/StatCard";
+import { ExportButton } from "@/components/ui/ExportButton";
+import { downloadCsvFile } from "@/lib/reportExport";
 import {
   useGetEventsQuery,
   useUpdateEventStatusMutation,
@@ -50,9 +52,28 @@ export default function MyEventsPage() {
     });
   }, [events, filterStatus, search]);
 
-  const thCls = cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"));
-  const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
+  const thCls = cn(
+    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
+  );
+  const tdCls = cn(
+    "px-4 py-3.5 text-[13px] border-r last:border-r-0",
+    D("text-slate-200 border-white/[0.04]", "text-slate-700 border-slate-100"),
+  );
   const errorMessage = error?.data?.message || "Unable to load coordinator events.";
+
+  function handleExport() {
+    downloadCsvFile(
+      "coordinator-my-events-report.csv",
+      filtered,
+      [
+        { label: "Event name", value: (event) => event.eventName },
+        { label: "Department(s)", value: (event) => event.departments.map((department) => department.shortName).join(", ") || "Open" },
+        { label: "Date", value: (event) => formatDate(event.startDate) },
+        { label: "Status", value: (event) => event.status },
+        { label: "Registrations", value: (event) => event.registrationCount },
+      ],
+    );
+  }
 
   async function handleStatusChange(eventId, status) {
     setStatusMessage("");
@@ -69,12 +90,19 @@ export default function MyEventsPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/6", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D(
+          "bg-[#0D1626] border-white/[0.06]",
+          "bg-blue-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Events</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Department events assigned to you</p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0 || isLoading} />
           <select
             value={filterStatus}
             onChange={(event) => setFilterStatus(event.target.value)}
@@ -102,7 +130,7 @@ export default function MyEventsPage() {
           <button
             onClick={() => navigate("/dashboard/coordinator/events/create")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold"
-            style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.3)" }}
+            style={{ background: "#6366F1", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
           >
             <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
             New event
@@ -132,7 +160,7 @@ export default function MyEventsPage() {
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/7", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-deep-navy border-white/7", "bg-slate-50 border-slate-200"))}>
+              <tr className="border-b bg-slate-900 text-slate-100">
                 <th className={thCls}>Event name</th>
                 <th className={thCls}>Department(s)</th>
                 <th className={thCls}>Date</th>
@@ -151,13 +179,13 @@ export default function MyEventsPage() {
                     <td className={cn(tdCls, "font-semibold")}>{event.eventName}</td>
                     <td className={tdCls}>{event.departments.map((department) => department.shortName).join(", ")}</td>
                     <td className={cn(tdCls, D("text-slate-400", "text-slate-500"))}>{formatDate(event.startDate)}</td>
-                    <td className="px-4 py-3.5 text-center">
+                    <td className="px-4 py-3.5 text-center border-r last:border-r-0">
                       <span className="text-[11px] font-medium px-2.5 py-1 rounded-full inline-flex items-center gap-1.5" style={{ background: status.bg, color: status.text }}>
                         <span className="w-1.5 h-1.5 rounded-full" style={{ background: status.dot }} />
                         {status.label}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-center font-semibold text-[14px]" style={{ color: "#6366F1" }}>
+                    <td className="px-4 py-3.5 text-center font-semibold text-[14px] border-r last:border-r-0" style={{ color: "#6366F1" }}>
                       {event.registrationCount}
                     </td>
                     <td className={tdCls}>
@@ -186,7 +214,7 @@ export default function MyEventsPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3.5 text-right">
+                    <td className="px-4 py-3.5 text-right border-r last:border-r-0">
                       <button
                         onClick={() => navigate(`/dashboard/coordinator/events/${event.id}`)}
                         className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
@@ -200,7 +228,7 @@ export default function MyEventsPage() {
 
               {isLoading && (
                 <tr>
-                  <td colSpan={7} className={cn("text-center py-16", D("bg-deep-navy text-slate-400", "bg-white text-slate-500"))}>
+                  <td colSpan={7} className={cn("text-center py-16", D("bg-slate-900 text-slate-400", "bg-white text-slate-500"))}>
                     Loading events...
                   </td>
                 </tr>

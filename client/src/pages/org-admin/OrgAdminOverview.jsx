@@ -46,7 +46,13 @@ export default function OrgAdminOverview() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <header className={cn("flex items-center justify-between px-8 py-4 border-b shrink-0", D("bg-[#070D1A] border-white/[0.06]", "bg-[#F0F7F6] border-slate-200"))}>
+      <header className={cn(
+        "flex items-center justify-between px-8 py-4 border-b shrink-0",
+        D(
+          "bg-[#0F1B30] border-white/[0.06]",
+          "bg-teal-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[18px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Overview</h1>
           <p className={cn("text-[12px] mt-0.5", D("text-slate-500", "text-slate-400"))}>
@@ -104,7 +110,7 @@ export default function OrgAdminOverview() {
           <button
             onClick={() => navigate("/dashboard/collegeadmin/events/create")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+            style={{ background: "#0D948B", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
           >
             <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
             Create event
@@ -139,11 +145,11 @@ export default function OrgAdminOverview() {
             </div>
 
             <div className="grid grid-cols-3 gap-5">
-              <div className={cn("col-span-2 rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200 shadow-sm"))}>
+              <div className={cn("col-span-2 rounded-2xl border p-5", D("bg-slate-900 border-slate-700", "bg-blue-50 border-slate-200"))}>
                 <div className="flex items-center justify-between mb-5">
                   <div>
                     <h2 className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Monthly activity</h2>
-                    <p className={cn("text-[11px] mt-0.5", D("text-slate-500", "text-slate-400"))}>Events and registrations over the last 6 months</p>
+                    <p className={cn("text-[11px] mt-0.5", D("text-slate-400", "text-slate-500"))}>Events and registrations over the last 6 months</p>
                   </div>
                 </div>
                 <ResponsiveContainer width="100%" height={220}>
@@ -158,7 +164,7 @@ export default function OrgAdminOverview() {
                 </ResponsiveContainer>
               </div>
 
-              <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200 shadow-sm"))}>
+              <div className={cn("rounded-2xl border p-5", D("bg-slate-900 border-slate-700", "bg-blue-50 border-slate-200"))}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Departments</h2>
                   <button

@@ -82,13 +82,12 @@ function DepartmentsPage() {
   ];
 
   const thCls = cn(
-    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]",
-    D("text-slate-500", "text-slate-400"),
+    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
   );
 
   const tdCls = cn(
-    "px-4 py-3.5 text-[13px]",
-    D("text-slate-200", "text-slate-700"),
+    "px-4 py-3.5 text-[13px] border-r last:border-r-0",
+    D("text-slate-200 border-white/[0.04]", "text-slate-700 border-slate-100"),
   );
 
   const errorMessage = error?.data?.message || "Unable to load departments right now.";
@@ -133,7 +132,13 @@ function DepartmentsPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D(
+          "bg-[#0F1B30] border-white/[0.06]",
+          "bg-teal-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Departments</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -158,7 +163,7 @@ function DepartmentsPage() {
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "linear-gradient(135deg,#F59E0B,#FCD34D)", color: "#78350F", boxShadow: "0 4px 14px rgba(245,158,11,0.3)" }}
+            style={{ background: "#F59E0B", color: "#78350F", boxShadow: "0 4px 14px rgba(245,158,11,0.22)" }}
           >
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
               <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -184,7 +189,7 @@ function DepartmentsPage() {
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+              <tr className="border-b bg-slate-900 text-slate-100">
                 <th className={thCls}>Department</th>
                 <th className={thCls}>Coordinator</th>
                 <th className={cn(thCls, "text-center")}>Students</th>
@@ -241,7 +246,7 @@ function DepartmentsPage() {
                   <td className={tdCls}>
                     {new Date(department.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3.5 text-right">
+                  <td className="px-4 py-3.5 text-right border-r last:border-r-0">
                     <button
                       type="button"
                       onClick={() => handleDeleteDepartment(department)}
@@ -497,7 +502,7 @@ function AddDeptModal({ dark, onClose }) {
             type="submit"
             disabled={isLoading}
             className="flex-1 py-2.5 rounded-xl text-[13.5px] font-bold text-white transition-all hover:scale-[1.02] disabled:opacity-60 disabled:hover:scale-100"
-            style={{ background: `linear-gradient(135deg,${form.color},${form.color}bb)`, boxShadow: `0 4px 14px ${form.color}44` }}
+            style={{ background: form.color, boxShadow: `0 4px 14px ${form.color}44` }}
           >
             {isLoading ? "Creating..." : "Create department"}
           </button>

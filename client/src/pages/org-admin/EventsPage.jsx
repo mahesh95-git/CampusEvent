@@ -81,11 +81,13 @@ export default function EventsPage() {
   ];
 
   const thCls = cn(
-    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]",
-    D("text-slate-500", "text-slate-400"),
+    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
   );
 
-  const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
+  const tdCls = cn(
+    "px-4 py-3.5 text-[13px] border-r border-b",
+    D("text-slate-200 border-white/[0.04]", "text-slate-700 border-slate-100"),
+  );
   const errorMessage = error?.data?.message || "Unable to load events right now.";
 
   function handleExport() {
@@ -118,7 +120,13 @@ export default function EventsPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D(
+          "bg-[#0F1B30] border-white/[0.06]",
+          "bg-teal-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Events</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -157,7 +165,7 @@ export default function EventsPage() {
           <button
             onClick={() => navigate("/dashboard/collegeadmin/events/create")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", color: "#ECFEFF", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+            style={{ background: "#0D948B", color: "#ECFEFF", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
           >
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
               <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -185,7 +193,7 @@ export default function EventsPage() {
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+              <tr className="border-b bg-slate-900 text-slate-100">
                 <th className={thCls}>Event</th>
                 <th className={thCls}>Departments</th>
                 <th className={thCls}>Dates</th>
@@ -284,7 +292,7 @@ export default function EventsPage() {
                         </select>
                       </div>
                     </td>
-                    <td className="px-4 py-3.5 text-right">
+                    <td className="px-4 py-3.5 text-right border-r border-b">
                       <button
                         onClick={() => navigate(`/dashboard/collegeadmin/events/${event.id}`)}
                         className={cn(

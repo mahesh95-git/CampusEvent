@@ -36,7 +36,10 @@ export default function VolunteerOverviewPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D("border-white/[0.06]", "border-slate-200"),
+          D(
+            "bg-[#111827] border-white/[0.06]",
+            "bg-slate-50 border-slate-200",
+          ),
         )}
       >
         <div>
@@ -88,7 +91,7 @@ export default function VolunteerOverviewPage() {
           <button
             onClick={() => navigate("/dashboard/volunteer/events")}
             className="rounded-xl px-4 py-2.5 font-semibold text-[13px] text-white"
-            style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
+            style={{ background: "#F59E0B" }}
           >
             My Events
           </button>
@@ -185,7 +188,7 @@ export default function VolunteerOverviewPage() {
                         className="h-full rounded-full transition-all duration-500"
                         style={{
                           width: `${progress}%`,
-                          background: progress === 100 ? "#10B981" : "linear-gradient(90deg,#F59E0B,#FBBF24)",
+                          background: progress === 100 ? "#10B981" : "#F59E0B",
                         }}
                       />
                     </div>

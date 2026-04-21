@@ -58,7 +58,10 @@ export default function VolunteerTasksPage() {
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       {/* Header */}
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D("bg-[#111827] border-white/[0.06]", "bg-slate-50 border-slate-200"),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Tasks</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -104,7 +107,7 @@ export default function VolunteerTasksPage() {
         <div className={cn("ml-auto rounded-full overflow-hidden flex-1 max-w-xs h-2", D("bg-white/[0.08]", "bg-slate-100"))}>
           <div
             className="h-full rounded-full transition-all duration-500"
-            style={{ width: `${tasks.length > 0 ? Math.round((done / tasks.length) * 100) : 0}%`, background: "linear-gradient(90deg,#10B981,#34D399)" }}
+            style={{ width: `${tasks.length > 0 ? Math.round((done / tasks.length) * 100) : 0}%`, background: "#10B981" }}
           />
         </div>
         <span className={cn("text-[12px] font-semibold ml-2 shrink-0", D("text-slate-300", "text-slate-700"))}>

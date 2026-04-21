@@ -53,7 +53,7 @@ export default function StudentProfilePage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b",
-          D("border-white/[0.06]", "border-slate-200"),
+          D("bg-[#111827] border-white/[0.06]", "bg-amber-50 border-slate-200"),
         )}
       >
         <div>
@@ -95,7 +95,7 @@ export default function StudentProfilePage() {
               />
             ) : (
               <div
-                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg"
+                className="w-16 h-16 rounded-2xl bg-indigo-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg"
               >
                 {initials}
               </div>

@@ -110,7 +110,13 @@ export default function CollegeDetailsPage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b",
+        D(
+          "bg-[#0F1B30] border-white/[0.06]",
+          "bg-teal-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>College Details</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -121,7 +127,7 @@ export default function CollegeDetailsPage() {
           <button
             onClick={() => setEditing(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+            style={{ background: "#0D948B", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
           >
             Edit details
           </button>
@@ -134,7 +140,7 @@ export default function CollegeDetailsPage() {
               onClick={handleSave}
               disabled={isSaving}
               className="px-4 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", boxShadow: "0 4px 14px rgba(13,148,139,0.3)" }}
+              style={{ background: "#0D948B", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
             >
               {isSaving ? "Saving..." : "Save changes"}
             </button>

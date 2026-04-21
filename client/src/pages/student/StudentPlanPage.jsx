@@ -53,7 +53,7 @@ export default function StudentPlanPage() {
       <div
         className={cn(
           "flex flex-col gap-5 border-b px-8 py-6 lg:flex-row lg:items-end lg:justify-between",
-          D("border-white/[0.06]", "border-slate-200"),
+          D("bg-[#111827] border-white/[0.06]", "bg-amber-50 border-slate-200"),
         )}
       >
         <div className="max-w-3xl">
@@ -126,7 +126,7 @@ export default function StudentPlanPage() {
           <button
             onClick={() => navigate("/dashboard/student/events")}
             className="rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#F59E0B,#FBBF24)" }}
+            style={{ background: "#F59E0B" }}
           >
             Explore events
           </button>
@@ -265,8 +265,7 @@ export default function StudentPlanPage() {
                         <div
                           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-[13px] font-black text-white"
                           style={{
-                            background:
-                              "linear-gradient(135deg, #F59E0B 0%, #FB7185 100%)",
+                            background: "#F59E0B",
                           }}
                         >
                           {index + 1}
@@ -382,8 +381,7 @@ export default function StudentPlanPage() {
                           className="h-full rounded-full"
                           style={{
                             width: item.progress,
-                            background:
-                              "linear-gradient(90deg,#F59E0B 0%,#FB7185 100%)",
+                            background: "#F59E0B",
                           }}
                         />
                       </div>

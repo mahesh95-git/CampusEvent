@@ -71,8 +71,13 @@ export default function VolunteerAttendancePage() {
 
   const handleSave = () => setSaved(true);
 
-  const thCls = cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"));
-  const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
+  const thCls = cn(
+    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
+  );
+  const tdCls = cn(
+    "px-4 py-3.5 text-[13px] border-r last:border-r-0",
+    D("text-slate-200 border-white/[0.04]", "text-slate-700 border-slate-100"),
+  );
 
   function handleExport() {
     downloadCsvFile(
@@ -96,7 +101,10 @@ export default function VolunteerAttendancePage() {
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       {/* Header */}
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D("bg-[#111827] border-white/[0.06]", "bg-slate-50 border-slate-200"),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Attendance</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -135,7 +143,7 @@ export default function VolunteerAttendancePage() {
         <button
           onClick={handleSave}
           className="px-4 py-2.5 rounded-lg text-[13px] font-bold text-white"
-          style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 4px 14px rgba(99,102,241,0.3)" }}
+          style={{ background: "#6366F1", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
         >
           Save Changes
         </button>
@@ -160,7 +168,7 @@ export default function VolunteerAttendancePage() {
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+              <tr className="border-b bg-slate-900 text-slate-100">
                 <th className={cn(thCls, "w-12 text-center")}>
                   <input 
                     type="checkbox" 

@@ -1,4 +1,4 @@
-const ROLES = {
+﻿const ROLES = {
   participant: {
     label: "Participant",
     dot: "#10B981",
@@ -38,6 +38,17 @@ const ROLES = {
     cta: "Sign in",
     extra: { label: "Forgot password?", href: "/forgot-password" },
   },
+
+  judge: {
+    label: "Judge",
+    dot: "#8B5CF6",
+    accent: "#8B5CF6",
+    accentSoft: "rgba(139,92,246,0.12)",
+    desc: "Evaluate events, upload results, and score participants",
+    cta: "Sign in",
+    extra: { label: "Forgot password?", href: "/forgot-password" },
+  },
+
 };
 const SHARED_FIELDS = [
   {
@@ -51,7 +62,7 @@ const SHARED_FIELDS = [
     name: "password",
     label: "Password",
     type: "password",
-    placeholder: "••••••••",
+    placeholder: "â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢",
     autoComplete: "current-password",
   },
 ];
@@ -62,12 +73,13 @@ const ROLE_OPTIONS = [
   { value: "coordinator", label: "Coordinator", dot: "#0D948B" },
   { value: "collegeadmin", label: "college Admin", dot: "#F59E0B" },
   { value: "volunteer", label: "Volunteer", dot: "#3B82F6" },
+  { value: "judge", label: "Judge", dot: "#8B5CF6" },
 ];
 
 const PLANS = [
   {
     name: "Starter",
-    price: "₹499",
+    price: "â‚¹499",
     period: "per semester",
     desc: "For small clubs just getting started",
     highlight: false,
@@ -89,7 +101,7 @@ const PLANS = [
   },
   {
     name: "Organisation",
-    price: "₹999",
+    price: "â‚¹999",
     period: "per semester",
     desc: "For active departments & student bodies",
     highlight: true,
@@ -158,7 +170,7 @@ const COLLEGE_TYPES = [
 const NAV_CONFIG = {
   collegeadmin: {
     label: "Org Admin",
-    emoji: "🎯",
+    emoji: "ðŸŽ¯",
     color: "teal",
     accent: { dark: "#14B8A6", light: "#0D948B" },
     navItems: [
@@ -176,7 +188,7 @@ const NAV_CONFIG = {
 
   coordinator: {
     label: "Coordinator",
-    emoji: "📋",
+    emoji: "ðŸ“‹",
     color: "indigo",
     accent: { dark: "#818CF8", light: "#6366F1" },
     plan: null, // coordinators don't have a plan badge
@@ -193,7 +205,7 @@ const NAV_CONFIG = {
 
   student: {
     label: "Student",
-    emoji: "🎓",
+    emoji: "ðŸŽ“",
     color: "amber",
     accent: { dark: "#F59E0B", light: "#D97706" },
     plan: null,
@@ -209,7 +221,7 @@ const NAV_CONFIG = {
 
   volunteer: {
     label: "Volunteer",
-    emoji: "🎗️",
+    emoji: "ðŸŽ—ï¸",
     color: "blue",
     accent: { dark: "#60A5FA", light: "#3B82F6" },
     plan: null,
@@ -219,6 +231,21 @@ const NAV_CONFIG = {
       { label: "Events", path: "/dashboard/volunteer/events", icon: "calendar" },
     ],
 
+    quickPanel: null,
+  },
+
+  judge: {
+    label: "Judge",
+    emoji: "⚖️",
+    color: "purple",
+    accent: { dark: "#A78BFA", light: "#8B5CF6" },
+    plan: null,
+    navItems: [
+      { label: "Overview", path: "/dashboard/judge", icon: "grid" },
+      { label: "Events", path: "/dashboard/judge/events", icon: "calendar" },
+      { label: "Scores", path: "/dashboard/judge/scores", icon: "calendar" },
+      { label: "Profile", path: "/dashboard/judge/profile", icon: "user-add" },
+    ],
     quickPanel: null,
   },
 };
@@ -269,3 +296,4 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/svg+xml",
 ];
 export { ROLES, SHARED_FIELDS, ROLE_OPTIONS, PLANS, INDIAN_STATES, COLLEGE_TYPES, NAV_CONFIG, ACCEPTED_IMAGE_TYPES };
+

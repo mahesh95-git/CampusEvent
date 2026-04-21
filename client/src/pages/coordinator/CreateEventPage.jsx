@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import {
   useCreateEventMutation,
   useGetDepartmentsQuery,
+  useGetStudentsQuery,
 } from "@/store/api";
 import { EventBannerUpload } from "@/components/upload/CloudinaryUpload";
 
@@ -70,6 +71,11 @@ function plusOneHour(date, time) {
   return formatLocalDateTime(parsedDate);
 }
 
+function generatePassword() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$";
+  return Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
 export default function CreateEventPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -115,12 +121,20 @@ export default function CreateEventPage() {
   const [nextFieldId, setNextId] = useState(3);
 
   const [volunteers, setVolunteers] = useState([]);
+  const [selectedStudentId, setSelectedStudentId] = useState("");
   const [volForm, setVolForm] = useState({
-    name: "",
-    email: "",
     taskTitle: "",
     taskDescription: "",
   });
+  const [judgeForm, setJudgeForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: generatePassword(),
+  });
+  const { data: studentsResponse, isLoading: studentsLoading } = useGetStudentsQuery();
+  const students = studentsResponse?.students ?? [];
+  const selectedStudent = students.find((student) => String(student.id) === String(selectedStudentId));
 
   const canGoNext = useMemo(() => {
     if (step === 1) {
@@ -177,15 +191,23 @@ export default function CreateEventPage() {
   }
 
   function addVolunteer() {
-    if (!volForm.name.trim() || !volForm.email.trim() || !volForm.taskTitle.trim()) {
+    if (!selectedStudent?.email?.trim() || !volForm.taskTitle.trim()) {
       return;
     }
 
     setVolunteers((current) => [
       ...current,
-      { id: Date.now(), ...volForm, name: volForm.name.trim(), email: volForm.email.trim() },
+      {
+        id: Date.now(),
+        ...volForm,
+        studentId: selectedStudent.id,
+        name: selectedStudent.name,
+        email: selectedStudent.email,
+        department: selectedStudent.department?.name || "",
+      },
     ]);
-    setVolForm({ name: "", email: "", taskTitle: "", taskDescription: "" });
+    setSelectedStudentId("");
+    setVolForm({ taskTitle: "", taskDescription: "" });
   }
 
   function removeVolunteer(id) {
@@ -223,6 +245,10 @@ export default function CreateEventPage() {
           volunteers,
           coCoordinators: team.coCoordinators,
         },
+        judgeName: judgeForm.name.trim(),
+        judgeEmail: judgeForm.email.trim(),
+        judgePhone: judgeForm.phone.trim(),
+        judgePassword: judgeForm.password,
       }).unwrap();
 
       setSuccessMessage("Event created successfully.");
@@ -237,62 +263,94 @@ export default function CreateEventPage() {
   const steps = ["Event info", "Departments & team", "Registration form", "Assign volunteers"];
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/6", "border-slate-200"))}>
-        <div>
-          <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Create Event</h1>
-          <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
-            Configure your event in 4 steps
-          </p>
+    <div
+      className={cn(
+        "relative flex-1 overflow-y-auto",
+        D("bg-[#0B1220]", "bg-[#F8FAFC]"),
+      )}
+    >
+      <div className={cn("relative z-10 mx-6 mt-6 rounded-3xl border overflow-hidden backdrop-blur-xl", D("bg-[#0D1626]/92 border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.22)]", "bg-white/90 border-slate-200 shadow-[0_24px_80px_rgba(15,23,42,0.08)]"))}>
+        <div className={cn("flex items-center justify-between gap-4 px-6 py-5 border-b", D("border-white/[0.07]", "border-slate-200"))}>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className={cn("inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold border", D("bg-white/[0.06] border-white/[0.08] text-slate-300", "bg-slate-50 border-slate-200 text-slate-600"))}>
+                Event Builder
+              </span>
+              <span className={cn("text-[11px] font-semibold px-2.5 py-1 rounded-full", D("bg-indigo-500/10 text-indigo-300", "bg-indigo-50 text-indigo-700"))}>
+                Step {step} of 4
+              </span>
+            </div>
+            <h1 className={cn("text-[24px] lg:text-[28px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Create Event</h1>
+            <p className={cn("text-[12px] mt-1 max-w-2xl", D("text-slate-400", "text-slate-500"))}>
+              Build a polished event page with a clear registration flow, team assignment, and volunteer plan.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate(eventsBasePath)}
+            className={cn("shrink-0 text-[13px] font-medium px-4 py-2.5 rounded-xl border transition-colors", D("border-white/[0.1] text-slate-300 hover:bg-white/[0.05]", "border-slate-200 text-slate-600 hover:bg-slate-50"))}
+          >
+            Cancel
+          </button>
         </div>
-        <button
-          onClick={() => navigate(eventsBasePath)}
-          className={cn("text-[13px] font-medium px-4 py-2.5 rounded-xl border", D("border-white/10 text-slate-400", "border-slate-200 text-slate-600"))}
-        >
-          Cancel
-        </button>
-      </div>
 
-      <div className={cn("px-8 py-5 border-b", D("border-white/4", "border-slate-100"))}>
-        <div className="flex items-center gap-0">
-          {steps.map((label, index) => {
-            const currentStep = index + 1;
-            const active = step === currentStep;
-            const done = step > currentStep;
+        <div className={cn("px-6 py-5 border-b", D("border-white/[0.06]", "border-slate-100"))}>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {steps.map((label, index) => {
+              const currentStep = index + 1;
+              const active = step === currentStep;
+              const done = step > currentStep;
 
-            return (
-              <React.Fragment key={label}>
-                <div className="flex items-center gap-2.5">
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setStep(currentStep)}
+                  className={cn(
+                    "group flex items-center gap-3 rounded-2xl border px-4 py-3 text-left transition-all",
+                    active && "scale-[1.01]",
+                    D(
+                      done
+                        ? "bg-emerald-500/10 border-emerald-500/20"
+                        : active
+                          ? "bg-indigo-500/10 border-indigo-500/25 shadow-[0_10px_24px_rgba(99,102,241,0.12)]"
+                          : "bg-white/[0.03] border-white/[0.07] hover:bg-white/[0.05]",
+                      done
+                        ? "bg-emerald-50 border-emerald-200"
+                        : active
+                          ? "bg-indigo-50 border-indigo-200 shadow-[0_10px_24px_rgba(99,102,241,0.08)]"
+                          : "bg-slate-50 border-slate-200 hover:bg-white",
+                    ),
+                  )}
+                >
                   <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 transition-all"
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 transition-all"
                     style={{
                       background: done
-                        ? "#6366F1"
+                        ? "#10B981"
                         : active
-                          ? "linear-gradient(135deg,#6366F1,#818CF8)"
+                          ? "#6366F1"
                           : dark
                             ? "rgba(255,255,255,0.06)"
-                            : "#F1F5F9",
-                      color: done || active ? "#FFF" : dark ? "#475569" : "#94A3B8",
-                      boxShadow: active ? "0 0 0 4px rgba(99,102,241,0.2)" : "none",
+                            : "#E2E8F0",
+                      color: done || active ? "#FFF" : dark ? "#94A3B8" : "#64748B",
+                      boxShadow: active ? "0 10px 24px rgba(99,102,241,0.22)" : "none",
                     }}
                   >
-                    {done ? "OK" : currentStep}
+                    {done ? "✓" : currentStep}
                   </div>
-                  <p className={cn("text-[13px] font-semibold transition-colors", active ? "text-indigo-400" : done ? D("text-slate-300", "text-slate-600") : D("text-slate-600", "text-slate-400"))}>
-                    {label}
-                  </p>
-                </div>
-                {index < steps.length - 1 && (
-                  <div className={cn("flex-1 h-px mx-4", done ? "bg-indigo-500/60" : D("bg-white/8", "bg-slate-200"))} />
-                )}
-              </React.Fragment>
-            );
-          })}
+                  <div className="min-w-0">
+                    <p className={cn("text-[13px] font-semibold", active ? "text-indigo-400" : done ? D("text-slate-200", "text-slate-700") : D("text-slate-500", "text-slate-500"))}>{label}</p>
+                    <p className={cn("text-[11px] mt-0.5", D("text-slate-500", "text-slate-400"))}>
+                      {currentStep === 1 ? "Basics" : currentStep === 2 ? "Departments" : currentStep === 3 ? "Form fields" : "Volunteers"}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      <div className="px-8 py-7 max-w-190 flex flex-col gap-5">
+        <div className="relative z-10 px-6 py-7 lg:px-8 lg:py-8 max-w-6xl mx-auto flex flex-col gap-5">
         {step === 1 && (
           <div className="flex flex-col gap-5">
             <div>
@@ -386,7 +444,7 @@ export default function CreateEventPage() {
                         onClick={() => setInfo((current) => ({ ...current, participation: value }))}
                         className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
                         style={{
-                          background: info.participation === value ? "linear-gradient(135deg,#6366F1,#818CF8)" : "transparent",
+                        background: info.participation === value ? "#6366F1" : "transparent",
                           color: info.participation === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
                           borderColor: info.participation === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
                         }}
@@ -423,7 +481,7 @@ export default function CreateEventPage() {
                     onClick={() => setInfo((current) => ({ ...current, fee: value, amount: value === "free" ? "" : current.amount }))}
                     className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
                     style={{
-                      background: info.fee === value ? "linear-gradient(135deg,#0D948B,#14B8A6)" : "transparent",
+                      background: info.fee === value ? "#0D948B" : "transparent",
                       color: info.fee === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
                       borderColor: info.fee === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
                     }}
@@ -696,25 +754,47 @@ export default function CreateEventPage() {
         {step === 4 && (
           <div className="flex flex-col gap-5">
             <p className={cn("text-[13px]", D("text-slate-400", "text-slate-500"))}>
-              Add volunteers for this event. You can assign roles and add more later.
+              Pick a student from your college and assign a volunteer role.
             </p>
 
             <div className={cn("p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
               <p className={cn("text-[12px] font-bold mb-3", D("text-slate-400", "text-slate-500"))}>Add volunteer</p>
-              <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <div>
-                  <label className={labelCls}>Name</label>
-                  <input className={inputCls} placeholder="Student Name" value={volForm.name} onChange={(event) => setVolForm((current) => ({ ...current, name: event.target.value }))} />
-                </div>
-                <div>
-                  <label className={labelCls}>Student Email *</label>
-                  <input type="email" className={inputCls} placeholder="student@college.edu" value={volForm.email} onChange={(event) => setVolForm((current) => ({ ...current, email: event.target.value }))} />
+                  <label className={labelCls}>Select student *</label>
+                  <select
+                    className={inputCls}
+                    value={selectedStudentId}
+                    onChange={(event) => setSelectedStudentId(event.target.value)}
+                    disabled={studentsLoading}
+                  >
+                    <option value="">
+                      {studentsLoading ? "Loading students..." : "Choose a student"}
+                    </option>
+                    {students.map((student) => (
+                      <option key={student.id} value={student.id}>
+                        {student.name} - {student.email}
+                      </option>
+                    ))}
+                  </select>
+                  <p className={cn("text-[11px] mt-2", D("text-slate-500", "text-slate-400"))}>
+                    {students.length} student{students.length !== 1 ? "s" : ""} available from your organization.
+                  </p>
                 </div>
                 <div>
                   <label className={labelCls}>Task Title *</label>
                   <input className={inputCls} placeholder="e.g. Stage Manager" value={volForm.taskTitle} onChange={(event) => setVolForm((current) => ({ ...current, taskTitle: event.target.value }))} />
                 </div>
               </div>
+              {selectedStudent && (
+                <div className={cn("mb-3 rounded-xl border px-4 py-3 text-[12px]", D("bg-white/[0.05] border-white/[0.08] text-slate-300", "bg-slate-50 border-slate-200 text-slate-700"))}>
+                  <p className="font-semibold">{selectedStudent.name}</p>
+                  <p className={D("text-slate-400", "text-slate-500")}>{selectedStudent.email}</p>
+                  <p className={D("text-slate-400", "text-slate-500")}>
+                    {selectedStudent.department?.name || "No department assigned"}
+                  </p>
+                </div>
+              )}
               <div className="mb-3">
                   <label className={labelCls}>Task Description (Optional)</label>
                   <input className={inputCls} placeholder="Instructions for the task" value={volForm.taskDescription} onChange={(event) => setVolForm((current) => ({ ...current, taskDescription: event.target.value }))} />
@@ -722,9 +802,9 @@ export default function CreateEventPage() {
               <button
                 type="button"
                 onClick={addVolunteer}
-                disabled={!volForm.name.trim() || !volForm.email.trim() || !volForm.taskTitle.trim()}
+                disabled={!selectedStudent?.email?.trim() || !volForm.taskTitle.trim()}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-white disabled:opacity-40 transition-all"
-                style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 3px 10px rgba(99,102,241,0.28)" }}
+                style={{ background: "#6366F1", boxShadow: "0 3px 10px rgba(99,102,241,0.22)" }}
               >
                 <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
                 Add
@@ -738,12 +818,13 @@ export default function CreateEventPage() {
                 </p>
                 {volunteers.map((volunteer) => (
                   <div key={volunteer.id} className={cn("flex items-center gap-3 px-4 py-2.5 rounded-xl border", D("bg-deep-navy border-white/7", "bg-white border-slate-200"))}>
-                    <div className="w-7 h-7 rounded-full bg-linear-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
                       {volunteer.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={cn("text-[13px] font-semibold", D("text-slate-100", "text-slate-800"))}>{volunteer.name}</p>
                       <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>{volunteer.email}</p>
+                      <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>{volunteer.department || "No department"}</p>
                     </div>
                     <span className={cn("text-[11.5px] font-medium px-2.5 py-1 rounded-lg shrink-0", D("bg-white/5 text-slate-400", "bg-slate-100 text-slate-600"))}>{volunteer.taskTitle}</span>
                     <button type="button" onClick={() => removeVolunteer(volunteer.id)} className={cn("text-[11px] w-6 h-6 rounded-lg flex items-center justify-center", D("hover:bg-rose-500/10 text-rose-400", "hover:bg-rose-50 text-rose-500"))}>x</button>
@@ -755,6 +836,40 @@ export default function CreateEventPage() {
                 No volunteers added yet.
               </p>
             )}
+
+            <div className={cn("mt-2 p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <p className={cn("text-[12px] font-bold", D("text-slate-400", "text-slate-500"))}>Assign judge</p>
+                <button
+                  type="button"
+                  onClick={() => setJudgeForm((current) => ({ ...current, password: generatePassword() }))}
+                  className={cn("text-[11px] font-medium", D("text-slate-500 hover:text-indigo-400", "text-slate-400 hover:text-indigo-600"))}
+                >
+                  Regenerate password
+                </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className={labelCls}>Judge name *</label>
+                  <input className={inputCls} placeholder="e.g. Prof. Meera Rao" value={judgeForm.name} onChange={(event) => setJudgeForm((current) => ({ ...current, name: event.target.value }))} />
+                </div>
+                <div>
+                  <label className={labelCls}>Judge email *</label>
+                  <input className={inputCls} type="email" placeholder="judge@college.edu" value={judgeForm.email} onChange={(event) => setJudgeForm((current) => ({ ...current, email: event.target.value }))} />
+                </div>
+                <div>
+                  <label className={labelCls}>Judge phone *</label>
+                  <input className={inputCls} placeholder="9876543210" value={judgeForm.phone} onChange={(event) => setJudgeForm((current) => ({ ...current, phone: event.target.value }))} />
+                </div>
+                <div>
+                  <label className={labelCls}>Judge password *</label>
+                  <input className={inputCls} type="text" value={judgeForm.password} onChange={(event) => setJudgeForm((current) => ({ ...current, password: event.target.value }))} />
+                </div>
+              </div>
+              <p className={cn("text-[11px] mt-3", D("text-slate-500", "text-slate-400"))}>
+                The judge can log in with these details and will see only the events assigned to them.
+              </p>
+            </div>
           </div>
         )}
 
@@ -764,8 +879,9 @@ export default function CreateEventPage() {
           </div>
         )}
       </div>
+      </div>
 
-      <div className={cn("sticky bottom-0 flex items-center justify-between px-8 py-4 border-t", D("bg-abyss border-white/6", "bg-white border-slate-200"))}>
+      <div className={cn("sticky bottom-0 z-20 mx-6 mb-6 flex items-center justify-between px-6 py-4 border rounded-3xl backdrop-blur-xl", D("bg-[#070D1A]/95 border-white/[0.06] shadow-[0_18px_50px_rgba(0,0,0,0.18)]", "bg-white/90 border-slate-200 shadow-[0_18px_50px_rgba(15,23,42,0.08)]"))}>
         <button
           onClick={() => (step > 1 ? setStep((current) => current - 1) : navigate(eventsBasePath))}
           className={cn("px-5 py-2.5 rounded-xl text-[13px] font-medium border", D("border-white/10 text-slate-400", "border-slate-200 text-slate-600"))}
@@ -783,7 +899,7 @@ export default function CreateEventPage() {
           onClick={() => (step < 4 ? setStep((current) => current + 1) : handlePublish())}
           disabled={(step < 4 && !canGoNext) || isLoading}
           className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-50"
-          style={{ background: "linear-gradient(135deg,#6366F1,#818CF8)", boxShadow: "0 4px 14px rgba(99,102,241,0.3)" }}
+          style={{ background: "#6366F1", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
         >
           {isLoading ? "Publishing..." : step < 4 ? "Next >" : "Publish event"}
         </button>

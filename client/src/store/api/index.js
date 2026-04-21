@@ -1,10 +1,11 @@
 import { authApi } from "./auth/authApi";
+import { judgeApi } from "./judge/judgeApi";
 import { organizationApi } from "./organization/organizationApi";
 import { studentApi } from "./student/studentApi";
 import { publicApi } from "./public/publicApi";
 import { volunteerApi } from "./volunteer/volunteerApi";
 
-export { authApi, organizationApi, studentApi, publicApi, volunteerApi };
+export { authApi, judgeApi, organizationApi, studentApi, publicApi, volunteerApi };
 export const {
   useChangePasswordMutation,
   useGetCurrentUserQuery,
@@ -12,6 +13,13 @@ export const {
   useLogoutUserMutation,
   useUpdateCurrentUserMutation,
 } = authApi;
+export const {
+  useGetJudgeDashboardQuery,
+  useGetJudgeEventByIdQuery,
+  useGetJudgeEventsQuery,
+  useSaveJudgeResultMutation,
+  useSaveJudgeScoreMutation,
+} = judgeApi;
 export const {
   useCreateDepartmentMutation,
   useCreateEventMutation,

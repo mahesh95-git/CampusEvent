@@ -41,8 +41,13 @@ export default function ParticipantsPage() {
     });
   }, [students, search]);
 
-  const thCls = cn("px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em]", D("text-slate-500", "text-slate-400"));
-  const tdCls = cn("px-4 py-3.5 text-[13px]", D("text-slate-200", "text-slate-700"));
+  const thCls = cn(
+    "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
+  );
+  const tdCls = cn(
+    "px-4 py-3.5 text-[13px] border-r last:border-r-0",
+    D("text-slate-200 border-white/[0.04]", "text-slate-700 border-slate-100"),
+  );
   const errorMessage = error?.data?.message || "Unable to load students.";
 
   async function handleApprove(student) {
@@ -79,7 +84,13 @@ export default function ParticipantsPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn(
+        "flex items-center justify-between px-8 py-5 border-b shrink-0",
+        D(
+          "bg-[#0D1626] border-white/[0.06]",
+          "bg-blue-50 border-slate-200",
+        ),
+      )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Students</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Students from your department</p>
@@ -115,7 +126,7 @@ export default function ParticipantsPage() {
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className={cn("border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-50 border-slate-200"))}>
+              <tr className="border-b bg-slate-900 text-slate-100">
                 <th className={thCls}>Student</th>
                 <th className={thCls}>Department</th>
                 <th className={thCls}>Phone</th>
@@ -129,7 +140,7 @@ export default function ParticipantsPage() {
                 <tr key={student.id} className={cn("border-b last:border-0 transition-colors", D("border-white/[0.04] hover:bg-white/[0.03]", "border-slate-100 hover:bg-slate-50"))}>
                   <td className={tdCls}>
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                         {(student.name || "NA").split(" ").map((part) => part[0]).join("").slice(0, 2)}
                       </div>
                       <div>
@@ -152,7 +163,7 @@ export default function ParticipantsPage() {
                       );
                     })()}
                   </td>
-                  <td className="px-4 py-3.5 text-right">
+                  <td className="px-4 py-3.5 text-right border-r last:border-r-0">
                     <button
                       type="button"
                       onClick={() => handleApprove(student)}

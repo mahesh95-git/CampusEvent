@@ -2,8 +2,10 @@ import express from "express";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
 import requireAuth from "../middlewares/requireAuth.js";
+import requireRole from "../middlewares/requireRole.js";
 import {
   uploadCollegeLogo,
+  uploadJudgeResultFile,
   uploadEventBanner,
   uploadProfilePicture,
 } from "../controllers/uploadController.js";
@@ -30,6 +32,14 @@ router.post(
   requireAuth,
   upload.any(),
   asyncHandler(uploadProfilePicture)
+);
+
+router.post(
+  "/judge-result",
+  requireAuth,
+  requireRole("judge", "coordinator", "collegeadmin"),
+  upload.any(),
+  asyncHandler(uploadJudgeResultFile)
 );
 
 export default router;
