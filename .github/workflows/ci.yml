@@ -20,7 +20,11 @@ jobs:
                 client-id: ${{ vars.AZURE_CLIENT_ID }}
                 tenant-id: ${{ vars.AZURE_TENANT_ID }}
                 subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-            
+            - name: Verify Azure identity
+              run: |
+                az account show \
+                  --query "{subscription:id, tenant:tenantId, user:user.name, userType:user.type}" \
+                  --output json
             - name: Login to Azure Container Registry
               run: az acr login --name maheshrathod
             - name: Build frontend image
