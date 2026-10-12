@@ -1,0 +1,21 @@
+name: Campuse event CI
+
+on:
+    push:
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    docker-build:
+        runs-on: ubuntu-latest
+        name: Build Docker image
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: build frontend
+              run: docker build -t campuse-event-frontend:ci ./frontend
+            - name: build backend
+              run: docker build -t campuse-event-backend:ci ./backend
+            
+    
+
