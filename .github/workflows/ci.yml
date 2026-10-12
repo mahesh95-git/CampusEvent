@@ -15,33 +15,38 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
             - name: Azure Login using OIDC
+              id: azure_login
+              if: ${{ vars.ACR_LOGIN_SERVER != '' && vars.AZURE_CLIENT_ID != '' && vars.AZURE_TENANT_ID != '' && vars.AZURE_SUBSCRIPTION_ID != '' }}
+              continue-on-error: true
               uses: azure/login@v2
               with:
-                client-id: ${{ vars.AZURE_CLIENT_ID }}
-                tenant-id: ${{ vars.AZURE_TENANT_ID }}
-                subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+               client-id: ${{ vars.AZURE_CLIENT_ID }}
+               tenant-id: ${{ vars.AZURE_TENANT_ID }}
+               subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
             
             - name: Login to Azure Container Registry
+              if: ${{ steps.azure_login.outcome == 'success' }}
               run: az acr login --name maheshrathod
             - name: Build frontend image
               run: |
                docker build \
-                -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${{ github.sha }} \
-                -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest \
-                ./client
+               -t ${{ vars.ACR_LOGIN_SERVER != '' && format('{0}/campus-event-frontend:{1}', vars.ACR_LOGIN_SERVER, github.sha) || format('campus-event-frontend:{0}', github.sha) }} \
+               -t ${{ vars.ACR_LOGIN_SERVER != '' && format('{0}/campus-event-frontend:latest', vars.ACR_LOGIN_SERVER) || 'campus-event-frontend:latest' }} \
+               ./client
             - name: Build backend image
               run: |
                docker build \
-               -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${{ github.sha }} \
-               -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest \
+               -t ${{ vars.ACR_LOGIN_SERVER != '' && format('{0}/campus-event-server:{1}', vars.ACR_LOGIN_SERVER, github.sha) || format('campus-event-server:{0}', github.sha) }} \
+               -t ${{ vars.ACR_LOGIN_SERVER != '' && format('{0}/campus-event-server:latest', vars.ACR_LOGIN_SERVER) || 'campus-event-server:latest' }} \
                ./server
             - name: Push frontend image
+              if: ${{ steps.azure_login.outcome == 'success' }}
               run: |
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${{ github.sha }}
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest
+               docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${{ github.sha }}
+               docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest
 
             - name: Push backend image
+              if: ${{ steps.azure_login.outcome == 'success' }}
               run: |
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${{ github.sha }}
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest
-
+               docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${{ github.sha }}
+               docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest
