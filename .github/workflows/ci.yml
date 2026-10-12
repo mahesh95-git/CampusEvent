@@ -13,9 +13,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
             - name: build frontend
-              run: docker build -t campuse-event-frontend:ci ./frontend
+              run: docker build -t campuse-event-frontend:ci ./client
             - name: build backend
-              run: docker build -t campuse-event-backend:ci ./backend
+              run: docker build -t campuse-event-backend:ci ./server
             
     
 
