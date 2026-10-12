@@ -1,0 +1,3 @@
+.env
+.env.*
+!.env.examplegit rm --cached client/.env server/.env

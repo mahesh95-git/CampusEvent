@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: campus-event-server
+    env_file:
+      - ./server/.env
+    expose:
+      - 3000
+    restart: unless-stopped
+    networks:
+      - campus-event-network
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: campus-event-fronted
+    expose:
+      - 80
+    restart: unless-stopped
+    networks:
+      - campus-event-network
+  nginx:
+    image: nginx:latest
+    container_name: campus-event-nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+    networks:
+      - campus-event-network
+networks:
+  campus-event-network:
+    driver: bridge
+  

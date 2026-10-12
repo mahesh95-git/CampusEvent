@@ -23,11 +23,11 @@ app.use(
 );
 app.use(express.json({ limit: "5mb" }));
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-app.get("/hello", (req, res) => {
+app.get("/api/hello", (req, res) => {
   res.json({ message: "hello world" });
 });
 
