@@ -57,31 +57,21 @@ jobs:
           docker push "${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${GITHUB_SHA}"
           docker push "${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest"
 
-     
-      - name: Diagnose Azure VM Run Command
+      - name: Deploy to Azure VM
         run: |
-          echo "Checking Azure VM..."
-
-          az vm show \
-            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ vars.AZURE_VM_NAME }}" \
-            --query "{name:name, provisioningState:provisioningState, location:location}" \
-            --output json
-
-          echo "Checking VM status..."
-
-          az vm get-instance-view \
-            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ vars.AZURE_VM_NAME }}" \
-            --query "instanceView.statuses[].displayStatus" \
-            --output json
-
-          echo "Testing Azure Run Command..."
-
           az vm run-command invoke \
             --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
             --name "${{ vars.AZURE_VM_NAME }}" \
             --command-id RunShellScript \
-            --scripts "echo RUN_COMMAND_OK" \
-            --output json
+            --scripts '
+              set -eu
 
+              cd /home/azureuser/campus-event
+
+              az login --identity --allow-no-subscriptions >/dev/null
+              az acr login --name maheshrathod
+
+              docker compose pull
+              docker compose up -d --remove-orphans
+              docker compose ps
+            '
