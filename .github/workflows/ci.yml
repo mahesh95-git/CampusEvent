@@ -1,51 +1,77 @@
-name: Campuse event CI
+
+name: Campus Event CI/CD
 
 on:
-    push:
-    pull_request:
-    workflow_dispatch:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
 permissions:
   contents: read
   id-token: write
+
+concurrency:
+  group: campus-event-production
+  cancel-in-progress: false
+
 jobs:
-    docker-build:
-        runs-on: ubuntu-latest
-        name: Build Docker image
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-            - name: Azure Login using OIDC
-              uses: azure/login@v2
-              with:
-                client-id: ${{ vars.AZURE_CLIENT_ID }}
-                tenant-id: ${{ vars.AZURE_TENANT_ID }}
-                subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-            - name: Verify Azure identity
-              run: |
-                az account show \
-                  --query "{subscription:id, tenant:tenantId, user:user.name, userType:user.type}" \
-                  --output json
-            - name: Login to Azure Container Registry
-              run: az acr login --name maheshrathod
-            - name: Build frontend image
-              run: |
-               docker build \
-                -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${{ github.sha }} \
-                -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest \
-                ./client
-            - name: Build backend image
-              run: |
-               docker build \
-               -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${{ github.sha }} \
-               -t ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest \
-               ./server
-            - name: Push frontend image
-              run: |
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${{ github.sha }}
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest
+  build-push-deploy:
+    name: Build, Push and Deploy
+    runs-on: ubuntu-latest
 
-            - name: Push backend image
-              run: |
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${{ github.sha }}
-                docker push ${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      - name: Azure Login using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Verify Azure identity
+        run: az account show --output table
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name maheshrathod
+
+      - name: Build and push frontend image
+        run: |
+          docker build \
+            -t "${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${GITHUB_SHA}" \
+            -t "${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest" \
+            ./client
+
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:${GITHUB_SHA}"
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/campus-event-frontend:latest"
+
+      - name: Build and push backend image
+        run: |
+          docker build \
+            -t "${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${GITHUB_SHA}" \
+            -t "${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest" \
+            ./server
+
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:${GITHUB_SHA}"
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/campus-event-server:latest"
+
+      - name: Deploy to Azure VM
+        run: |
+          az vm run-command invoke \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ vars.AZURE_VM_NAME }}" \
+            --command-id RunShellScript \
+            --scripts '
+              set -eu
+
+              cd /home/azureuser/campus-event
+
+              az login --identity --allow-no-subscriptions >/dev/null
+              az acr login --name maheshrathod
+
+              docker compose pull
+              docker compose up -d --remove-orphans
+              docker compose ps
+            '
