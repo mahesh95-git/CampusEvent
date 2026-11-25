@@ -9,15 +9,15 @@ export function CustomTooltip({ active, payload, label, dark }) {
       className={cn(
         "rounded-xl border px-3.5 py-2.5 text-[12px]",
         D(
-          "bg-[#0D1626] border-white/[0.12]",
-          "bg-white border-slate-200 shadow-lg",
+          "bg-[#1E293B] border-slate-700",
+          "bg-white border-[#E2E8F0] shadow-lg",
         ),
       )}
     >
       <p
         className={cn(
           "font-semibold mb-1.5",
-          D("text-slate-300", "text-slate-700"),
+          D("text-slate-200", "text-[#0F172A]"),
         )}
       >
         {label}

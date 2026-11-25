@@ -12,7 +12,7 @@ function MetricCard({ label, value, hint, accent, D }) {
       className={cn(
         "rounded-3xl border p-5",
         D(
-          "border-white/[0.07] bg-[#0D1626]",
+          "border-white/[0.07] bg-[#1E293B]",
           "border-slate-200 bg-white",
         ),
       )}
@@ -53,14 +53,14 @@ export default function StudentPlanPage() {
       <div
         className={cn(
           "flex flex-col gap-5 border-b px-8 py-6 lg:flex-row lg:items-end lg:justify-between",
-          D("bg-[#111827] border-white/[0.06]", "bg-amber-50 border-slate-200"),
+          D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
         )}
       >
         <div className="max-w-3xl">
           <p
             className={cn(
               "text-[11px] font-semibold uppercase tracking-[0.22em]",
-              D("text-amber-300", "text-amber-700"),
+              D("text-blue-300", "text-blue-700"),
             )}
           >
             Student plan
@@ -126,7 +126,7 @@ export default function StudentPlanPage() {
           <button
             onClick={() => navigate("/dashboard/student/events")}
             className="rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white"
-            style={{ background: "#F59E0B" }}
+            style={{ background: "#2563EB" }}
           >
             Explore events
           </button>
@@ -165,7 +165,7 @@ export default function StudentPlanPage() {
             label="Registered this semester"
             value={stats?.registeredCount ?? 0}
             hint="Events you already joined and can prepare for now."
-            accent="#F59E0B"
+            accent="#2563EB"
             D={D}
           />
           <MetricCard
@@ -179,7 +179,7 @@ export default function StudentPlanPage() {
             label="Volunteer target"
             value={plan?.volunteerGoal || "0 events"}
             hint="A soft target to build leadership experience this term."
-            accent="#6366F1"
+            accent="#2563EB"
             D={D}
           />
         </section>
@@ -188,7 +188,7 @@ export default function StudentPlanPage() {
           <div
             className={cn(
               "rounded-[28px] border p-10 text-center",
-              D("border-white/[0.07] bg-[#0D1626]", "border-slate-200 bg-white"),
+              D("border-white/[0.07] bg-[#1E293B]", "border-slate-200 bg-white"),
             )}
           >
             <p
@@ -206,7 +206,7 @@ export default function StudentPlanPage() {
               className={cn(
                 "rounded-[28px] border p-6",
                 D(
-                  "border-white/[0.07] bg-[#0D1626]",
+                  "border-white/[0.07] bg-[#1E293B]",
                   "border-slate-200 bg-white",
                 ),
               )}
@@ -239,8 +239,8 @@ export default function StudentPlanPage() {
                   className={cn(
                     "rounded-full px-3 py-1 text-[11px] font-semibold",
                     D(
-                      "bg-amber-500/10 text-amber-300",
-                      "bg-amber-100 text-amber-700",
+                      "bg-blue-500/10 text-blue-300",
+                      "bg-blue-100 text-blue-700",
                     ),
                   )}
                 >
@@ -255,7 +255,7 @@ export default function StudentPlanPage() {
                     className={cn(
                       "rounded-3xl border p-5",
                       D(
-                        "border-white/[0.06] bg-[#111827]",
+                        "border-white/[0.06] bg-[#1E293B]",
                         "border-slate-200 bg-slate-50",
                       ),
                     )}
@@ -265,7 +265,7 @@ export default function StudentPlanPage() {
                         <div
                           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-[13px] font-black text-white"
                           style={{
-                            background: "#F59E0B",
+                            background: "#2563EB",
                           }}
                         >
                           {index + 1}
@@ -295,7 +295,7 @@ export default function StudentPlanPage() {
                           item.status === "Done"
                             ? "bg-emerald-500/15 text-emerald-400"
                             : item.status === "In progress"
-                              ? "bg-amber-500/15 text-amber-400"
+                              ? "bg-blue-500/15 text-blue-400"
                               : "bg-slate-500/15 text-slate-400",
                         )}
                       >
@@ -328,7 +328,7 @@ export default function StudentPlanPage() {
                 className={cn(
                   "rounded-[28px] border p-6",
                   D(
-                    "border-white/[0.07] bg-[#111827]",
+                    "border-white/[0.07] bg-[#1E293B]",
                     "border-slate-200 bg-slate-50",
                   ),
                 )}
@@ -348,7 +348,7 @@ export default function StudentPlanPage() {
                       className={cn(
                         "rounded-2xl border p-4",
                         D(
-                          "border-white/[0.06] bg-[#0D1626]",
+                          "border-white/[0.06] bg-[#1E293B]",
                           "border-slate-200 bg-white",
                         ),
                       )}
@@ -365,7 +365,7 @@ export default function StudentPlanPage() {
                         <span
                           className={cn(
                             "text-[12px] font-bold",
-                            D("text-amber-300", "text-amber-700"),
+                            D("text-blue-300", "text-blue-700"),
                           )}
                         >
                           {item.progress}
@@ -381,7 +381,7 @@ export default function StudentPlanPage() {
                           className="h-full rounded-full"
                           style={{
                             width: item.progress,
-                            background: "#F59E0B",
+                            background: "#2563EB",
                           }}
                         />
                       </div>
@@ -394,7 +394,7 @@ export default function StudentPlanPage() {
                 className={cn(
                   "rounded-[28px] border p-6",
                   D(
-                    "border-white/[0.07] bg-[#0D1626]",
+                    "border-white/[0.07] bg-[#1E293B]",
                     "border-slate-200 bg-white",
                   ),
                 )}
@@ -414,7 +414,7 @@ export default function StudentPlanPage() {
                       className={cn(
                         "rounded-2xl border p-4",
                         D(
-                          "border-white/[0.06] bg-[#111827]",
+                          "border-white/[0.06] bg-[#1E293B]",
                           "border-slate-200 bg-slate-50",
                         ),
                       )}

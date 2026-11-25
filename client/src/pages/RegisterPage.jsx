@@ -108,10 +108,10 @@ function Register() {
 
   if (!collegeSlug) {
     return (
-      <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
+      <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#0F172A]", "bg-[#F8FAFC]"))}>
         <div className="text-center max-w-[460px]">
-          <h2 className={cn("text-[20px] font-bold mb-2", D("text-slate-100", "text-slate-800"))}>College link required</h2>
-          <p className={cn("text-[14px]", D("text-slate-400", "text-slate-500"))}>
+          <h2 className={cn("text-[20px] font-bold mb-2", D("text-slate-100", "text-[#0F172A]"))}>College link required</h2>
+          <p className={cn("text-[14px]", D("text-slate-400", "text-[#64748B]"))}>
             Open this page from a college login link so we know which college you want to register for.
           </p>
         </div>
@@ -121,7 +121,7 @@ function Register() {
 
   if (collegeLoading) {
     return (
-      <div className={cn("min-h-screen flex items-center justify-center", D("bg-[#070D1A] text-slate-300", "bg-[#F0F7F6] text-slate-600"))}>
+      <div className={cn("min-h-screen flex items-center justify-center", D("bg-[#0F172A] text-slate-300", "bg-[#F8FAFC] text-[#64748B]"))}>
         Loading college details...
       </div>
     );
@@ -129,10 +129,10 @@ function Register() {
 
   if (collegeError || !college) {
     return (
-      <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
+      <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#0F172A]", "bg-[#F8FAFC]"))}>
         <div className="text-center max-w-[460px]">
-          <h2 className={cn("text-[20px] font-bold mb-2", D("text-slate-100", "text-slate-800"))}>College not found</h2>
-          <p className={cn("text-[14px]", D("text-slate-400", "text-slate-500"))}>
+          <h2 className={cn("text-[20px] font-bold mb-2", D("text-slate-100", "text-[#0F172A]"))}>College not found</h2>
+          <p className={cn("text-[14px]", D("text-slate-400", "text-[#64748B]"))}>
             We could not find a college for slug <code>{collegeSlug}</code>.
           </p>
         </div>
@@ -141,41 +141,41 @@ function Register() {
   }
 
   return (
-    <div className={cn("min-h-screen flex transition-colors duration-300", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
+    <div className={cn("min-h-screen flex transition-colors duration-300", D("bg-[#0F172A]", "bg-[#F8FAFC]"))}>
       <div
         className={cn(
           "hidden lg:flex flex-col justify-between w-[300px] shrink-0 p-10 relative overflow-hidden border-r",
-          D("bg-[#0D1626] border-white/[0.06]", "bg-white border-slate-200"),
+          D("bg-[#1E293B] border-slate-800", "bg-white border-[#E2E8F0]"),
         )}
       >
-        <div className="absolute top-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full bg-teal-500 opacity-[0.07] blur-[70px] pointer-events-none" />
-        <div className="absolute bottom-[-40px] right-[-40px] w-[200px] h-[200px] rounded-full bg-amber-400 opacity-[0.05] blur-[50px] pointer-events-none" />
+        <div className="absolute top-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full bg-[#2563EB] opacity-[0.08] blur-[70px] pointer-events-none" />
+        <div className="absolute bottom-[-40px] right-[-40px] w-[200px] h-[200px] rounded-full bg-sky-400 opacity-[0.06] blur-[50px] pointer-events-none" />
 
         <div className="relative z-10 flex items-center gap-2.5">
-          <div className="w-[32px] h-[32px] rounded-[10px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[15px] shadow-lg shadow-teal-500/30">CP</div>
-          <span className={cn("font-extrabold text-[16px] tracking-[-0.3px]", D("text-slate-50", "text-slate-900"))}>CampusEvents</span>
+          <div className="w-[32px] h-[32px] rounded-[10px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[15px] text-white font-bold shadow-lg shadow-blue-600/25">CP</div>
+          <span className={cn("font-extrabold text-[16px] tracking-[-0.3px]", D("text-slate-50", "text-[#0F172A]"))}>CampusEvents</span>
         </div>
 
         <div className="relative z-10">
-          <h2 className={cn("text-[22px] font-extrabold tracking-tight leading-tight", D("text-slate-50", "text-slate-900"))}>
+          <h2 className={cn("text-[22px] font-extrabold tracking-tight leading-tight", D("text-slate-50", "text-[#0F172A]"))}>
             Join <br />
             {college.name}
           </h2>
-          <p className={cn("text-[13px] mt-3 leading-relaxed", D("text-slate-400", "text-slate-500"))}>
+          <p className={cn("text-[13px] mt-3 leading-relaxed", D("text-slate-400", "text-[#64748B]"))}>
             Create your student account to explore campus events, registrations, and opportunities for your college.
           </p>
-          <div className={cn("mt-5 rounded-2xl border p-4", D("bg-white/[0.03] border-white/[0.06]", "bg-slate-50 border-slate-200"))}>
-            <p className={cn("text-[11px] uppercase tracking-[0.08em] font-semibold", D("text-slate-500", "text-slate-400"))}>College</p>
-            <p className={cn("text-[14px] font-semibold mt-2", D("text-slate-100", "text-slate-800"))}>{college.name}</p>
-            <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>{college.location}</p>
+          <div className={cn("mt-5 rounded-2xl border p-4", D("bg-[#0F172A]/60 border-slate-700", "bg-[#F8FAFC] border-[#E2E8F0]"))}>
+            <p className={cn("text-[11px] uppercase tracking-[0.08em] font-semibold", D("text-slate-400", "text-[#64748B]"))}>College</p>
+            <p className={cn("text-[14px] font-semibold mt-2", D("text-slate-100", "text-[#0F172A]"))}>{college.name}</p>
+            <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-[#64748B]"))}>{college.location}</p>
           </div>
         </div>
 
-        <p className={cn("relative z-10 text-[11px]", D("text-slate-700", "text-slate-400"))}>
+        <p className={cn("relative z-10 text-[11px]", D("text-slate-400", "text-[#64748B]"))}>
           Already have an account?{" "}
           <a
             href={`/login?college=${collegeSlug}&role=participant`}
-            className={cn("font-semibold", D("text-teal-400 hover:text-teal-300", "text-teal-600 hover:text-teal-500"))}
+            className={cn("font-semibold", D("text-blue-400 hover:text-blue-300", "text-[#2563EB] hover:text-[#1D4ED8]"))}
           >
             Sign in
           </a>
@@ -183,17 +183,17 @@ function Register() {
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className={cn("flex items-center justify-between px-8 py-4 border-b shrink-0", D("border-white/[0.06] bg-[#070D1A]", "border-slate-200 bg-[#F0F7F6]"))}>
+        <div className={cn("flex items-center justify-between px-8 py-4 border-b shrink-0", D("border-slate-800 bg-[#0F172A]", "border-[#E2E8F0] bg-white"))}>
           <div className="flex items-center gap-2.5 lg:hidden">
-            <div className="w-[30px] h-[30px] rounded-[9px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[14px]">CP</div>
-            <span className={cn("font-extrabold text-[15px]", D("text-slate-50", "text-slate-900"))}>CampusEvents</span>
+            <div className="w-[30px] h-[30px] rounded-[9px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[14px] text-white font-bold">CP</div>
+            <span className={cn("font-extrabold text-[15px]", D("text-slate-50", "text-[#0F172A]"))}>CampusEvents</span>
           </div>
-          <h1 className={cn("hidden lg:block text-[15px] font-semibold", D("text-slate-300", "text-slate-700"))}>
+          <h1 className={cn("hidden lg:block text-[15px] font-semibold", D("text-slate-200", "text-[#0F172A]"))}>
             Student Registration
           </h1>
           <a
             href={`/login?college=${collegeSlug}&role=participant`}
-            className={cn("text-[13px] transition-colors", D("text-slate-500 hover:text-teal-400", "text-slate-400 hover:text-teal-600"))}
+            className={cn("text-[13px] transition-colors", D("text-slate-400 hover:text-blue-400", "text-[#64748B] hover:text-[#2563EB]"))}
           >
             Already registered? Sign in
           </a>
@@ -202,9 +202,9 @@ function Register() {
         <div className="flex-1 overflow-y-auto">
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="px-8 py-7 max-w-[800px] mx-auto">
             <SectionHeading>College information</SectionHeading>
-            <div className={cn("rounded-2xl border p-5 mb-7", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
-              <p className={cn("text-[15px] font-bold", D("text-slate-100", "text-slate-900"))}>{selectedCollegeLabel}</p>
-              <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>
+            <div className={cn("rounded-2xl border p-5 mb-7", D("bg-[#1E293B] border-slate-700", "bg-white border-[#E2E8F0]"))}>
+              <p className={cn("text-[15px] font-bold", D("text-slate-100", "text-[#0F172A]"))}>{selectedCollegeLabel}</p>
+              <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-[#64748B]"))}>
                 Your account will be created under this college.
               </p>
             </div>
@@ -321,7 +321,7 @@ function Register() {
             </div>
 
             {serverError && (
-              <div className={cn("flex items-center gap-2 px-4 py-3 rounded-xl text-[13px] mb-5", D("bg-rose-500/10 border border-rose-500/20 text-rose-400", "bg-rose-50 border border-rose-200 text-rose-600"))}>
+              <div className={cn("flex items-center gap-2 px-4 py-3 rounded-xl text-[13px] mb-5", D("bg-red-500/10 border border-red-500/25 text-red-400", "bg-red-50 border border-red-200 text-[#DC2626]"))}>
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="none">
                   <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />
                   <path d="M8 5v3M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -337,7 +337,7 @@ function Register() {
                 "w-full py-3 rounded-xl text-[15px] font-bold text-white transition-all duration-200 mb-8",
                 isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.01] hover:opacity-95 active:scale-[0.99]",
               )}
-              style={{ background: "linear-gradient(135deg,#0D948B,#14B8A6)", boxShadow: "0 4px 18px rgba(13,148,139,0.4)" }}
+              style={{ background: "#2563EB", boxShadow: "0 4px 18px rgba(37,99,235,0.32)" }}
             >
               {isSubmitting ? "Creating account..." : "Create my account"}
             </button>

@@ -33,10 +33,7 @@ export default function StudentOverviewPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D(
-            "bg-[#111827] border-white/[0.06]",
-            "bg-amber-50 border-slate-200",
-          ),
+                    D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
         )}
       >
         <div>
@@ -87,7 +84,7 @@ export default function StudentOverviewPage() {
         <StatCard
           label="Registered events"
           value={stats?.registeredCount ?? 0}
-          color="#F59E0B"
+          color="#2563EB"
           dark={dark}
         />
         <StatCard
@@ -99,7 +96,7 @@ export default function StudentOverviewPage() {
         <StatCard
           label="College events"
           value={stats?.collegeCount ?? 0}
-          color="#6366F1"
+          color="#2563EB"
           dark={dark}
         />
       </div>
@@ -154,7 +151,7 @@ export default function StudentOverviewPage() {
                 className={cn(
                   "rounded-3xl border p-10 text-center",
                   D(
-                    "border-white/[0.06] bg-[#0D1626]",
+                    "border-white/[0.06] bg-[#1E293B]",
                     "border-slate-200 bg-white",
                   ),
                 )}
@@ -177,7 +174,7 @@ export default function StudentOverviewPage() {
                 className={cn(
                   "w-full rounded-3xl p-6 text-left border transition hover:-translate-y-0.5",
                   D(
-                    "border-white/[0.06] bg-[#0D1626] hover:border-white/[0.12]",
+                    "border-white/[0.06] bg-[#1E293B] hover:border-white/[0.12]",
                     "border-slate-200 bg-white hover:border-slate-300",
                   ),
                 )}
@@ -253,7 +250,7 @@ export default function StudentOverviewPage() {
                 className={cn(
                   "rounded-3xl border p-10 text-center",
                   D(
-                    "border-white/[0.06] bg-[#0D1626]",
+                    "border-white/[0.06] bg-[#1E293B]",
                     "border-slate-200 bg-white",
                   ),
                 )}

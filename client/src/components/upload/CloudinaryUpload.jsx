@@ -59,7 +59,7 @@ export function CollegeLogoUpload({ organizationId, onUploadSuccess }) {
 
   return (
     <div className="space-y-4">
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+      <div className="border-2 border-dashed border-[#E2E8F0] dark:border-slate-700 rounded-lg p-4">
         {preview ? (
           <div className="space-y-2">
             <img src={preview} alt="Preview" className="max-w-[200px] max-h-[200px] rounded" />
@@ -68,7 +68,7 @@ export function CollegeLogoUpload({ organizationId, onUploadSuccess }) {
                 setPreview(null);
                 setSelectedFile(null);
               }}
-              className="text-sm text-red-600 hover:text-red-700"
+              className="text-sm text-[#DC2626] hover:text-red-700"
             >
               Remove
             </button>
@@ -84,22 +84,22 @@ export function CollegeLogoUpload({ organizationId, onUploadSuccess }) {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="text-blue-600 hover:text-blue-700 underline"
+              className="text-[#2563EB] hover:text-[#1D4ED8] underline"
             >
               Click to upload college logo
             </button>
-            <p className="text-xs text-gray-500 mt-2">PNG, JPG, WebP, GIF up to 5MB</p>
+            <p className="text-xs text-[#64748B] mt-2">PNG, JPG, WebP, GIF up to 5MB</p>
           </div>
         )}
       </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {error && <p className="text-[#DC2626] text-sm">{error}</p>}
 
       {selectedFile && (
         <button
           onClick={handleUpload}
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-[#2563EB] text-white py-2 rounded-lg hover:bg-[#1D4ED8] disabled:opacity-50"
         >
           {loading ? "Uploading..." : "Upload Logo"}
         </button>
@@ -184,7 +184,7 @@ export function EventBannerUpload({ eventId, onUploadSuccess }) {
 
   return (
     <div className="space-y-4">
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+      <div className="border-2 border-dashed border-[#E2E8F0] dark:border-slate-700 rounded-lg p-4">
         {preview ? (
           <div className="space-y-2">
             <img src={preview} alt="Preview" className="max-w-full max-h-[300px] rounded" />
@@ -193,7 +193,7 @@ export function EventBannerUpload({ eventId, onUploadSuccess }) {
                 setPreview(null);
                 setSelectedFile(null);
               }}
-              className="text-sm text-red-600 hover:text-red-700"
+              className="text-sm text-[#DC2626] hover:text-red-700"
             >
               Remove
             </button>
@@ -209,22 +209,22 @@ export function EventBannerUpload({ eventId, onUploadSuccess }) {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="text-blue-600 hover:text-blue-700 underline"
+              className="text-[#2563EB] hover:text-[#1D4ED8] underline"
             >
               Click to upload event banner
             </button>
-            <p className="text-xs text-gray-500 mt-2">PNG, JPG, WebP, GIF up to 5MB</p>
+            <p className="text-xs text-[#64748B] mt-2">PNG, JPG, WebP, GIF up to 5MB</p>
           </div>
         )}
       </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {error && <p className="text-[#DC2626] text-sm">{error}</p>}
 
       {selectedFile && (
         <button
           onClick={handleUpload}
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-[#2563EB] text-white py-2 rounded-lg hover:bg-[#1D4ED8] disabled:opacity-50"
         >
           {loading ? "Uploading..." : "Upload Banner"}
         </button>
@@ -287,7 +287,7 @@ export function ProfilePictureUpload({ onUploadSuccess }) {
 
   return (
     <div className="space-y-4">
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+      <div className="border-2 border-dashed border-[#E2E8F0] dark:border-slate-700 rounded-lg p-4">
         {preview ? (
           <div className="space-y-2">
             <img
@@ -300,7 +300,7 @@ export function ProfilePictureUpload({ onUploadSuccess }) {
                 setPreview(null);
                 setSelectedFile(null);
               }}
-              className="text-sm text-red-600 hover:text-red-700 block mx-auto"
+              className="text-sm text-[#DC2626] hover:text-red-700 block mx-auto"
             >
               Remove
             </button>
@@ -316,22 +316,22 @@ export function ProfilePictureUpload({ onUploadSuccess }) {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="text-blue-600 hover:text-blue-700 underline"
+              className="text-[#2563EB] hover:text-[#1D4ED8] underline"
             >
               Click to upload profile picture
             </button>
-            <p className="text-xs text-gray-500 mt-2">PNG, JPG, WebP, GIF up to 5MB</p>
+            <p className="text-xs text-[#64748B] mt-2">PNG, JPG, WebP, GIF up to 5MB</p>
           </div>
         )}
       </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {error && <p className="text-[#DC2626] text-sm">{error}</p>}
 
       {selectedFile && (
         <button
           onClick={handleUpload}
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-[#2563EB] text-white py-2 rounded-lg hover:bg-[#1D4ED8] disabled:opacity-50"
         >
           {loading ? "Uploading..." : "Upload Picture"}
         </button>

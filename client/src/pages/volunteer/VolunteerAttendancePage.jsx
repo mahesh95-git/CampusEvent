@@ -103,7 +103,7 @@ export default function VolunteerAttendancePage() {
       {/* Header */}
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D("bg-[#111827] border-white/[0.06]", "bg-slate-50 border-slate-200"),
+        D("bg-[#1E293B] border-white/[0.06]", "bg-white border-slate-200"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Attendance</h1>
@@ -118,7 +118,7 @@ export default function VolunteerAttendancePage() {
             onChange={(e) => setSelectedEventId(parseInt(e.target.value))}
             className={cn(
               "px-3.5 py-2.5 rounded-xl border text-[13px] font-medium outline-none",
-              D("bg-[#111827] border-white/[0.1] text-slate-200", "bg-white border-slate-200 text-slate-800")
+              D("bg-[#1E293B] border-white/[0.1] text-slate-200", "bg-white border-slate-200 text-slate-800")
             )}
           >
             {events.map((e) => (
@@ -129,7 +129,7 @@ export default function VolunteerAttendancePage() {
       </div>
 
       {/* Stats row */}
-      <div className={cn("flex items-center justify-between px-8 py-4 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn("flex items-center justify-between px-8 py-4 border-b shrink-0", D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"))}>
         <div className="flex items-center gap-8">
           <div>
             <p className={cn("text-[11px] font-semibold uppercase", D("text-slate-500", "text-slate-400"))}>Present</p>
@@ -143,7 +143,7 @@ export default function VolunteerAttendancePage() {
         <button
           onClick={handleSave}
           className="px-4 py-2.5 rounded-lg text-[13px] font-bold text-white"
-          style={{ background: "#6366F1", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
+          style={{ background: "#2563EB", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
         >
           Save Changes
         </button>
@@ -152,7 +152,7 @@ export default function VolunteerAttendancePage() {
 
       {/* Search */}
       <div className={cn("px-8 py-3 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
-        <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border w-max", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+        <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border w-max", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
           <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
             <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3"/>
             <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>

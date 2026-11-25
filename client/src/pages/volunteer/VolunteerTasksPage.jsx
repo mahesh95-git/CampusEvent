@@ -60,7 +60,7 @@ export default function VolunteerTasksPage() {
       {/* Header */}
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D("bg-[#111827] border-white/[0.06]", "bg-slate-50 border-slate-200"),
+        D("bg-[#1E293B] border-white/[0.06]", "bg-white border-slate-200"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Tasks</h1>
@@ -73,7 +73,7 @@ export default function VolunteerTasksPage() {
           <select
             value={filterEvent}
             onChange={(e) => setFilterEvent(e.target.value)}
-            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
           >
             <option value="all">All events</option>
             {events.map((ev) => <option key={ev}>{ev}</option>)}
@@ -81,7 +81,7 @@ export default function VolunteerTasksPage() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
           >
             <option value="all">All status</option>
             <option value="pending">Pending</option>
@@ -127,7 +127,7 @@ export default function VolunteerTasksPage() {
                   "rounded-2xl p-5 border flex items-start gap-4 transition",
                   task.status === "done"
                     ? D("border-white/[0.04] bg-white/[0.01] opacity-70", "border-slate-100 bg-slate-50 opacity-80")
-                    : D("border-white/[0.06] bg-[#0D1626]", "border-slate-200 bg-white"),
+                    : D("border-white/[0.06] bg-[#1E293B]", "border-slate-200 bg-white"),
                 )}
               >
                 {/* Checkbox */}
@@ -169,7 +169,7 @@ export default function VolunteerTasksPage() {
           })}
 
           {filtered.length === 0 && (
-            <div className={cn("rounded-2xl border p-10 text-center", D("border-white/[0.06] bg-[#0D1626]", "border-slate-200 bg-white"))}>
+            <div className={cn("rounded-2xl border p-10 text-center", D("border-white/[0.06] bg-[#1E293B]", "border-slate-200 bg-white"))}>
               <p className={cn("text-[14px] font-semibold", D("text-slate-300", "text-slate-700"))}>No tasks found</p>
               <p className={cn("text-[12px] mt-2", D("text-slate-500", "text-slate-400"))}>Try changing the filters above.</p>
             </div>

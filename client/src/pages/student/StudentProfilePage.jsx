@@ -53,7 +53,7 @@ export default function StudentProfilePage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b",
-          D("bg-[#111827] border-white/[0.06]", "bg-amber-50 border-slate-200"),
+          D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
         )}
       >
         <div>
@@ -81,7 +81,7 @@ export default function StudentProfilePage() {
           className={cn(
             "rounded-3xl border p-6",
             D(
-              "border-white/[0.07] bg-[#0D1626]",
+              "border-white/[0.07] bg-[#1E293B]",
               "border-slate-200 bg-white",
             ),
           )}
@@ -95,7 +95,7 @@ export default function StudentProfilePage() {
               />
             ) : (
               <div
-                className="w-16 h-16 rounded-2xl bg-indigo-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg"
+                className="w-16 h-16 rounded-2xl bg-blue-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg"
               >
                 {initials}
               </div>
@@ -155,7 +155,7 @@ export default function StudentProfilePage() {
           className={cn(
             "rounded-3xl border p-6 mt-6",
             D(
-              "border-white/[0.07] bg-[#0D1626]",
+              "border-white/[0.07] bg-[#1E293B]",
               "border-slate-200 bg-white",
             ),
           )}

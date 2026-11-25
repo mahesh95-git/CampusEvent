@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Building2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
@@ -36,8 +37,8 @@ function CollegeLogo({ college }) {
     <div
       className="w-[128px] h-[128px] rounded-[24px] flex items-center justify-center text-white font-black text-[36px] tracking-tight"
       style={{
-        background: `linear-gradient(135deg, ${college.accentColor}, #14B8A6)`,
-        boxShadow: `0 8px 28px ${college.accentColor}50`,
+        background: `linear-gradient(135deg, ${college.accentColor || "#2563EB"}, #1D4ED8)`,
+        boxShadow: `0 8px 28px ${(college.accentColor || "#2563EB")}40`,
       }}
     >
       {college.initials}
@@ -139,12 +140,12 @@ function CollegeLogin() {
   // ── Loading screen
   if (collegeSlug && collegeLoading) {
     return (
-      <div className={cn("min-h-screen flex items-center justify-center flex-col gap-4", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
-        <svg className="w-8 h-8 animate-spin text-teal-500" viewBox="0 0 24 24" fill="none">
+      <div className={cn("min-h-screen flex items-center justify-center flex-col gap-4", D("bg-[#0F172A]", "bg-[#F8FAFC]"))}>
+        <svg className="w-8 h-8 animate-spin text-[#2563EB]" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="40" strokeDashoffset="15" strokeLinecap="round" opacity="0.3"/>
           <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
         </svg>
-        <p className={cn("text-[14px]", D("text-slate-500", "text-slate-400"))}>Loading college portal…</p>
+        <p className={cn("text-[14px]", D("text-slate-400", "text-[#64748B]"))}>Loading college portal…</p>
       </div>
     );
   }
@@ -152,14 +153,14 @@ function CollegeLogin() {
   // ── College not found
   if (collegeSlug && collegeError) {
     return (
-      <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#070D1A]", "bg-[#F0F7F6]"))}>
+      <div className={cn("min-h-screen flex items-center justify-center px-4", D("bg-[#0F172A]", "bg-[#F8FAFC]"))}>
         <div className="text-center max-w-[470px]">
-          <div className="text-[40px] mb-4">🏫</div>
-          <h2 className={cn("text-[20px] font-bold mb-2", D("text-slate-100", "text-slate-800"))}>College not found</h2>
-          <p className={cn("text-[14px] mb-6", D("text-slate-400", "text-slate-500"))}>
-            No college found for <code className="px-1.5 py-0.5 rounded bg-white/5 text-teal-400 text-[13px]">{collegeSlug}</code>.
+          <Building2 size={40} className="mx-auto mb-4 text-[#2563EB]" strokeWidth={1.7} aria-hidden="true" />
+          <h2 className={cn("text-[20px] font-bold mb-2", D("text-slate-100", "text-[#0F172A]"))}>College not found</h2>
+          <p className={cn("text-[14px] mb-6", D("text-slate-400", "text-[#64748B]"))}>
+            No college found for <code className="px-1.5 py-0.5 rounded bg-blue-500/10 text-[#2563EB] dark:text-blue-400 text-[13px]">{collegeSlug}</code>.
           </p>
-          <a href="/login" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-teal-400 text-white text-[14px] font-semibold">
+          <a href="/login" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[14px] font-semibold">
             Go to general login
           </a>
         </div>
@@ -171,7 +172,7 @@ function CollegeLogin() {
     <div
       className={cn(
         "min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden transition-colors duration-300",
-        D("bg-[#070D1A]", "bg-[#F0F7F6]")
+        D("bg-[#0F172A]", "bg-[#F8FAFC]")
       )}
     >
       {/* Ambient glow */}
@@ -188,26 +189,26 @@ function CollegeLogin() {
           {college ? (
             <>
               <CollegeLogo college={college} />
-              <h1 className={cn("mt-4 text-[22px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>
+              <h1 className={cn("mt-4 text-[22px] font-extrabold tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>
                 {college.name}
               </h1>
               {college.location && (
-                <p className={cn("text-[13px] mt-1", D("text-slate-500", "text-slate-400"))}>
+                <p className={cn("text-[13px] mt-1", D("text-slate-400", "text-[#64748B]"))}>
                   {college.location}
                 </p>
               )}
             </>
           ) : (
             <>
-              <div className="w-[56px] h-[56px] rounded-[16px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[26px] shadow-xl shadow-teal-500/30 mb-1">
-                🎯
+              <div className="w-[56px] h-[56px] rounded-[16px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[26px] shadow-xl shadow-blue-600/25 mb-1">
+                <Building2 size={27} strokeWidth={1.8} aria-hidden="true" />
               </div>
-              <h1 className={cn("mt-4 text-[22px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>
+              <h1 className={cn("mt-4 text-[22px] font-extrabold tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>
                 Campus Portal
               </h1>
             </>
           )}
-          <p className={cn("text-[13px] mt-2", D("text-slate-400", "text-slate-500"))}>
+          <p className={cn("text-[13px] mt-2", D("text-slate-400", "text-[#64748B]"))}>
             Sign in to access campus events
           </p>
         </div>
@@ -216,12 +217,12 @@ function CollegeLogin() {
         <div
           className={cn(
             "rounded-[24px] border p-8 transition-colors duration-200",
-            D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200 shadow-xl shadow-black/[0.06]")
+            D("bg-[#1E293B] border-slate-700", "bg-white border-[#E2E8F0] shadow-xl shadow-slate-900/[0.06]")
           )}
         >
           {/* Role selector dropdown */}
           <div className="mb-6">
-            <p className={cn("text-[11px] font-semibold uppercase tracking-[0.07em] mb-2.5", D("text-slate-500", "text-slate-400"))}>
+            <p className={cn("text-[11px] font-semibold uppercase tracking-[0.07em] mb-2.5", D("text-slate-400", "text-[#64748B]"))}>
               Select your role
             </p>
             <div className="relative">
@@ -231,13 +232,13 @@ function CollegeLogin() {
                 className={cn(
                   "w-full pr-10",
                   D(
-                    "bg-[#111827] border-white/[0.1] text-slate-100 focus:ring-teal-500/30 focus:border-white/[0.2]",
-                    "bg-white border-slate-200 text-slate-900 focus:ring-teal-400/30 focus:border-slate-300"
+                    "bg-[#0F172A] border-slate-700 text-slate-100 focus:ring-blue-500/30 focus:border-[#3B82F6]",
+                    "bg-white border-[#E2E8F0] text-[#0F172A] focus:ring-blue-500/20 focus:border-[#2563EB]"
                   )
                 )}
               >
                 {ROLE_OPTIONS.filter((opt) => opt.value !== "volunteer").map((opt) => (
-                  <option key={opt.value} value={opt.value} style={{ background: dark ? "#0D1626" : "#ffffff", color: dark ? "#e2e8f0" : "#000000" }}>
+                  <option key={opt.value} value={opt.value} style={{ background: dark ? "#0F172A" : "#ffffff", color: dark ? "#e2e8f0" : "#0F172A" }}>
                     {opt.label}
                   </option>
                 ))}
@@ -282,7 +283,7 @@ function CollegeLogin() {
                     <a
                       href="/forgot-password"
                       tabIndex={-1}
-                      className={cn("text-[12px] transition-colors", D("text-slate-500 hover:text-teal-400", "text-slate-400 hover:text-teal-600"))}
+                      className={cn("text-[12px] transition-colors", D("text-slate-400 hover:text-blue-400", "text-[#64748B] hover:text-[#2563EB]"))}
                     >
                       Forgot password?
                     </a>
@@ -326,7 +327,7 @@ function CollegeLogin() {
 
             {/* Server error */}
             {serverError && (
-              <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[13px]", D("bg-rose-500/10 border border-rose-500/20 text-rose-400", "bg-rose-50 border border-rose-200 text-rose-600"))}>
+              <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[13px]", D("bg-red-500/10 border border-red-500/25 text-red-400", "bg-red-50 border border-red-200 text-[#DC2626]"))}>
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="none">
                   <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />
                   <path d="M8 5v3M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -344,8 +345,8 @@ function CollegeLogin() {
                 isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.02] hover:opacity-95 active:scale-[0.98]"
               )}
               style={{
-                background: `linear-gradient(135deg, ${config.accent}, #14B8A6)`,
-                boxShadow: `0 4px 18px ${config.accent}44`,
+                background: "#2563EB",
+                boxShadow: "0 4px 18px rgba(37,99,235,0.32)",
               }}
             >
               {isSubmitting ? (
@@ -364,7 +365,7 @@ function CollegeLogin() {
                 href={`/register?college=${collegeSlug}`}
                 className={cn(
                   "text-center text-[13px] font-medium underline underline-offset-4 transition-colors",
-                  D("text-teal-400 hover:text-teal-300", "text-teal-600 hover:text-teal-500"),
+                  D("text-blue-400 hover:text-blue-300", "text-[#2563EB] hover:text-[#1D4ED8]"),
                 )}
               >
                 New student? Create an account
@@ -378,12 +379,12 @@ function CollegeLogin() {
         </div>
 
         {/* Footer */}
-        <p className={cn("text-center text-[12px] mt-6", D("text-slate-600", "text-slate-400"))}>
+        <p className={cn("text-center text-[12px] mt-6", D("text-slate-500", "text-[#64748B]"))}>
           Protected by CampusEvents · Role-based access
         </p>
-        <p className={cn("text-center text-[12px] mt-2", D("text-slate-700", "text-slate-400"))}>
+        <p className={cn("text-center text-[12px] mt-2", D("text-slate-500", "text-[#64748B]"))}>
           Not from this college?{" "}
-          <a href="/login" className={cn("underline underline-offset-2 transition-colors", D("text-slate-500 hover:text-teal-400", "text-slate-400 hover:text-teal-600"))}>
+          <a href="/login" className={cn("underline underline-offset-2 transition-colors", D("text-slate-400 hover:text-blue-400", "text-[#64748B] hover:text-[#2563EB]"))}>
             General login
           </a>
         </p>

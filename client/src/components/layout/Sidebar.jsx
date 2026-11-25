@@ -32,58 +32,28 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
     }
   };
 
-  const getActiveStyles = (color) => {
-    const styles = {
-      teal: D("bg-teal-500/18 text-teal-200 border-teal-400/25 shadow-[0_8px_24px_rgba(13,148,136,0.12)]", "bg-blue-100 text-blue-900 border-blue-200 shadow-sm"),
-      indigo: D("bg-indigo-500/18 text-indigo-200 border-indigo-400/25 shadow-[0_8px_24px_rgba(99,102,241,0.12)]", "bg-blue-100 text-blue-900 border-blue-200 shadow-sm"),
-      amber: D("bg-amber-500/18 text-amber-200 border-amber-400/25 shadow-[0_8px_24px_rgba(245,158,11,0.12)]", "bg-blue-100 text-blue-900 border-blue-200 shadow-sm"),
-      blue: D("bg-sky-500/18 text-sky-200 border-sky-400/25 shadow-[0_8px_24px_rgba(59,130,246,0.12)]", "bg-blue-100 text-blue-900 border-blue-200 shadow-sm"),
-    };
-    return styles[color] || styles.teal;
-  };
+  const getActiveStyles = () =>
+    D(
+      "bg-[#2563EB]/20 text-blue-300 border-blue-500/30 shadow-[0_8px_24px_rgba(37,99,235,0.16)]",
+      "bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE] font-semibold shadow-sm",
+    );
 
-  const getNavIdleStyles = (color) => {
-    const styles = {
-      teal: D("bg-teal-500/6 text-slate-300 border-transparent hover:bg-teal-500/10 hover:text-slate-100", "bg-blue-100/80 text-slate-700 border-transparent hover:bg-blue-200 hover:text-slate-900"),
-      indigo: D("bg-indigo-500/6 text-slate-300 border-transparent hover:bg-indigo-500/10 hover:text-slate-100", "bg-blue-100/80 text-slate-700 border-transparent hover:bg-blue-200 hover:text-slate-900"),
-      amber: D("bg-amber-500/6 text-slate-300 border-transparent hover:bg-amber-500/10 hover:text-slate-100", "bg-blue-100/80 text-slate-700 border-transparent hover:bg-blue-200 hover:text-slate-900"),
-      blue: D("bg-sky-500/6 text-slate-300 border-transparent hover:bg-sky-500/10 hover:text-slate-100", "bg-blue-100/80 text-slate-700 border-transparent hover:bg-blue-200 hover:text-slate-900"),
-    };
-    return styles[color] || styles.teal;
-  };
+  const getNavIdleStyles = () =>
+    D(
+      "bg-transparent text-slate-300 border-transparent hover:bg-white/[0.06] hover:text-white",
+      "bg-transparent text-[#64748B] border-transparent hover:bg-[#F8FAFC] hover:text-[#0F172A]",
+    );
 
-  const getIconBg = (color) => {
-    const styles = {
-      teal: "bg-teal-500 shadow-teal-500/25",
-      indigo: "bg-indigo-500 shadow-indigo-500/25",
-      amber: "bg-amber-500 shadow-amber-500/25",
-      blue: "bg-sky-500 shadow-sky-500/25",
-    };
-    return styles[color] || styles.teal;
-  };
+  const getIconBg = () => "bg-[#2563EB] shadow-blue-600/25";
 
   const getProfileStyles = (color, isActiveProfile) => {
     if (!isActiveProfile) {
-      return D("border-transparent hover:bg-white/[0.05]", "border-transparent hover:bg-slate-50");
+      return D("border-transparent hover:bg-white/[0.06]", "border-transparent hover:bg-[#F8FAFC]");
     }
-    const styles = {
-      teal: D("bg-teal-500/10 border-teal-500/20", "bg-teal-50 border-teal-200"),
-      indigo: D("bg-indigo-500/10 border-indigo-500/20", "bg-indigo-50 border-indigo-200"),
-      amber: D("bg-amber-500/10 border-amber-500/20", "bg-amber-50 border-amber-200"),
-      blue: D("bg-sky-500/10 border-sky-500/20", "bg-sky-50 border-sky-200"),
-    };
-    return styles[color] || styles.teal;
+    return D("bg-[#2563EB]/15 border-blue-500/30", "bg-[#EFF6FF] border-[#BFDBFE]");
   };
 
-  const getAvatarBg = (color) => {
-    const styles = {
-      teal: "bg-teal-500",
-      indigo: "bg-indigo-500",
-      amber: "bg-amber-500",
-      blue: "bg-sky-500",
-    };
-    return styles[color] || styles.teal;
-  };
+  const getAvatarBg = () => "bg-[#2563EB]";
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -142,13 +112,13 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
     <aside
       className={cn(
       "relative w-[220px] md:w-[220px] shrink-0 flex flex-col h-full border-r md:border-r overflow-hidden backdrop-blur-xl",
-        D("bg-[#0D1626]/96 border-white/[0.06]", "bg-blue-50 border-blue-100"),
+        D("bg-[#0F172A] border-slate-800", "bg-white border-[#E2E8F0]"),
       )}
     >
       <div
         className={cn(
           "relative z-10 flex items-center gap-2.5 px-4 md:px-5 py-4 md:py-5 border-b md:border-b",
-          D("border-white/[0.06]", "border-blue-100"),
+          D("border-slate-800", "border-[#E2E8F0]"),
         )}
       >
         {organizationLogo && !logoFailed ? (
@@ -168,8 +138,8 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
           </div>
         )}
         <div className="min-w-0 hidden sm:block">
-          <p title={organizationName || sidebarTitle} className={cn("font-extrabold text-[13px] leading-tight truncate tracking-tight", D("text-slate-50", "text-slate-900"))}>{sidebarTitle}</p>
-          <p className={cn("text-[11px] truncate", D("text-slate-500", "text-slate-400"))}>{config.label}</p>
+          <p title={organizationName || sidebarTitle} className={cn("font-extrabold text-[13px] leading-tight truncate tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>{sidebarTitle}</p>
+          <p className={cn("text-[11px] truncate", D("text-slate-400", "text-[#64748B]"))}>{config.label}</p>
         </div>
       </div>
 
@@ -180,18 +150,18 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
             onClick={() => handleNavigate(item.path)}
             className={cn(navCls(item.path), "sm:text-[13px] text-[12px]")}
           >
-            <Icon name={item.icon} size={15} color={isActive(item.path) ? (dark ? config.accent.dark : config.accent.light) : (dark ? "#64748B" : "#94A3B8")} />
+            <Icon name={item.icon} size={15} color={isActive(item.path) ? (dark ? config.accent.dark : config.accent.light) : "#64748B"} />
             <span className="hidden sm:inline">{item.label}</span>
           </button>
         ))}
       </nav>
 
-      <div className={cn("relative z-10 px-3 md:px-4 py-3 md:py-4 border-t flex flex-col gap-3", D("border-white/[0.06]", "border-blue-100"))}>
+      <div className={cn("relative z-10 px-3 md:px-4 py-3 md:py-4 border-t flex flex-col gap-3", D("border-slate-800", "border-[#E2E8F0]"))}>
         {config.plan && (
-          <div className={cn("rounded-xl p-3 border hidden sm:block", D("bg-amber-500/8 border-amber-500/20", "bg-amber-50 border-amber-200"))}>
-            <p className={cn("text-[11px] font-bold", D("text-amber-400", "text-amber-700"))}>{config.plan.label}</p>
-            <p className={cn("text-[10px] mt-0.5", D("text-amber-500/70", "text-amber-600/80"))}>{config.plan.expiry}</p>
-            <button className={cn("text-[11px] font-semibold mt-2 transition-colors", D("text-amber-400 hover:text-amber-300", "text-amber-700 hover:text-amber-800"))}>Manage →</button>
+          <div className={cn("rounded-xl p-3 border hidden sm:block", D("bg-blue-500/10 border-blue-500/25", "bg-[#EFF6FF] border-[#BFDBFE]"))}>
+            <p className={cn("text-[11px] font-bold", D("text-blue-400", "text-[#2563EB]"))}>{config.plan.label}</p>
+            <p className={cn("text-[10px] mt-0.5", D("text-slate-400", "text-[#64748B]"))}>{config.plan.expiry}</p>
+            <button className={cn("text-[11px] font-semibold mt-2 transition-colors", D("text-blue-400 hover:text-blue-300", "text-[#2563EB] hover:text-[#1D4ED8]"))}>Manage →</button>
           </div>
         )}
 
@@ -200,7 +170,7 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
           onClick={toggleTheme}
           className={cn(
             "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] md:text-[13px] font-medium transition-all duration-150 w-full justify-center border",
-            D("border-white/[0.08] bg-white/[0.06] text-slate-200 hover:bg-white/[0.1]", "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"),
+            D("border-slate-700 bg-[#1E293B] text-slate-200 hover:bg-slate-700", "border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A] hover:bg-slate-100"),
           )}
           aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
           title={dark ? "Switch to light theme" : "Switch to dark theme"}
@@ -220,8 +190,8 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
             {getInitials(currentUser?.name)}
           </div>
           <div className="text-left min-w-0 hidden sm:block">
-            <p className={cn("text-[12px] font-semibold truncate", D("text-slate-200", "text-slate-800"))}>{currentUser?.name || "User"}</p>
-            <p className={cn("text-[11px] truncate", D("text-slate-500", "text-slate-400"))}>View profile</p>
+            <p className={cn("text-[12px] font-semibold truncate", D("text-slate-200", "text-[#0F172A]"))}>{currentUser?.name || "User"}</p>
+            <p className={cn("text-[11px] truncate", D("text-slate-400", "text-[#64748B]"))}>View profile</p>
           </div>
         </button>
 
@@ -229,7 +199,7 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
           onClick={handleLogout}
           className={cn(
             "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] md:text-[13px] font-medium transition-all duration-150 w-full justify-center border",
-            D("border-rose-500/20 bg-rose-500/10 text-rose-400 hover:bg-rose-500/15", "border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100"),
+            D("border-red-500/25 bg-red-500/10 text-red-400 hover:bg-red-500/20", "border-red-200 bg-red-50 text-[#DC2626] hover:bg-red-100"),
           )}
         >
           <span className="hidden sm:inline">Logout</span>

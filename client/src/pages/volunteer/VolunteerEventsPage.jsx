@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CalendarDays, UsersRound } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ExportButton } from "@/components/ui/ExportButton";
@@ -6,7 +7,7 @@ import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetVolunteerEventsQuery, useGetVolunteerTasksQuery } from "@/store/api";
 
 const STATUS_COLORS = {
-  upcoming:  { label: "Upcoming",  color: "#818CF8" },
+  upcoming:  { label: "Upcoming",  color: "#2563EB" },
   completed: { label: "Completed", color: "#10B981" },
 };
 
@@ -60,10 +61,7 @@ export default function VolunteerEventsPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D(
-            "bg-[#111827] border-white/[0.06]",
-            "bg-slate-50 border-slate-200",
-          ),
+                    D("bg-[#1E293B] border-white/[0.06]", "bg-white border-slate-200"),
         )}
       >
         <div>
@@ -76,7 +74,7 @@ export default function VolunteerEventsPage() {
         </div>
         <div className="flex items-center gap-3">
           <ExportButton onClick={handleExport} label="Export report" disabled={filtered.length === 0} />
-          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3"/>
               <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#64748B" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>
@@ -107,8 +105,8 @@ export default function VolunteerEventsPage() {
                 className={cn(
                   "w-full rounded-2xl p-4 text-left border transition",
                   isSelected
-                    ? D("border-amber-500/50 bg-amber-500/10", "border-amber-400 bg-amber-50")
-                    : D("border-white/[0.06] bg-[#0D1626] hover:border-white/[0.12]", "border-slate-200 bg-white hover:border-slate-300"),
+                    ? D("border-blue-500/50 bg-blue-500/10", "border-blue-400 bg-blue-50")
+                    : D("border-white/[0.06] bg-[#1E293B] hover:border-white/[0.12]", "border-slate-200 bg-white hover:border-slate-300"),
                 )}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -126,7 +124,7 @@ export default function VolunteerEventsPage() {
                         className="h-full rounded-full"
                         style={{
                           width: `${progress}%`,
-                          background: progress === 100 ? "#10B981" : "#F59E0B",
+                          background: progress === 100 ? "#10B981" : "#2563EB",
                         }}
                       />
                 </div>
@@ -149,7 +147,7 @@ export default function VolunteerEventsPage() {
           {!selectedEvent ? (
             <div className="h-full flex flex-col items-center justify-center gap-3 text-center">
               <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl", D("bg-white/[0.05]", "bg-slate-100"))}>
-                🗓️
+                <CalendarDays size={26} className="text-[#2563EB]" aria-hidden="true" />
               </div>
               <p className={cn("text-[15px] font-semibold", D("text-slate-300", "text-slate-700"))}>Select an event</p>
               <p className={cn("text-[12px]", D("text-slate-500", "text-slate-400"))}>
@@ -159,7 +157,7 @@ export default function VolunteerEventsPage() {
           ) : (
             <div className="flex flex-col gap-6">
               {/* Event meta */}
-              <div className={cn("rounded-3xl p-6 border", D("border-white/[0.07] bg-[#0D1626]", "border-slate-200 bg-white"))}>
+              <div className={cn("rounded-3xl p-6 border", D("border-white/[0.07] bg-[#1E293B]", "border-slate-200 bg-white"))}>
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h2 className={cn("text-[18px] font-bold", D("text-slate-50", "text-slate-900"))}>{selectedEvent.name}</h2>
@@ -170,7 +168,7 @@ export default function VolunteerEventsPage() {
                       {new Date(selectedEvent.date).toLocaleDateString()}
                     </span>
                     <span className={cn("text-[12px] mt-1", D("text-slate-400", "text-slate-500"))}>
-                      👥 {selectedEvent.participants} participants
+                      <UsersRound className="inline-block mr-1" size={13} aria-hidden="true" /> {selectedEvent.participants} participants
                     </span>
                   </div>
                 </div>
@@ -192,7 +190,7 @@ export default function VolunteerEventsPage() {
                         key={task.id}
                         className={cn(
                           "rounded-2xl p-5 border flex items-start gap-4",
-                          D("border-white/[0.06] bg-[#0D1626]", "border-slate-200 bg-white"),
+                          D("border-white/[0.06] bg-[#1E293B]", "border-slate-200 bg-white"),
                         )}
                       >
                         <div

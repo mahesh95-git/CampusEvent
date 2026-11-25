@@ -54,9 +54,9 @@ export default function CollegeDetailsPage() {
 
   const inputCls = cn(
     "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all",
-    D("bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-teal-500", "bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-teal-500"),
+    D("bg-[#0F172A] border-slate-700 text-slate-100 placeholder:text-slate-500 focus:border-[#3B82F6]", "bg-white border-[#E2E8F0] text-[#0F172A] placeholder:text-slate-400 focus:border-[#2563EB]"),
   );
-  const labelCls = cn("block text-[12px] font-medium mb-1.5", D("text-slate-400", "text-slate-500"));
+  const labelCls = cn("block text-[12px] font-medium mb-1.5", D("text-slate-400", "text-[#64748B]"));
   const errorMessage = error?.data?.message || "Unable to load college details.";
 
   async function handleSave() {
@@ -102,7 +102,7 @@ export default function CollegeDetailsPage() {
 
   if (isError || !organization) {
     return (
-      <div className={cn("flex-1 flex items-center justify-center", D("text-rose-400", "text-rose-600"))}>
+      <div className={cn("flex-1 flex items-center justify-center", D("text-red-400", "text-[#DC2626]"))}>
         {errorMessage}
       </div>
     );
@@ -112,14 +112,11 @@ export default function CollegeDetailsPage() {
     <div className="flex-1 overflow-y-auto">
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b",
-        D(
-          "bg-[#0F1B30] border-white/[0.06]",
-          "bg-teal-50 border-slate-200",
-        ),
+                D("bg-[#0F172A] border-slate-800", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
-          <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>College Details</h1>
-          <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
+          <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>College Details</h1>
+          <p className={cn("text-[12px] mt-1", D("text-slate-400", "text-[#64748B]"))}>
             Review and update your college information
           </p>
         </div>
@@ -127,20 +124,20 @@ export default function CollegeDetailsPage() {
           <button
             onClick={() => setEditing(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "#0D948B", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
+            style={{ background: "#2563EB", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(37,99,235,0.25)" }}
           >
             Edit details
           </button>
         ) : (
           <div className="flex gap-2">
-            <button onClick={handleCancel} className={cn("px-4 py-2.5 rounded-xl text-[13px] font-medium border", D("border-white/[0.1] text-slate-400", "border-slate-200 text-slate-600"))}>
+            <button onClick={handleCancel} className={cn("px-4 py-2.5 rounded-xl text-[13px] font-medium border", D("border-slate-700 text-slate-300", "border-[#E2E8F0] text-[#64748B]"))}>
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={isSaving}
               className="px-4 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60"
-              style={{ background: "#0D948B", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
+              style={{ background: "#2563EB", boxShadow: "0 4px 14px rgba(37,99,235,0.25)" }}
             >
               {isSaving ? "Saving..." : "Save changes"}
             </button>
@@ -149,7 +146,7 @@ export default function CollegeDetailsPage() {
       </div>
 
       <div className="px-8 py-6 grid grid-cols-[1fr_320px] gap-6 items-start">
-        <div className={cn("rounded-2xl border p-6", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+        <div className={cn("rounded-2xl border p-6", D("bg-[#1E293B] border-slate-700", "bg-white border-[#E2E8F0]"))}>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>College name</label>
@@ -238,30 +235,30 @@ export default function CollegeDetailsPage() {
           </div>
 
           {message && (
-            <div className={cn("mt-5 rounded-xl px-3.5 py-2.5 text-[13px] border", message.toLowerCase().includes("success") ? D("bg-emerald-500/10 border-emerald-500/20 text-emerald-400", "bg-emerald-50 border-emerald-200 text-emerald-600") : D("bg-rose-500/10 border-rose-500/20 text-rose-400", "bg-rose-50 border-rose-200 text-rose-600"))}>
+            <div className={cn("mt-5 rounded-xl px-3.5 py-2.5 text-[13px] border", message.toLowerCase().includes("success") ? D("bg-green-500/10 border-green-500/25 text-green-400", "bg-green-50 border-green-200 text-[#16A34A]") : D("bg-red-500/10 border-red-500/25 text-red-400", "bg-red-50 border-red-200 text-[#DC2626]"))}>
               {message}
             </div>
           )}
         </div>
 
         <div className="flex flex-col gap-5">
-          <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
-            <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>College profile</p>
+          <div className={cn("rounded-2xl border p-5", D("bg-[#1E293B] border-slate-700", "bg-white border-[#E2E8F0]"))}>
+            <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-400", "text-[#64748B]"))}>College profile</p>
             {[
               { label: "Location", value: organization.location },
               { label: "Created", value: new Date(organization.createdAt).toLocaleDateString("en-IN") },
               { label: "Updated", value: new Date(organization.updatedAt).toLocaleDateString("en-IN") },
             ].map(({ label, value }) => (
-              <div key={label} className={cn("flex items-center justify-between py-3 border-b last:border-0", D("border-white/[0.06]", "border-slate-100"))}>
-                <p className={cn("text-[12px]", D("text-slate-500", "text-slate-400"))}>{label}</p>
-                <p className={cn("text-[12.5px] font-semibold", D("text-slate-200", "text-slate-700"))}>{value}</p>
+              <div key={label} className={cn("flex items-center justify-between py-3 border-b last:border-0", D("border-slate-700", "border-[#E2E8F0]"))}>
+                <p className={cn("text-[12px]", D("text-slate-400", "text-[#64748B]"))}>{label}</p>
+                <p className={cn("text-[12.5px] font-semibold", D("text-slate-200", "text-[#0F172A]"))}>{value}</p>
               </div>
             ))}
           </div>
         {/* College Logo Upload */}
         <div className="flex flex-col gap-5">
-          <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
-            <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>College Logo</p>
+          <div className={cn("rounded-2xl border p-5", D("bg-[#1E293B] border-slate-700", "bg-white border-[#E2E8F0]"))}>
+            <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-400", "text-[#64748B]"))}>College Logo</p>
             <CollegeLogoUpload organizationId={organization.id} onUploadSuccess={(url) => setLogoUrl(url)} />
             {(logoUrl || organization.logoUrl) && (
               <div className="mt-4">
@@ -271,7 +268,7 @@ export default function CollegeDetailsPage() {
                   className="w-32 h-32 object-contain rounded-lg"
                 />
                 {logoUrl && (
-                  <p className={cn("text-[11px] mt-3", D("text-emerald-400", "text-emerald-600"))}>✓ Logo updated successfully!</p>
+                  <p className={cn("text-[11px] mt-3", D("text-green-400", "text-[#16A34A]"))}>✓ Logo updated successfully!</p>
                 )}
               </div>
             )}

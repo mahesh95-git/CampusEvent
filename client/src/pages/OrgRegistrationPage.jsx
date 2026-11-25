@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { Building2, MapPin, UserRound } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -43,11 +44,11 @@ function LogoUpload({ setValue, errors, dark }) {
           "flex items-center gap-3 px-3.5 py-2.5 rounded-xl border cursor-pointer transition-all duration-150",
           errors.logo
             ? dark
-              ? "border-rose-500/40 bg-rose-500/5"
-              : "border-rose-300 bg-rose-50"
+              ? "border-red-500/50 bg-red-500/10"
+              : "border-[#DC2626] bg-red-50"
             : dark
-              ? "border-white/[0.1] bg-[#111827] hover:border-teal-500/40"
-              : "border-slate-200 bg-white hover:border-teal-400",
+              ? "border-slate-700 bg-[#1E293B] hover:border-[#3B82F6]"
+              : "border-[#E2E8F0] bg-white hover:border-[#2563EB]",
         )}
       >
         {preview ? (
@@ -172,7 +173,7 @@ function OrgRegistrationForm() {
     <div
       className={cn(
         "h-screen w-screen flex overflow-hidden transition-colors duration-300",
-        D("bg-[#070D1A]", "bg-[#F0F7F6]"),
+        D("bg-[#0F172A]", "bg-[#F8FAFC]"),
       )}
     >
       {/* ── Left brand panel ── */}
@@ -180,24 +181,24 @@ function OrgRegistrationForm() {
         className={cn(
           "hidden lg:flex flex-col justify-between w-[300px] shrink-0 p-10 relative overflow-hidden",
           D(
-            "bg-[#0D1626] border-r border-white/[0.06]",
-            "bg-white border-r border-slate-200",
+            "bg-[#1E293B] border-r border-slate-800",
+            "bg-white border-r border-[#E2E8F0]",
           ),
         )}
       >
         {/* Glow */}
-        <div className="absolute top-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full opacity-[0.08] blur-[70px] bg-teal-500 pointer-events-none" />
-        <div className="absolute bottom-[-40px] right-[-40px] w-[200px] h-[200px] rounded-full opacity-[0.05] blur-[50px] bg-amber-400 pointer-events-none" />
+        <div className="absolute top-[-60px] left-[-60px] w-[300px] h-[300px] rounded-full opacity-[0.08] blur-[70px] bg-[#2563EB] pointer-events-none" />
+        <div className="absolute bottom-[-40px] right-[-40px] w-[200px] h-[200px] rounded-full opacity-[0.06] blur-[50px] bg-sky-400 pointer-events-none" />
 
         {/* Brand */}
         <div className="relative z-10 flex items-center gap-2.5">
-          <div className="w-[34px] h-[34px] rounded-[10px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[16px] shadow-lg shadow-teal-500/30">
-            🎯
+          <div className="w-[34px] h-[34px] rounded-[10px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[16px] shadow-lg shadow-blue-600/25">
+            <Building2 size={19} strokeWidth={1.8} aria-hidden="true" />
           </div>
           <span
             className={cn(
               "font-extrabold text-[16px] tracking-[-0.3px]",
-              D("text-slate-50", "text-slate-900"),
+              D("text-slate-50", "text-[#0F172A]"),
             )}
           >
             CampusEvents
@@ -210,7 +211,7 @@ function OrgRegistrationForm() {
             <h2
               className={cn(
                 "text-[22px] font-extrabold tracking-tight leading-tight",
-                D("text-slate-50", "text-slate-900"),
+                D("text-slate-50", "text-[#0F172A]"),
               )}
             >
               Register your
@@ -220,7 +221,7 @@ function OrgRegistrationForm() {
             <p
               className={cn(
                 "text-[13px] mt-3 leading-relaxed",
-                D("text-slate-400", "text-slate-500"),
+                D("text-slate-400", "text-[#64748B]"),
               )}
             >
               Create your college portal and start managing campus events,
@@ -236,9 +237,9 @@ function OrgRegistrationForm() {
             "Analytics & attendance reports",
           ].map((f) => (
             <div key={f} className="flex items-center gap-2.5">
-              <div className="w-5 h-5 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center shrink-0">
+              <div className="w-5 h-5 rounded-full bg-blue-600/15 border border-blue-500/30 flex items-center justify-center shrink-0">
                 <svg
-                  className="w-3 h-3 text-teal-400"
+                  className="w-3 h-3 text-[#2563EB] dark:text-blue-400"
                   viewBox="0 0 12 12"
                   fill="none"
                 >
@@ -254,7 +255,7 @@ function OrgRegistrationForm() {
               <span
                 className={cn(
                   "text-[12.5px]",
-                  D("text-slate-400", "text-slate-500"),
+                  D("text-slate-300", "text-[#64748B]"),
                 )}
               >
                 {f}
@@ -266,22 +267,13 @@ function OrgRegistrationForm() {
         <p
           className={cn(
             "relative z-10 text-[11px]",
-            D("text-slate-700", "text-slate-400"),
+            D("text-slate-400", "text-[#64748B]"),
           )}
         >
           Already registered?{" "}
-          <a
-            href="/login"
-            className={cn(
-              "font-semibold",
-              D(
-                "text-teal-400 hover:text-teal-300",
-                "text-teal-600 hover:text-teal-500",
-              ),
-            )}
-          >
+         
             Sign in on your portal
-          </a>
+          
         </p>
       </div>
 
@@ -292,19 +284,19 @@ function OrgRegistrationForm() {
           className={cn(
             "flex items-center justify-between px-8 py-4 border-b shrink-0",
             D(
-              "border-white/[0.06] bg-[#070D1A]",
-              "border-slate-200 bg-[#F0F7F6]",
+              "border-slate-800 bg-[#0F172A]",
+              "border-[#E2E8F0] bg-white",
             ),
           )}
         >
           <div className="flex items-center gap-2 lg:hidden">
-            <div className="w-[30px] h-[30px] rounded-[9px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[14px]">
-              🎯
+            <div className="w-[30px] h-[30px] rounded-[9px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[14px]">
+              <Building2 size={17} strokeWidth={1.8} aria-hidden="true" />
             </div>
             <span
               className={cn(
                 "font-extrabold text-[15px]",
-                D("text-slate-50", "text-slate-900"),
+                D("text-slate-50", "text-[#0F172A]"),
               )}
             >
               CampusEvents
@@ -313,7 +305,7 @@ function OrgRegistrationForm() {
           <h1
             className={cn(
               "hidden lg:block text-[15px] font-semibold",
-              D("text-slate-300", "text-slate-700"),
+              D("text-slate-200", "text-[#0F172A]"),
             )}
           >
             Organisation registration
@@ -328,7 +320,7 @@ function OrgRegistrationForm() {
             className="h-full px-8 py-6 max-w-[860px] mx-auto"
           >
             {/* ── Section 1: College identity ── */}
-            <SectionHeading icon="🏛️" title="College identity" dark={dark} />
+            <SectionHeading icon={<Building2 size={17} />} title="College identity" dark={dark} />
             <div className="grid grid-cols-2 gap-x-5 gap-y-4 mb-6">
               {/* College name */}
               <div>
@@ -451,7 +443,7 @@ function OrgRegistrationForm() {
             </div>
 
             {/* ── Section 2: Address ── */}
-            <SectionHeading icon="📍" title="Address" dark={dark} />
+            <SectionHeading icon={<MapPin size={17} />} title="Address" dark={dark} />
             <div className="grid grid-cols-2 gap-x-5 gap-y-4 mb-6">
               {/* Street — full width */}
               <div className="col-span-2">
@@ -524,7 +516,7 @@ function OrgRegistrationForm() {
             </div>
 
             {/* ── Section 3: Admin account ── */}
-            <SectionHeading icon="👤" title="Admin account" dark={dark} />
+            <SectionHeading icon={<UserRound size={17} />} title="Admin account" dark={dark} />
             <div className="grid grid-cols-2 gap-x-5 gap-y-4 mb-6">
               {/* Admin name — full width */}
               <div className="col-span-2">
@@ -639,8 +631,8 @@ function OrgRegistrationForm() {
                 className={cn(
                   "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[13px] mb-5",
                   D(
-                    "bg-rose-500/10 border border-rose-500/20 text-rose-400",
-                    "bg-rose-50 border border-rose-200 text-rose-600",
+                    "bg-red-500/10 border border-red-500/25 text-red-400",
+                    "bg-red-50 border border-red-200 text-[#DC2626]",
                   ),
                 )}
               >
@@ -679,7 +671,7 @@ function OrgRegistrationForm() {
                 isLoading
                   ? "opacity-60 cursor-not-allowed"
                   : "hover:scale-[1.01] hover:opacity-95 active:scale-[0.99] cursoor:pointer",
-                D("bg-teal-500 text-white", "bg-teal-600 text-white"),
+                "bg-[#2563EB] hover:bg-[#1D4ED8] text-white",
               )}
             >
               {isLoading ? (

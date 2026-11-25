@@ -5,9 +5,9 @@ import { useGetStudentEventByIdQuery, useRegisterForEventMutation } from "@/stor
 import EventRegistrationForm from "@/components/forms/EventRegistrationForm";
 
 const STATUS_LABELS = {
-  draft: { label: "Draft", color: "#F59E0B" },
-  upcoming: { label: "Upcoming", color: "#818CF8" },
-  active: { label: "Open for registration", color: "#14B8A6" },
+  draft: { label: "Draft", color: "#2563EB" },
+  upcoming: { label: "Upcoming", color: "#2563EB" },
+  active: { label: "Open for registration", color: "#2563EB" },
   completed: { label: "Completed", color: "#94A3B8" },
 };
 
@@ -74,7 +74,7 @@ export default function StudentEventDetailPage() {
           <button
             onClick={() => navigate("/dashboard/student/events")}
             className="mt-6 rounded-xl px-4 py-2.5 font-semibold text-white"
-            style={{ background: "#F59E0B" }}
+            style={{ background: "#2563EB" }}
           >
             Back to events
           </button>
@@ -112,7 +112,7 @@ export default function StudentEventDetailPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D("bg-[#111827] border-white/6", "bg-amber-50 border-slate-200"),
+          D("bg-[#1E293B] border-white/6", "bg-white border-[#E2E8F0]"),
         )}
       >
         <div>
@@ -136,7 +136,7 @@ export default function StudentEventDetailPage() {
         <button
           onClick={() => navigate("/dashboard/student/events")}
           className="rounded-xl px-4 py-2.5 font-semibold text-white"
-          style={{ background: "#F59E0B" }}
+          style={{ background: "#2563EB" }}
         >
           Back to list
         </button>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Moon, Sun } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom"; 
 import { setTheme } from "@/store/slices/theme";
@@ -12,17 +13,17 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { Building2 } from "lucide-react";
 
 
 const PRODUCT_ITEMS = [
   {
-    icon: "🏛️",
-    iconBg: "rgba(13,148,139,0.15)",
+    icon: Building2,
+    iconBg: "rgba(37,99,235,0.12)",
     title: "Register Organisation",
     desc: "Onboard your college or club to manage events",
     href: "/orgregistration",
   },
-  
 ];
 
 const NAV_LINKS = [
@@ -38,8 +39,8 @@ function MenuPanel({ dark, className, children }) {
       className={cn(
         "p-2 rounded-xl border list-none",
         dark
-          ? "bg-[#0D1626] border-white/[0.08]"
-          : "bg-white border-black/[0.08] shadow-lg shadow-black/[0.06]",
+          ? "bg-[#1E293B] border-slate-700"
+          : "bg-white border-[#E2E8F0] shadow-lg shadow-slate-900/[0.06]",
         className
       )}
     >
@@ -49,7 +50,7 @@ function MenuPanel({ dark, className, children }) {
 }
 
 const MenuCard = React.forwardRef(
-  ({ icon, iconBg, title, desc, href, dark, className, ...props }, ref) => (
+  ({ icon: Icon, iconBg, title, desc, href, dark, className, ...props }, ref) => (
     <li>
       <NavigationMenuLink asChild>
         <Link
@@ -68,15 +69,15 @@ const MenuCard = React.forwardRef(
             className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
             style={{ background: iconBg }}
           >
-            {icon}
+            <Icon size={18} strokeWidth={1.8} aria-hidden="true" />
           </div>
           <div className="flex flex-col gap-0.5">
             <span
               className={cn(
                 "text-[13px] font-medium transition-colors leading-tight",
                 dark
-                  ? "text-slate-200 group-hover:text-teal-300"
-                  : "text-slate-700 group-hover:text-teal-600"
+                  ? "text-slate-200 group-hover:text-blue-400"
+                  : "text-[#0F172A] group-hover:text-[#2563EB]"
               )}
             >
               {title}
@@ -84,7 +85,7 @@ const MenuCard = React.forwardRef(
             <span
               className={cn(
                 "text-[11px] leading-snug",
-                dark ? "text-slate-500" : "text-slate-400"
+                dark ? "text-slate-400" : "text-[#64748B]"
               )}
             >
               {desc}
@@ -116,20 +117,20 @@ function NavBar() {
     <nav
       className={cn(
         "sticky top-0 z-50 border-b backdrop-blur-xl transition-colors duration-300",
-        D("bg-[#070D1A]/88 border-white/[0.06]", "bg-[#F0F7F6]/92 border-black/[0.07]")
+        D("bg-[#0F172A]/95 border-slate-800", "bg-[#F8FAFC]/95 border-[#E2E8F0]")
       )}
     >
       <div className="max-w-[1280px] mx-auto px-8 h-[66px] flex items-center justify-between">
 
         {/* ── Logo ── */}
         <div className="flex items-center gap-2.5">
-          <div className="w-[38px] h-[38px] rounded-[11px] bg-gradient-to-br from-teal-600 to-teal-400 flex items-center justify-center text-[19px] shadow-lg shadow-teal-500/30">
-            🎯
+          <div className="w-[38px] h-[38px] rounded-[11px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[19px] shadow-lg shadow-blue-600/25">
+            <Building2 size={21} strokeWidth={1.8} aria-hidden="true" />
           </div>
           <span
             className={cn(
               "font-extrabold text-[18px] tracking-[-0.4px]",
-              D("text-slate-50", "text-slate-900")
+              D("text-slate-50", "text-[#0F172A]")
             )}
           >
             CampusEvents
@@ -145,10 +146,10 @@ function NavBar() {
               <NavigationMenuTrigger
                 className={cn(
                   "text-[14px] font-medium rounded-lg px-3.5 py-2 bg-transparent",
-                  "data-[state=open]:bg-teal-500/10",
+                  "data-[state=open]:bg-blue-600/10",
                   D(
-                    "text-slate-400 hover:text-teal-400 hover:bg-teal-500/[0.08] data-[state=open]:text-teal-400",
-                    "text-slate-500 hover:text-teal-600 hover:bg-teal-500/[0.08] data-[state=open]:text-teal-600"
+                    "text-slate-400 hover:text-blue-400 hover:bg-blue-500/[0.1] data-[state=open]:text-blue-400",
+                    "text-[#64748B] hover:text-[#2563EB] hover:bg-blue-600/[0.08] data-[state=open]:text-[#2563EB]"
                   )
                 )}
               >
@@ -173,8 +174,8 @@ function NavBar() {
                     navigationMenuTriggerStyle(),
                     "text-[14px] font-medium rounded-lg px-3.5 py-2 bg-transparent",
                     D(
-                      "text-slate-400 hover:text-teal-400 hover:bg-teal-500/[0.08]",
-                      "text-slate-500 hover:text-teal-600 hover:bg-teal-500/[0.08]"
+                      "text-slate-400 hover:text-blue-400 hover:bg-blue-500/[0.1]",
+                      "text-[#64748B] hover:text-[#2563EB] hover:bg-blue-600/[0.08]"
                     )
                   )}
                 >
@@ -196,12 +197,12 @@ function NavBar() {
               "flex items-center gap-1.5 px-[14px] py-[7px] rounded-[8px] border",
               "text-[13px] font-medium cursor-pointer transition-all duration-200",
               D(
-                "bg-white/[0.07] border-white/[0.1] text-slate-400 hover:text-slate-200",
-                "bg-black/[0.05] border-black/[0.1] text-slate-500 hover:text-slate-700"
+                "bg-white/[0.06] border-slate-700 text-slate-300 hover:text-white",
+                "bg-white border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A]"
               )
             )}
           >
-            <span className="text-[15px] leading-none">{D("☀️", "🌙")}</span>
+            {dark ? <Sun size={15} aria-hidden="true" /> : <Moon size={15} aria-hidden="true" />}
             {D("Light", "Dark")}
           </button>
 

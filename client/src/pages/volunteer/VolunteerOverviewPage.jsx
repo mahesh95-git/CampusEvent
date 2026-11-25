@@ -6,7 +6,7 @@ import { StatCard } from "@/components/cards/StatCard";
 import { PdfExportButton } from "@/components/ui/PdfExportButton";
 
 const STATUS_COLORS = {
-  upcoming: { label: "Upcoming", color: "#818CF8" },
+  upcoming: { label: "Upcoming", color: "#2563EB" },
   completed: { label: "Completed", color: "#10B981" },
 };
 
@@ -36,10 +36,7 @@ export default function VolunteerOverviewPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D(
-            "bg-[#111827] border-white/[0.06]",
-            "bg-slate-50 border-slate-200",
-          ),
+                    D("bg-[#1E293B] border-white/[0.06]", "bg-white border-slate-200"),
         )}
       >
         <div>
@@ -91,7 +88,7 @@ export default function VolunteerOverviewPage() {
           <button
             onClick={() => navigate("/dashboard/volunteer/events")}
             className="rounded-xl px-4 py-2.5 font-semibold text-[13px] text-white"
-            style={{ background: "#F59E0B" }}
+            style={{ background: "#2563EB" }}
           >
             My Events
           </button>
@@ -100,8 +97,8 @@ export default function VolunteerOverviewPage() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-4 gap-4 px-8 py-6 shrink-0">
-        <StatCard label="Assigned Events"  value={totalAssigned}  color="#F59E0B" dark={dark} />
-        <StatCard label="Upcoming Events"  value={upcoming}       color="#818CF8" dark={dark} />
+        <StatCard label="Assigned Events"  value={totalAssigned}  color="#2563EB" dark={dark} />
+        <StatCard label="Upcoming Events"  value={upcoming}       color="#2563EB" dark={dark} />
         <StatCard label="Total Tasks"      value={totalTasks}     color="#0EA5E9" dark={dark} />
         <StatCard label="Pending Tasks"    value={pendingTasks}   color="#F43F5E" dark={dark} />
       </div>
@@ -142,7 +139,7 @@ export default function VolunteerOverviewPage() {
                   className={cn(
                     "rounded-3xl p-6 border transition hover:-translate-y-0.5 cursor-pointer",
                     D(
-                      "border-white/[0.06] bg-[#0D1626] hover:border-white/[0.12]",
+                      "border-white/[0.06] bg-[#1E293B] hover:border-white/[0.12]",
                       "border-slate-200 bg-white hover:border-slate-300",
                     ),
                   )}
@@ -188,7 +185,7 @@ export default function VolunteerOverviewPage() {
                         className="h-full rounded-full transition-all duration-500"
                         style={{
                           width: `${progress}%`,
-                          background: progress === 100 ? "#10B981" : "#F59E0B",
+                          background: progress === 100 ? "#10B981" : "#2563EB",
                         }}
                       />
                     </div>
@@ -198,7 +195,7 @@ export default function VolunteerOverviewPage() {
                     <button
                       onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/volunteer/events/${event.id}`); }}
                       className="text-[12px] font-semibold px-3 py-1.5 rounded-lg"
-                      style={{ background: "rgba(245,158,11,0.15)", color: "#F59E0B" }}
+                      style={{ background: "rgba(37,99,235,0.12)", color: "#2563EB" }}
                     >
                       Mark Attendance
                     </button>

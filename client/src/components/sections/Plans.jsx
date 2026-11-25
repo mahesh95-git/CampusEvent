@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GraduationCap } from "lucide-react";
 import { useSelector } from "react-redux";
 import Pill from "@/components/ui/Pill";
 import FadeIn from "@/util/FadeIn";
@@ -16,7 +17,7 @@ function Plans() {
   const D = (d, l) => (dark ? d : l);
 
   const gradTxt =
-    "bg-gradient-to-r from-teal-500 via-teal-400 to-amber-400 bg-clip-text text-transparent";
+    "bg-gradient-to-r from-[#2563EB] via-blue-500 to-sky-500 bg-clip-text text-transparent";
 
   return (
     <section id="plans" className="py-16 px-6">
@@ -26,20 +27,20 @@ function Plans() {
             <Pill dark={dark}>Simple Pricing</Pill>
           </div>
           <h2
-            className={`text-[clamp(28px,4vw,46px)] font-extrabold tracking-[-1px] mb-3 ${D("text-slate-50", "text-slate-900")}`}
+            className={`text-[clamp(28px,4vw,46px)] font-extrabold tracking-[-1px] mb-3 ${D("text-slate-50", "text-[#0F172A]")}`}
           >
             Plans for every
             <br />
             <span className={gradTxt}>organisation on campus</span>
           </h2>
           <p
-            className={`text-[16px] max-w-[480px] mx-auto ${D("text-slate-400", "text-slate-500")}`}
+            className={`text-[16px] max-w-[480px] mx-auto ${D("text-slate-400", "text-[#64748B]")}`}
           >
             Subscribe to create and manage campus events. Students join and participate completely free.
           </p>
         </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
           {PLANS.map((plan, i) => (
             <FadeIn key={i} delay={i * 0.1}>
               <PlanCard
@@ -53,9 +54,9 @@ function Plans() {
         </div>
 
         <FadeIn>
-          <p className={`text-center text-[13px] mt-10 ${D("text-slate-500", "text-slate-400")}`}>
-            🎓 Students, volunteers & participants always join for{" "}
-            <span className={D("text-teal-400 font-semibold", "text-teal-600 font-semibold")}>
+          <p className={`text-center text-[13px] mt-10 ${D("text-slate-400", "text-[#64748B]")}`}>
+            <GraduationCap className="inline-block mr-1 text-[#2563EB]" size={15} aria-hidden="true" /> Students, volunteers & participants always join for{" "}
+            <span className={D("text-blue-400 font-semibold", "text-[#2563EB] font-semibold")}>
               free
             </span>
             . No account needed to browse events.

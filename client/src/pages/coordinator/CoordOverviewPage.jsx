@@ -18,7 +18,7 @@ import { useGetCoordinatorOverviewQuery } from "@/store/api";
 
 const STATUS_MAP = {
   active: { label: "Active", bg: "rgba(16,185,129,0.14)", text: "#10B981", dot: "#059669" },
-  upcoming: { label: "Upcoming", bg: "rgba(99,102,241,0.14)", text: "#818CF8", dot: "#6366F1" },
+  upcoming: { label: "Upcoming", bg: "rgba(37,99,235,0.14)", text: "#2563EB", dot: "#2563EB" },
   completed: { label: "Completed", bg: "rgba(148,163,184,0.14)", text: "#94A3B8", dot: "#64748B" },
   draft: { label: "Draft", bg: "rgba(245,158,11,0.14)", text: "#FCD34D", dot: "#F59E0B" },
 };
@@ -47,10 +47,7 @@ export default function CoordOverview() {
     <div className="flex-1 overflow-y-auto">
       <header className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D(
-          "bg-[#0D1626] border-white/[0.06]",
-          "bg-blue-50 border-slate-200",
-        ),
+                D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>
@@ -96,7 +93,7 @@ export default function CoordOverview() {
           <button
             onClick={() => navigate("/dashboard/coordinator/events/create")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "#6366F1", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
+            style={{ background: "#2563EB", color: "#FFF", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
           >
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
             Create event
@@ -106,13 +103,13 @@ export default function CoordOverview() {
 
       <div className="px-8 py-6">
         {isLoading && (
-          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#0D1626] border-white/[0.07] text-slate-400", "bg-white border-slate-200 text-slate-500"))}>
+          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#1E293B] border-white/[0.07] text-slate-400", "bg-white border-slate-200 text-slate-500"))}>
             Loading coordinator dashboard...
           </div>
         )}
 
         {!isLoading && isError && (
-          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#0D1626] border-white/[0.07] text-rose-400", "bg-white border-slate-200 text-rose-600"))}>
+          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#1E293B] border-white/[0.07] text-rose-400", "bg-white border-slate-200 text-rose-600"))}>
             {errorMessage}
           </div>
         )}
@@ -121,22 +118,22 @@ export default function CoordOverview() {
           <>
             <div className="grid grid-cols-3 gap-4 mb-6">
               {[
-                { label: "Total events", value: stats.totalEvents, color: "#6366F1" },
+                { label: "Total events", value: stats.totalEvents, color: "#2563EB" },
                 { label: "Active events", value: stats.activeEvents, color: "#10B981" },
-                { label: "Total registrations", value: stats.totalRegistrations, color: "#0D948B" },
+                { label: "Total registrations", value: stats.totalRegistrations, color: "#2563EB" },
               ].map((stat) => (
                 <StatCard key={stat.label} label={stat.label} value={stat.value} color={stat.color} dark={dark} />
               ))}
             </div>
 
             <div className="px-0 pb-6">
-              <div className={cn("rounded-2xl border p-5", D("bg-slate-900 border-slate-700", "bg-blue-50 border-slate-200"))}>
+              <div className={cn("rounded-2xl border p-5", D("bg-slate-900 border-slate-700", "bg-white border-[#E2E8F0]"))}>
                 <div className="flex items-center justify-between mb-5">
                   <div>
                     <p className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Monthly events</p>
                     <p className={cn("text-[12px] mt-0.5", D("text-slate-400", "text-slate-500"))}>Department events over the last 6 months</p>
                   </div>
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full" style={{ background: "rgba(99,102,241,0.14)", color: "#818CF8" }}>
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full" style={{ background: "rgba(37,99,235,0.14)", color: "#2563EB" }}>
                     {monthlyData.reduce((sum, item) => sum + item.events, 0)} total
                   </span>
                 </div>
@@ -152,14 +149,14 @@ export default function CoordOverview() {
                           key={index}
                           fill={entry.events === Math.max(...monthlyData.map((item) => item.events), 0)
                             ? "url(#barGradient)"
-                            : dark ? "rgba(99,102,241,0.35)" : "rgba(99,102,241,0.2)"}
+                            : dark ? "rgba(37,99,235,0.35)" : "rgba(37,99,235,0.2)"}
                         />
                       ))}
                     </Bar>
                     <defs>
                       <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#818CF8" />
-                        <stop offset="100%" stopColor="#6366F1" />
+                        <stop offset="0%" stopColor="#2563EB" />
+                        <stop offset="100%" stopColor="#2563EB" />
                       </linearGradient>
                     </defs>
                   </BarChart>
@@ -172,7 +169,7 @@ export default function CoordOverview() {
                 <p className={cn("text-[14px] font-bold", D("text-slate-200", "text-slate-800"))}>Recent events</p>
                 <button
                   onClick={() => navigate("/dashboard/coordinator/events")}
-                  className={cn("text-[12px] font-medium transition-colors", D("text-slate-500 hover:text-indigo-400", "text-slate-400 hover:text-indigo-600"))}
+                  className={cn("text-[12px] font-medium transition-colors", D("text-slate-500 hover:text-blue-400", "text-slate-400 hover:text-blue-600"))}
                 >
                   View all
                 </button>
@@ -201,13 +198,13 @@ export default function CoordOverview() {
                               {status.label}
                             </span>
                           </td>
-                          <td className={cn("px-5 py-3.5 text-center font-semibold text-[14px] border-r border-b", D("border-white/[0.04]", "border-slate-100"))} style={{ color: "#6366F1" }}>
+                          <td className={cn("px-5 py-3.5 text-center font-semibold text-[14px] border-r border-b", D("border-white/[0.04]", "border-slate-100"))} style={{ color: "#2563EB" }}>
                             {event.registrations}
                           </td>
                           <td className="px-5 py-3.5 text-right border-r border-b border-slate-200 dark:border-white/[0.04]">
                             <button
                               onClick={() => navigate(`/dashboard/coordinator/events/${event.id}`)}
-                              className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/[0.1] text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+                              className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/[0.1] text-slate-400 hover:text-blue-400 hover:border-blue-500/30", "border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"))}
                             >
                               View
                             </button>
@@ -217,7 +214,7 @@ export default function CoordOverview() {
                     })}
                     {recentEvents.length === 0 && (
                       <tr>
-                        <td colSpan={5} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                        <td colSpan={5} className={cn("text-center py-16", D("bg-[#1E293B]", "bg-white"))}>
                           <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No events found</p>
                         </td>
                       </tr>

@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { StatCard } from "@/components/cards/StatCard";
 import { ExportButton } from "@/components/ui/ExportButton";
 import { downloadCsvFile } from "@/lib/reportExport";
 import {
@@ -11,11 +10,11 @@ import {
 } from "@/store/api";
 
 const COLOR_OPTIONS = [
-  "#0D948B",
-  "#6366F1",
+  "#2563EB",
+  "#2563EB",
   "#F59E0B",
   "#10B981",
-  "#8B5CF6",
+  "#2563EB",
   "#EC4899",
   "#EF4444",
   "#3B82F6",
@@ -57,29 +56,6 @@ function DepartmentsPage() {
       (department.coordinator?.email ?? "").toLowerCase().includes(query),
     );
   }, [departments, search]);
-
-  const stats = [
-    {
-      label: "Total departments",
-      value: departments.length,
-      color: "#F59E0B",
-    },
-    {
-      label: "Assigned coordinators",
-      value: departments.filter((department) => department.coordinator).length,
-      color: "#0D948B",
-    },
-    {
-      label: "Student accounts",
-      value: departments.reduce((sum, department) => sum + department.studentCount, 0),
-      color: "#6366F1",
-    },
-    {
-      label: "Department users",
-      value: departments.reduce((sum, department) => sum + department.userCount, 0),
-      color: "#10B981",
-    },
-  ];
 
   const thCls = cn(
     "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
@@ -134,10 +110,7 @@ function DepartmentsPage() {
     <div className="flex-1 overflow-hidden flex flex-col">
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D(
-          "bg-[#0F1B30] border-white/[0.06]",
-          "bg-teal-50 border-slate-200",
-        ),
+                D("bg-[#0F172A] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Departments</h1>
@@ -147,7 +120,7 @@ function DepartmentsPage() {
         </div>
         <div className="flex items-center gap-3">
           <ExportButton onClick={handleExport} label="Export report" disabled={filteredDepartments.length === 0 || isLoading} />
-          <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />
               <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round" />
@@ -163,7 +136,7 @@ function DepartmentsPage() {
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "#F59E0B", color: "#78350F", boxShadow: "0 4px 14px rgba(245,158,11,0.22)" }}
+            style={{ background: "#2563EB", color: "#FFFFFF", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
           >
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
               <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -171,18 +144,6 @@ function DepartmentsPage() {
             Add department
           </button>
         </div>
-      </div>
-
-      <div className="grid grid-cols-4 gap-4 px-8 py-5 shrink-0 border-b" style={{ borderColor: dark ? "rgba(255,255,255,0.04)" : "#F1F5F9" }}>
-        {stats.map((stat) => (
-          <StatCard
-            key={stat.label}
-            label={stat.label}
-            value={stat.value}
-            color={stat.color}
-            dark={dark}
-          />
-        ))}
       </div>
 
       <div className="flex-1 overflow-y-auto px-8 py-4">
@@ -204,7 +165,7 @@ function DepartmentsPage() {
                   key={department.id}
                   className={cn(
                     "border-b transition-colors",
-                    D("bg-[#0D1626] border-white/[0.05] hover:bg-white/[0.03]", "bg-white border-slate-100 hover:bg-slate-50"),
+                    D("bg-[#1E293B] border-white/[0.05] hover:bg-white/[0.03]", "bg-white border-slate-100 hover:bg-slate-50"),
                   )}
                 >
                   <td className={tdCls}>
@@ -237,7 +198,7 @@ function DepartmentsPage() {
                       </span>
                     )}
                   </td>
-                  <td className={cn(tdCls, "text-center font-semibold")} style={{ color: "#6366F1" }}>
+                  <td className={cn(tdCls, "text-center font-semibold")} style={{ color: "#2563EB" }}>
                     {department.studentCount}
                   </td>
                   <td className={cn(tdCls, "text-center font-semibold")} style={{ color: "#10B981" }}>
@@ -268,19 +229,19 @@ function DepartmentsPage() {
           </table>
 
           {isLoading && (
-            <div className={cn("flex flex-col items-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+            <div className={cn("flex flex-col items-center py-16", D("bg-[#1E293B]", "bg-white"))}>
               <p className={cn("text-[14px] font-semibold", D("text-slate-400", "text-slate-500"))}>Loading departments...</p>
             </div>
           )}
 
           {!isLoading && isError && (
-            <div className={cn("flex flex-col items-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+            <div className={cn("flex flex-col items-center py-16", D("bg-[#1E293B]", "bg-white"))}>
               <p className={cn("text-[14px] font-semibold", D("text-rose-400", "text-rose-600"))}>{errorMessage}</p>
             </div>
           )}
 
           {!isLoading && !isError && filteredDepartments.length === 0 && (
-            <div className={cn("flex flex-col items-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+            <div className={cn("flex flex-col items-center py-16", D("bg-[#1E293B]", "bg-white"))}>
               <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No departments found</p>
               <p className={cn("text-[13px] mt-1", D("text-slate-600", "text-slate-400"))}>
                 {departments.length === 0 ? "Create your first department to get started." : "Try a different search term."}
@@ -314,7 +275,7 @@ function AddDeptModal({ dark, onClose }) {
   const [form, setForm] = useState({
     name: "",
     shortName: "",
-    color: "#0D948B",
+    color: "#2563EB",
     coordinatorName: "",
     coordinatorEmail: "",
     coordinatorPhone: "",
@@ -326,8 +287,8 @@ function AddDeptModal({ dark, onClose }) {
   const inputCls = cn(
     "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all font-[inherit]",
     D(
-      "bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-teal-500",
-      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-300 focus:border-teal-500",
+      "bg-[#1E293B] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-blue-500",
+      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-300 focus:border-blue-500",
     ),
   );
   const labelCls = cn("block text-[12px] font-medium mb-1.5", D("text-slate-400", "text-slate-500"));
@@ -361,7 +322,7 @@ function AddDeptModal({ dark, onClose }) {
     <div className="absolute inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.58)", backdropFilter: "blur(4px)" }}>
       <form
         onSubmit={handleSubmit}
-        className={cn("w-[540px] rounded-2xl border shadow-2xl p-7", D("bg-[#0D1626] border-white/[0.1]", "bg-white border-slate-200"))}
+        className={cn("w-[540px] rounded-2xl border shadow-2xl p-7", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className={cn("text-[17px] font-bold", D("text-slate-50", "text-slate-900"))}>Add department</h2>
@@ -456,7 +417,7 @@ function AddDeptModal({ dark, onClose }) {
                 <button
                   type="button"
                   onClick={() => setForm((prev) => ({ ...prev, coordinatorPassword: generatePassword() }))}
-                  className={cn("text-[11px] font-medium transition-colors", D("text-slate-500 hover:text-teal-400", "text-slate-400 hover:text-teal-600"))}
+                  className={cn("text-[11px] font-medium transition-colors", D("text-slate-500 hover:text-blue-400", "text-slate-400 hover:text-blue-600"))}
                 >
                   Regenerate
                 </button>

@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { StatCard } from "@/components/cards/StatCard";
 import { 
   useGetEventsQuery, 
   useGetStudentsQuery, 
@@ -60,10 +59,6 @@ export default function VolunteersPage() {
     v.role.toLowerCase().includes(search.toLowerCase())
   );
 
-  const totalVolunteers = volunteers.length;
-  const confirmedCount = volunteers.filter(v => v.status === "confirmed").length;
-  const pendingCount = volunteers.filter(v => v.status === "pending").length;
-
   async function addVolunteer() {
     if (!form.email || !form.role || !selectedEventId) {
       setError("Please fill in all fields");
@@ -95,8 +90,8 @@ export default function VolunteersPage() {
   );
   const inputCls = cn(
     "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all",
-    D("bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-indigo-500",
-      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500")
+    D("bg-[#1E293B] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-blue-500",
+      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-blue-500")
   );
 
   if (eventsLoading) return <div className="p-8 text-slate-500">Loading volunteers...</div>;
@@ -106,10 +101,7 @@ export default function VolunteersPage() {
       {/* ── Header ── */}
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D(
-          "bg-[#0D1626] border-white/[0.06]",
-          "bg-blue-50 border-slate-200",
-        ),
+                D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Volunteers</h1>
@@ -121,14 +113,14 @@ export default function VolunteersPage() {
             onChange={(e) => setSelectedEventId(parseInt(e.target.value))}
             className={cn(
               "px-3.5 py-2.5 rounded-xl border text-[13px] font-medium outline-none",
-              D("bg-[#111827] border-white/[0.1] text-slate-200", "bg-white border-slate-200 text-slate-800")
+              D("bg-[#1E293B] border-white/[0.1] text-slate-200", "bg-white border-slate-200 text-slate-800")
             )}
           >
             {events.map(e => (
               <option key={e.id} value={e.id}>{e.eventName}</option>
             ))}
           </select>
-          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <div className={cn("flex items-center gap-2 px-3.5 py-2.5 rounded-xl border", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3"/>
               <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round"/>
@@ -140,7 +132,7 @@ export default function VolunteersPage() {
           <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold"
-            style={{ background: "#6366F1", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
+            style={{ background: "#2563EB", color: "#FFF", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
           >
             <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
             Add volunteer
@@ -149,14 +141,6 @@ export default function VolunteersPage() {
       </div>
 
       {/* ── Stats ── */}
-      <div className="grid grid-cols-3 gap-4 px-8 py-5 shrink-0 border-b" style={{ borderColor: dark ? "rgba(255,255,255,0.04)" : "#F1F5F9" }}>
-        {[
-          { label: "Total volunteers", value: totalVolunteers, color: "#6366F1" },
-          { label: "Confirmed", value: confirmedCount, color: "#10B981" },
-          { label: "Pending", value: pendingCount, color: "#F59E0B" },
-        ].map(s => <StatCard key={s.label} label={s.label} value={s.value} color={s.color} dark={dark} />)}
-      </div>
-
       {/* ── Table ── */}
       <div className="flex-1 overflow-y-auto px-8 py-4">
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/[0.07]", "border-slate-200"))}>
@@ -177,7 +161,7 @@ export default function VolunteersPage() {
                   <tr key={v.taskId} className={cn("border-b last:border-0 transition-colors", D("border-white/[0.04] hover:bg-white/[0.03]", "border-slate-100 hover:bg-slate-50"))}>
                     <td className={tdCls}>
                       <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                           {v.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                         </div>
                         <div>
@@ -201,7 +185,7 @@ export default function VolunteersPage() {
               })}
               {filtered.length === 0 && !volunteersLoading && (
                 <tr>
-                  <td colSpan={4} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                  <td colSpan={4} className={cn("text-center py-16", D("bg-[#1E293B]", "bg-white"))}>
                     <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No volunteers found</p>
                   </td>
                 </tr>
@@ -214,7 +198,7 @@ export default function VolunteersPage() {
       {/* ── Add Volunteer Modal ── */}
       {showModal && (
         <div className="absolute inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
-          <div className={cn("w-[440px] rounded-2xl border shadow-2xl p-7", D("bg-[#0D1626] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <div className={cn("w-[440px] rounded-2xl border shadow-2xl p-7", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
             <div className="flex items-center justify-between mb-6">
               <h2 className={cn("text-[17px] font-bold", D("text-slate-50", "text-slate-900"))}>Assign Volunteer</h2>
               <button onClick={() => { setShowModal(false); setError(""); }} className={cn("w-7 h-7 rounded-lg flex items-center justify-center", D("hover:bg-white/[0.08] text-slate-400", "hover:bg-slate-100 text-slate-500"))}>
@@ -233,7 +217,7 @@ export default function VolunteersPage() {
                     onChange={e => setStudentSearchQuery(e.target.value)}
                   />
                   {studentSearchQuery && filteredStudents.length > 0 && (
-                    <div className={cn("absolute top-full mt-1 left-0 right-0 rounded-lg border z-10 max-h-48 overflow-y-auto", D("bg-[#0D1626] border-white/[0.1]", "bg-white border-slate-200"))}>
+                    <div className={cn("absolute top-full mt-1 left-0 right-0 rounded-lg border z-10 max-h-48 overflow-y-auto", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
                       {filteredStudents.map(s => (
                         <button
                           key={s.id}
@@ -277,7 +261,7 @@ export default function VolunteersPage() {
                 onClick={addVolunteer}
                 disabled={!form.email || !form.role || isAssigning}
                 className="flex-1 py-2.5 rounded-xl text-[13.5px] font-bold text-white disabled:opacity-40"
-                style={{ background: "#6366F1", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
+                style={{ background: "#2563EB", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
               >
                 {isAssigning ? "Assigning..." : "Assign Volunteer"}
               </button>

@@ -25,7 +25,7 @@ function getDashboardPathForRole(role) {
 
 function FullPageMessage({ message }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#070D1A] text-slate-300 text-sm">
+    <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-slate-300 text-sm">
       {message}
     </div>
   );

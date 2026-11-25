@@ -38,10 +38,10 @@ function DashboardLayout() {
   const currentRoleMatch = location.pathname.split("/")[2];
   const currentRole = NAV_CONFIG[currentRoleMatch] ? currentRoleMatch : "collegeadmin";
   const headerPalette = {
-    collegeadmin: "bg-teal-50 border-slate-200 text-slate-900",
-    coordinator: "bg-blue-50 border-slate-200 text-slate-900",
-    student: "bg-amber-50 border-slate-200 text-slate-900",
-    volunteer: "bg-slate-50 border-slate-200 text-slate-900",
+    collegeadmin: "bg-white border-[#E2E8F0] text-[#0F172A]",
+    coordinator: "bg-white border-[#E2E8F0] text-[#0F172A]",
+    student: "bg-white border-[#E2E8F0] text-[#0F172A]",
+    volunteer: "bg-white border-[#E2E8F0] text-[#0F172A]",
   };
   const mobileHeaderLight = headerPalette[currentRole] || headerPalette.collegeadmin;
 
@@ -53,7 +53,7 @@ function DashboardLayout() {
     <div
       className={cn(
         "relative h-screen w-screen flex flex-col md:flex-row overflow-hidden",
-        D("bg-[#0B1220] text-slate-100", "bg-[#F8FAFC] text-slate-900"),
+        D("bg-[#0F172A] text-[#F8FAFC]", "bg-[#F8FAFC] text-[#0F172A]"),
       )}
     >
       {/* Mobile Header with Menu Button */}
@@ -61,7 +61,7 @@ function DashboardLayout() {
         className={cn(
           "relative z-10 md:hidden flex items-center justify-between px-4 py-3 border-b shrink-0 backdrop-blur-xl",
           D(
-            "bg-[#0D1626]/96 border-white/[0.06]",
+            "bg-[#0F172A]/95 border-slate-800",
             mobileHeaderLight,
           ),
         )}

@@ -53,17 +53,17 @@ export default function EventRegistrationForm({
   }
 
   const inputCls = cn(
-    "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500",
+    "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all bg-white border-[#E2E8F0] text-[#0F172A] placeholder:text-slate-400 focus:border-[#2563EB]",
   );
 
-  const labelCls = "block text-[12px] font-medium mb-1.5 text-slate-500";
-  const errorCls = "text-[11px] mt-1 text-rose-500";
+  const labelCls = "block text-[12px] font-medium mb-1.5 text-[#64748B]";
+  const errorCls = "text-[11px] mt-1 text-[#DC2626]";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {fields.length === 0 ? (
-        <div className="p-4 rounded-xl border border-slate-200 text-center bg-slate-50">
-          <p className="text-[13px] text-slate-500">
+        <div className="p-4 rounded-xl border border-[#E2E8F0] text-center bg-[#F8FAFC]">
+          <p className="text-[13px] text-[#64748B]">
             No fields configured for this event registration
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function EventRegistrationForm({
               {field.type === "Text" && (
                 <input
                   type="text"
-                  className={cn(inputCls, error && "border-rose-500")}
+                  className={cn(inputCls, error && "border-[#DC2626]")}
                   placeholder={`Enter ${field.label.toLowerCase()}`}
                   value={value}
                   onChange={(e) => handleChange(field.label, e.target.value)}
@@ -93,7 +93,7 @@ export default function EventRegistrationForm({
               {field.type === "Number" && (
                 <input
                   type="number"
-                  className={cn(inputCls, error && "border-rose-500")}
+                  className={cn(inputCls, error && "border-[#DC2626]")}
                   placeholder={`Enter ${field.label.toLowerCase()}`}
                   value={value}
                   onChange={(e) => handleChange(field.label, e.target.value)}
@@ -104,7 +104,7 @@ export default function EventRegistrationForm({
               {field.type === "Email" && (
                 <input
                   type="email"
-                  className={cn(inputCls, error && "border-rose-500")}
+                  className={cn(inputCls, error && "border-[#DC2626]")}
                   placeholder={`Enter email address`}
                   value={value}
                   onChange={(e) => handleChange(field.label, e.target.value)}
@@ -115,7 +115,7 @@ export default function EventRegistrationForm({
               {field.type === "Textarea" && (
                 <textarea
                   rows={3}
-                  className={cn(inputCls, "resize-none", error && "border-rose-500")}
+                  className={cn(inputCls, "resize-none", error && "border-[#DC2626]")}
                   placeholder={`Enter ${field.label.toLowerCase()}`}
                   value={value}
                   onChange={(e) => handleChange(field.label, e.target.value)}
@@ -125,7 +125,7 @@ export default function EventRegistrationForm({
 
               {field.type === "Dropdown" && (
                 <select
-                  className={cn(inputCls, error && "border-rose-500")}
+                  className={cn(inputCls, error && "border-[#DC2626]")}
                   value={value}
                   onChange={(e) => handleChange(field.label, e.target.value)}
                   required={field.required}
@@ -144,7 +144,7 @@ export default function EventRegistrationForm({
                       <input
                         type="checkbox"
                         id={field.label}
-                        className="w-4 h-4 accent-indigo-500 cursor-pointer"
+                        className="w-4 h-4 accent-[#2563EB] cursor-pointer"
                         checked={value === "true" || value === true}
                         onChange={(e) => handleChange(field.label, e.target.checked ? "true" : "false")}
                         required={field.required}
@@ -160,7 +160,7 @@ export default function EventRegistrationForm({
                           <input
                             type="checkbox"
                             id={`${field.label}-${option}`}
-                            className="w-4 h-4 accent-indigo-500 cursor-pointer"
+                            className="w-4 h-4 accent-[#2563EB] cursor-pointer"
                             checked={(value || []).includes(option)}
                             onChange={(e) => {
                               const currentValues = value || [];
@@ -183,7 +183,7 @@ export default function EventRegistrationForm({
               {field.type === "File upload" && (
                 <input
                   type="file"
-                  className={cn(inputCls, error && "border-rose-500")}
+                  className={cn(inputCls, error && "border-[#DC2626]")}
                   onChange={(e) => handleChange(field.label, e.target.files?.[0]?.name || "")}
                   required={field.required}
                 />
@@ -200,8 +200,8 @@ export default function EventRegistrationForm({
         disabled={isLoading}
         className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-50 transition-all"
         style={{
-          background: "linear-gradient(135deg,#6366F1,#818CF8)",
-          boxShadow: "0 4px 14px rgba(99,102,241,0.3)",
+          background: "#2563EB",
+          boxShadow: "0 4px 14px rgba(37,99,235,0.28)",
         }}
       >
         {isLoading ? "Submitting..." : "Submit Registration"}

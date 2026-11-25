@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
-import { StatCard } from "@/components/cards/StatCard";
 import { ExportButton } from "@/components/ui/ExportButton";
 import { downloadCsvFile } from "@/lib/reportExport";
 import {
@@ -11,8 +10,8 @@ import {
 } from "@/store/api";
 
 const STATUS_META = {
-  active: { label: "Active", bg: "rgba(13,148,139,0.14)", text: "#14B8A6", dot: "#10B981" },
-  upcoming: { label: "Upcoming", bg: "rgba(99,102,241,0.14)", text: "#818CF8", dot: "#6366F1" },
+  active: { label: "Active", bg: "rgba(37,99,235,0.14)", text: "#2563EB", dot: "#10B981" },
+  upcoming: { label: "Upcoming", bg: "rgba(37,99,235,0.14)", text: "#2563EB", dot: "#2563EB" },
   completed: { label: "Completed", bg: "rgba(148,163,184,0.14)", text: "#94A3B8", dot: "#64748B" },
   draft: { label: "Draft", bg: "rgba(245,158,11,0.14)", text: "#FCD34D", dot: "#F59E0B" },
 };
@@ -73,13 +72,6 @@ export default function EventsPage() {
     });
   }, [events, filterStatus, search]);
 
-  const stats = [
-    { label: "Total events", value: events.length, color: "#0D948B" },
-    { label: "Active events", value: events.filter((event) => event.status === "active").length, color: "#10B981" },
-    { label: "Upcoming events", value: events.filter((event) => event.status === "upcoming").length, color: "#6366F1" },
-    { label: "Registrations", value: events.reduce((sum, event) => sum + event.registrationCount, 0), color: "#64748B" },
-  ];
-
   const thCls = cn(
     "px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] border-r border-b border-slate-700 text-slate-100",
   );
@@ -122,10 +114,7 @@ export default function EventsPage() {
     <div className="flex-1 overflow-hidden flex flex-col">
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D(
-          "bg-[#0F1B30] border-white/[0.06]",
-          "bg-teal-50 border-slate-200",
-        ),
+                D("bg-[#0F172A] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Events</h1>
@@ -138,7 +127,7 @@ export default function EventsPage() {
           <select
             value={filterStatus}
             onChange={(event) => setFilterStatus(event.target.value)}
-            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+            className={cn("px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
           >
             <option value="all">All Statuses</option>
             {EVENT_STATUSES.map((status) => (
@@ -148,7 +137,7 @@ export default function EventsPage() {
             ))}
           </select>
 
-          <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"))}>
+          <div className={cn("flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-[13px]", D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"))}>
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
               <circle cx="6.5" cy="6.5" r="4" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" />
               <path d="M9.5 9.5l3.5 3.5" stroke={dark ? "#475569" : "#94A3B8"} strokeWidth="1.3" strokeLinecap="round" />
@@ -165,7 +154,7 @@ export default function EventsPage() {
           <button
             onClick={() => navigate("/dashboard/collegeadmin/events/create")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all hover:scale-[1.02]"
-            style={{ background: "#0D948B", color: "#ECFEFF", boxShadow: "0 4px 14px rgba(13,148,139,0.22)" }}
+            style={{ background: "#2563EB", color: "#ECFEFF", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
           >
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
               <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -173,12 +162,6 @@ export default function EventsPage() {
             Create event
           </button>
         </div>
-      </div>
-
-      <div className="grid grid-cols-4 gap-4 px-8 py-5 shrink-0 border-b" style={{ borderColor: dark ? "rgba(255,255,255,0.04)" : "#F1F5F9" }}>
-        {stats.map((stat) => (
-          <StatCard key={stat.label} label={stat.label} value={stat.value} color={stat.color} dark={dark} />
-        ))}
       </div>
 
       {statusMessage && (
@@ -279,7 +262,7 @@ export default function EventsPage() {
                               handleStatusChange(event.id, nextStatus);
                             }
                           }}
-                          className={cn("px-3 py-2 rounded-xl border text-[12px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+                          className={cn("px-3 py-2 rounded-xl border text-[12px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
                         >
                           <option value="">
                             {nextStatuses.length === 0 ? "No next action" : "Move to..."}
@@ -312,7 +295,7 @@ export default function EventsPage() {
 
               {eventsLoading && (
                 <tr>
-                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
+                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#1E293B] text-slate-400", "bg-white text-slate-500"))}>
                     Loading events...
                   </td>
                 </tr>
@@ -320,7 +303,7 @@ export default function EventsPage() {
 
               {!eventsLoading && eventsError && (
                 <tr>
-                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#0D1626] text-rose-400", "bg-white text-rose-600"))}>
+                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#1E293B] text-rose-400", "bg-white text-rose-600"))}>
                     {errorMessage}
                   </td>
                 </tr>
@@ -328,7 +311,7 @@ export default function EventsPage() {
 
               {!eventsLoading && !eventsError && filteredEvents.length === 0 && (
                 <tr>
-                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#0D1626]", "bg-white"))}>
+                  <td colSpan={9} className={cn("text-center py-16", D("bg-[#1E293B]", "bg-white"))}>
                     <p className={cn("text-[14px] font-semibold", D("text-slate-500", "text-slate-500"))}>No events found</p>
                     <p className={cn("text-[13px] mt-1", D("text-slate-600", "text-slate-400"))}>Create your first event or try a different filter.</p>
                   </td>

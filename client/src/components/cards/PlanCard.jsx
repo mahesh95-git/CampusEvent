@@ -1,4 +1,5 @@
 import React from "react";
+import { Check } from "lucide-react";
 
 function PlanCard({ plan, isActive, onClick, dark }) {
   const D = (darkClass, lightClass) => (dark ? darkClass : lightClass);
@@ -6,25 +7,25 @@ function PlanCard({ plan, isActive, onClick, dark }) {
   return (
     <div
       onClick={onClick}
-      className={`relative rounded-[22px] p-[30px] cursor-pointer transition-all duration-300 border-2 ${
+      className={`relative h-full rounded-2xl p-6 cursor-pointer transition-all duration-200 border ${
         plan.highlight
-          ? `scale-[1.03] ${D(
-              "bg-gradient-to-b from-teal-900/30 to-[#0D1626] border-teal-500 shadow-xl shadow-teal-500/20",
-              "bg-gradient-to-b from-teal-50 to-white border-teal-500 shadow-xl shadow-teal-500/15"
+          ? `${D(
+              "bg-[#1E293B] border-[#2563EB] shadow-lg shadow-blue-950/20",
+              "bg-white border-[#2563EB] shadow-lg shadow-blue-900/10"
             )}`
           : isActive
             ? D(
-                "bg-[#111827] border-teal-500/40 shadow-lg shadow-teal-500/10",
-                "bg-white border-teal-400/50 shadow-md"
+                "bg-[#1E293B] border-blue-500/50 shadow-md",
+                "bg-white border-[#BFDBFE] shadow-sm"
               )
             : D(
-                "bg-[#111827] border-white/[0.07] hover:border-teal-500/30",
-                "bg-white border-slate-100 hover:border-teal-300"
+                "bg-[#1E293B] border-slate-700 hover:border-blue-500/50 hover:shadow-md",
+                "bg-white border-[#E2E8F0] hover:border-[#BFDBFE] hover:shadow-md"
               )
       }`}
     >
       {plan.badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-teal-600 to-teal-400 text-white text-[10px] font-black px-4 py-[5px] rounded-full shadow-md shadow-teal-500/30 whitespace-nowrap">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-[10px] font-black px-4 py-[5px] rounded-full shadow-md shadow-blue-600/30 whitespace-nowrap">
           {plan.badge}
         </span>
       )}
@@ -37,27 +38,27 @@ function PlanCard({ plan, isActive, onClick, dark }) {
         </p>
         <div className="flex items-baseline gap-1 mb-2">
           <span
-            className={`text-[40px] font-black tracking-[-1.5px] ${D("text-slate-50", "text-slate-900")}`}
+            className={`text-[40px] font-black tracking-[-1.5px] ${D("text-slate-50", "text-[#0F172A]")}`}
           >
             {plan.price}
           </span>
           {plan.price !== "Custom" && (
             <span
-              className={`text-[13px] ${D("text-slate-500", "text-slate-400")}`}
+              className={`text-[13px] ${D("text-slate-400", "text-[#64748B]")}`}
             >
               /{plan.period}
             </span>
           )}
         </div>
         <p
-          className={`text-[14px] ${D("text-slate-400", "text-slate-500")}`}
+          className={`text-[14px] ${D("text-slate-400", "text-[#64748B]")}`}
         >
           {plan.desc}
         </p>
       </div>
 
       <div
-        className={`border-t pt-5 mb-6 ${D("border-white/[0.06]", "border-slate-100")}`}
+        className={`border-t pt-5 mb-6 ${D("border-slate-700", "border-[#E2E8F0]")}`}
       >
         {plan.items.map((item, j) => (
           <div
@@ -67,9 +68,9 @@ function PlanCard({ plan, isActive, onClick, dark }) {
             <span
               className={`w-[20px] h-[20px] rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${D(plan.checkDark, plan.checkLight)}`}
             >
-              ✓
+              <Check size={12} strokeWidth={2.5} aria-hidden="true" />
             </span>
-            <span className={D("text-slate-400", "text-slate-600")}>
+            <span className={D("text-slate-300", "text-[#64748B]")}>
               {item}
             </span>
           </div>

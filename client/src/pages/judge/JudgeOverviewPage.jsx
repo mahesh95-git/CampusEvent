@@ -21,7 +21,7 @@ export default function JudgeOverviewPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"))}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>Judge Dashboard</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -31,14 +31,14 @@ export default function JudgeOverviewPage() {
         <button
           onClick={() => navigate("/dashboard/judge/events")}
           className="px-4 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:scale-[1.02]"
-          style={{ background: "linear-gradient(135deg,#8B5CF6,#A78BFA)", boxShadow: "0 4px 14px rgba(139,92,246,0.28)" }}
+          style={{ background: "linear-gradient(135deg,#2563EB,#2563EB)", boxShadow: "0 4px 14px rgba(37,99,235,0.28)" }}
         >
           Open events
         </button>
       </div>
 
       <div className="grid grid-cols-4 gap-4 px-8 py-5 shrink-0 border-b" style={{ borderColor: dark ? "rgba(255,255,255,0.04)" : "#F1F5F9" }}>
-        <StatCard label="Assigned events" value={stats.assignedEvents} color="#8B5CF6" dark={dark} />
+        <StatCard label="Assigned events" value={stats.assignedEvents} color="#2563EB" dark={dark} />
         <StatCard label="Active events" value={stats.activeEvents} color="#10B981" dark={dark} />
         <StatCard label="Result files" value={stats.totalResults} color="#F59E0B" dark={dark} />
         <StatCard label="Scores saved" value={stats.totalScores} color="#3B82F6" dark={dark} />
@@ -46,13 +46,13 @@ export default function JudgeOverviewPage() {
 
       <div className="flex-1 overflow-y-auto px-8 py-4">
         {isLoading && (
-          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#0D1626] border-white/[0.07] text-slate-400", "bg-white border-slate-200 text-slate-500"))}>
+          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#1E293B] border-white/[0.07] text-slate-400", "bg-white border-slate-200 text-slate-500"))}>
             Loading judge dashboard...
           </div>
         )}
 
         {!isLoading && isError && (
-          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#0D1626] border-white/[0.07] text-rose-400", "bg-white border-slate-200 text-rose-600"))}>
+          <div className={cn("rounded-2xl border p-10 text-center", D("bg-[#1E293B] border-white/[0.07] text-rose-400", "bg-white border-slate-200 text-rose-600"))}>
             {errorMessage}
           </div>
         )}
@@ -63,7 +63,7 @@ export default function JudgeOverviewPage() {
               <button
                 key={item.eventId}
                 onClick={() => navigate(`/dashboard/judge/events/${item.eventId}`)}
-                className={cn("text-left rounded-3xl border p-6 transition hover:-translate-y-0.5", D("bg-[#0D1626] border-white/[0.07] hover:border-white/[0.12]", "bg-white border-slate-200 hover:border-slate-300"))}
+                className={cn("text-left rounded-3xl border p-6 transition hover:-translate-y-0.5", D("bg-[#1E293B] border-white/[0.07] hover:border-white/[0.12]", "bg-white border-slate-200 hover:border-slate-300"))}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -72,7 +72,7 @@ export default function JudgeOverviewPage() {
                       {item.event?.venue || "Venue"} · {item.event?.status || "draft"}
                     </p>
                   </div>
-                  <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full" style={{ background: "rgba(139,92,246,0.15)", color: "#A78BFA" }}>
+                  <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full" style={{ background: "rgba(37,99,235,0.15)", color: "#2563EB" }}>
                     Open
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export default function JudgeOverviewPage() {
             ))}
 
             {events.length === 0 && (
-              <div className={cn("rounded-2xl border p-10 text-center lg:col-span-2", D("bg-[#0D1626] border-white/[0.07] text-slate-400", "bg-white border-slate-200 text-slate-500"))}>
+              <div className={cn("rounded-2xl border p-10 text-center lg:col-span-2", D("bg-[#1E293B] border-white/[0.07] text-slate-400", "bg-white border-slate-200 text-slate-500"))}>
                 No events assigned yet.
               </div>
             )}

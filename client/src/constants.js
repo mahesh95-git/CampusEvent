@@ -1,9 +1,9 @@
 ﻿const ROLES = {
   participant: {
     label: "Participant",
-    dot: "#10B981",
-    accent: "#10B981",
-    accentSoft: "rgba(16,185,129,0.12)",
+    dot: "#16A34A",
+    accent: "#2563EB",
+    accentSoft: "rgba(37,99,235,0.12)",
     desc: "Browse and join campus events",
     cta: "Continue",
     extra: { label: "New here? Register as participant", href: "/register?role=participant" },
@@ -11,9 +11,9 @@
 
   coordinator: {
     label: "Coordinator",
-    dot: "#0D948B",
-    accent: "#0D948B",
-    accentSoft: "rgba(13,148,139,0.12)",
+    dot: "#2563EB",
+    accent: "#2563EB",
+    accentSoft: "rgba(37,99,235,0.12)",
     desc: "Manage events and volunteers",
     cta: "Sign in",
     extra: { label: "Forgot password?", href: "/forgot-password" },
@@ -21,9 +21,9 @@
 
   collegeadmin: {
     label: "college Admin",
-    dot: "#F59E0B",
-    accent: "#F59E0B",
-    accentSoft: "rgba(245,158,11,0.12)",
+    dot: "#0F172A",
+    accent: "#2563EB",
+    accentSoft: "rgba(37,99,235,0.12)",
     desc: "Manage college events ",
     cta: "Log in",
     extra: { label: "Forgot password?", href: "/forgot-password" },
@@ -32,8 +32,8 @@
   volunteer: {
     label: "Volunteer",
     dot: "#3B82F6",
-    accent: "#3B82F6",
-    accentSoft: "rgba(59,130,246,0.12)",
+    accent: "#2563EB",
+    accentSoft: "rgba(37,99,235,0.12)",
     desc: "Manage tasks and attendance",
     cta: "Sign in",
     extra: { label: "Forgot password?", href: "/forgot-password" },
@@ -41,9 +41,9 @@
 
   judge: {
     label: "Judge",
-    dot: "#8B5CF6",
-    accent: "#8B5CF6",
-    accentSoft: "rgba(139,92,246,0.12)",
+    dot: "#64748B",
+    accent: "#2563EB",
+    accentSoft: "rgba(37,99,235,0.12)",
     desc: "Evaluate events, upload results, and score participants",
     cta: "Sign in",
     extra: { label: "Forgot password?", href: "/forgot-password" },
@@ -69,11 +69,11 @@ const SHARED_FIELDS = [
 
 
 const ROLE_OPTIONS = [
-  { value: "participant", label: "Participant", dot: "#10B981" },
-  { value: "coordinator", label: "Coordinator", dot: "#0D948B" },
-  { value: "collegeadmin", label: "college Admin", dot: "#F59E0B" },
+  { value: "participant", label: "Participant", dot: "#16A34A" },
+  { value: "coordinator", label: "Coordinator", dot: "#2563EB" },
+  { value: "collegeadmin", label: "college Admin", dot: "#0F172A" },
   { value: "volunteer", label: "Volunteer", dot: "#3B82F6" },
-  { value: "judge", label: "Judge", dot: "#8B5CF6" },
+  { value: "judge", label: "Judge", dot: "#64748B" },
 ];
 
 const PLANS = [
@@ -84,12 +84,12 @@ const PLANS = [
     desc: "For small clubs just getting started",
     highlight: false,
     badge: null,
-    accentDark: "text-teal-400",
-    accentLight: "text-teal-600",
-    checkDark: "bg-teal-500/15 border border-teal-500/30 text-teal-400",
-    checkLight: "bg-teal-100 border border-teal-300 text-teal-600",
-    btnDark: "border border-teal-500/40 text-teal-400 hover:bg-teal-500/10",
-    btnLight: "border border-teal-500/50 text-teal-600 hover:bg-teal-50",
+    accentDark: "text-blue-400",
+    accentLight: "text-[#2563EB]",
+    checkDark: "bg-blue-500/15 border border-blue-500/30 text-blue-400",
+    checkLight: "bg-blue-50 border border-blue-200 text-[#2563EB]",
+    btnDark: "border border-blue-500/40 text-blue-400 hover:bg-blue-500/10",
+    btnLight: "border border-[#2563EB]/40 text-[#2563EB] hover:bg-blue-50",
     items: [
       "Up to 5 events per semester",
       "1 Coordinator account",
@@ -106,14 +106,14 @@ const PLANS = [
     desc: "For active departments & student bodies",
     highlight: true,
     badge: "Most Popular",
-    accentDark: "text-teal-400",
-    accentLight: "text-teal-600",
-    checkDark: "bg-teal-500/15 border border-teal-500/30 text-teal-400",
-    checkLight: "bg-teal-100 border border-teal-300 text-teal-600",
+    accentDark: "text-blue-400",
+    accentLight: "text-[#2563EB]",
+    checkDark: "bg-blue-500/15 border border-blue-500/30 text-blue-400",
+    checkLight: "bg-blue-50 border border-blue-200 text-[#2563EB]",
     btnDark:
-      "bg-gradient-to-r from-teal-600 to-teal-400 text-white shadow-lg shadow-teal-500/30",
+      "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-lg shadow-blue-600/25",
     btnLight:
-      "bg-gradient-to-r from-teal-600 to-teal-400 text-white shadow-lg shadow-teal-500/30",
+      "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-lg shadow-blue-600/25",
     items: [
       "Unlimited events per semester",
       "Org Admin + up to 3 Coordinator accounts",
@@ -132,14 +132,14 @@ const PLANS = [
     desc: "For universities managing multiple orgs",
     highlight: false,
     badge: null,
-    accentDark: "text-amber-400",
-    accentLight: "text-amber-600",
-    checkDark: "bg-amber-500/15 border border-amber-500/30 text-amber-400",
-    checkLight: "bg-amber-100 border border-amber-300 text-amber-600",
+    accentDark: "text-slate-300",
+    accentLight: "text-[#0F172A]",
+    checkDark: "bg-green-500/15 border border-green-500/30 text-green-400",
+    checkLight: "bg-green-50 border border-green-200 text-[#16A34A]",
     btnDark:
-      "border border-amber-500/40 text-amber-400 hover:bg-amber-500/10",
+      "border border-slate-600 text-slate-200 hover:bg-white/[0.06]",
     btnLight:
-      "border border-amber-500/50 text-amber-600 hover:bg-amber-50",
+      "border border-[#E2E8F0] text-[#0F172A] hover:bg-[#F8FAFC]",
     items: [
       "Everything in Organisation",
       "Unlimited organisations under one roof",
@@ -170,9 +170,8 @@ const COLLEGE_TYPES = [
 const NAV_CONFIG = {
   collegeadmin: {
     label: "Org Admin",
-    emoji: "🎯",
-    color: "teal",
-    accent: { dark: "#14B8A6", light: "#0D948B" },
+    color: "blue",
+    accent: { dark: "#60A5FA", light: "#2563EB" },
     navItems: [
       { label: "Overview", path: "/dashboard/collegeadmin", icon: "grid" },
       { label: "College Details", path: "/dashboard/collegeadmin/college", icon: "building" },
@@ -188,9 +187,8 @@ const NAV_CONFIG = {
 
   coordinator: {
     label: "Coordinator",
-    emoji: "📋",
-    color: "indigo",
-    accent: { dark: "#818CF8", light: "#6366F1" },
+    color: "blue",
+    accent: { dark: "#60A5FA", light: "#2563EB" },
     plan: null, // coordinators don't have a plan badge
     navItems: [
       { label: "Overview", path: "/dashboard/coordinator", icon: "grid" },
@@ -205,9 +203,8 @@ const NAV_CONFIG = {
 
   student: {
     label: "Student",
-    emoji: "🎓",
-    color: "amber",
-    accent: { dark: "#F59E0B", light: "#D97706" },
+    color: "blue",
+    accent: { dark: "#60A5FA", light: "#2563EB" },
     plan: null,
     navItems: [
       { label: "Overview", path: "/dashboard/student", icon: "grid" },
@@ -221,9 +218,8 @@ const NAV_CONFIG = {
 
   volunteer: {
     label: "Volunteer",
-    emoji: "🎗️",
     color: "blue",
-    accent: { dark: "#60A5FA", light: "#3B82F6" },
+    accent: { dark: "#60A5FA", light: "#2563EB" },
     plan: null,
     navItems: [
       { label: "Overview", path: "/dashboard/volunteer", icon: "grid" },
@@ -236,9 +232,8 @@ const NAV_CONFIG = {
 
   judge: {
     label: "Judge",
-    emoji: "⚖️",
-    color: "purple",
-    accent: { dark: "#A78BFA", light: "#8B5CF6" },
+    color: "blue",
+    accent: { dark: "#60A5FA", light: "#2563EB" },
     plan: null,
     navItems: [
       { label: "Overview", path: "/dashboard/judge", icon: "grid" },
@@ -296,4 +291,3 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/svg+xml",
 ];
 export { ROLES, SHARED_FIELDS, ROLE_OPTIONS, PLANS, INDIAN_STATES, COLLEGE_TYPES, NAV_CONFIG, ACCEPTED_IMAGE_TYPES };
-

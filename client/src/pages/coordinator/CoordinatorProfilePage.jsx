@@ -33,10 +33,7 @@ export default function CoordinatorProfilePage() {
     <div className="flex-1 overflow-y-auto">
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b",
-        D(
-          "bg-[#0D1626] border-white/[0.06]",
-          "bg-blue-50 border-slate-200",
-        ),
+                D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Profile</h1>
@@ -45,7 +42,7 @@ export default function CoordinatorProfilePage() {
       </div>
 
       <div className="px-8 py-6 grid grid-cols-[1fr_320px] gap-6 items-start">
-        <div className={cn("rounded-2xl border p-6 flex items-center gap-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+        <div className={cn("rounded-2xl border p-6 flex items-center gap-5", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
           {profileUrl || user?.profilePictureUrl ? (
             <img 
               src={profileUrl || user?.profilePictureUrl}
@@ -53,7 +50,7 @@ export default function CoordinatorProfilePage() {
               className="w-16 h-16 rounded-2xl object-cover shadow-lg shrink-0"
             />
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-indigo-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500 flex items-center justify-center text-white text-[22px] font-black shadow-lg shrink-0">
               {initials(user.name)}
             </div>
           )}
@@ -61,13 +58,13 @@ export default function CoordinatorProfilePage() {
             <p className={cn("text-[18px] font-extrabold truncate", D("text-slate-50", "text-slate-900"))}>{user.name}</p>
             <p className={cn("text-[13px]", D("text-slate-400", "text-slate-500"))}>{user.email}</p>
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-400">Coordinator</span>
+              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-400">Coordinator</span>
               <span className={cn("text-[11px]", D("text-slate-600", "text-slate-400"))}>| {user.department?.DepartmentName || "No department"}</span>
             </div>
           </div>
         </div>
 
-        <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+        <div className={cn("rounded-2xl border p-5", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
           <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>Account</p>
           {[
             { label: "Role", value: "Coordinator" },
@@ -82,7 +79,7 @@ export default function CoordinatorProfilePage() {
           ))}
 
         {/* Profile Picture Upload */}
-        <div className={cn("rounded-2xl border p-5", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+        <div className={cn("rounded-2xl border p-5", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
           <p className={cn("text-[12px] font-bold uppercase tracking-[0.06em] mb-4", D("text-slate-500", "text-slate-400"))}>Profile Picture</p>
           <ProfilePictureUpload onUploadSuccess={(url) => setProfileUrl(url)} />
           {(profileUrl || user?.profilePictureUrl) && (

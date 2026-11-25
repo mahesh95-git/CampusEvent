@@ -6,8 +6,8 @@ import { downloadCsvFile } from "@/lib/reportExport";
 import { useGetEventByIdQuery } from "@/store/api";
 
 const STATUS_META = {
-  active: { label: "Active", bg: "rgba(13,148,139,0.14)", text: "#14B8A6", dot: "#10B981" },
-  upcoming: { label: "Upcoming", bg: "rgba(99,102,241,0.14)", text: "#818CF8", dot: "#6366F1" },
+  active: { label: "Active", bg: "rgba(37,99,235,0.14)", text: "#2563EB", dot: "#10B981" },
+  upcoming: { label: "Upcoming", bg: "rgba(37,99,235,0.14)", text: "#2563EB", dot: "#2563EB" },
   completed: { label: "Completed", bg: "rgba(148,163,184,0.14)", text: "#94A3B8", dot: "#64748B" },
   draft: { label: "Draft", bg: "rgba(245,158,11,0.14)", text: "#FCD34D", dot: "#F59E0B" },
 };
@@ -16,22 +16,6 @@ const EVENT_TYPE_LABELS = {
   internal: "Internal event",
   public: "Public event",
 };
-
-function hexToRgba(hex, alpha) {
-  if (!hex || typeof hex !== "string") return `rgba(13,148,136,${alpha})`;
-  const normalized = hex.replace("#", "");
-  if (normalized.length !== 6) return `rgba(13,148,136,${alpha})`;
-
-  const r = Number.parseInt(normalized.slice(0, 2), 16);
-  const g = Number.parseInt(normalized.slice(2, 4), 16);
-  const b = Number.parseInt(normalized.slice(4, 6), 16);
-
-  if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) {
-    return `rgba(13,148,136,${alpha})`;
-  }
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 function FormResponseCell({ formResponse, fieldName, dark: D }) {
   if (!formResponse || !formResponse[fieldName]) {
@@ -67,7 +51,7 @@ function FormResponseModal({ participant, event, dark: D, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className={cn("rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto", D("bg-deep-navy", "bg-white"))}>
-        <div className={cn("sticky top-0 flex items-center justify-between px-6 py-4 border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
+        <div className={cn("sticky top-0 flex items-center justify-between px-6 py-4 border-b", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-[#E2E8F0]"))}>
           <div>
             <p className={cn("text-[16px] font-bold", D("text-slate-100", "text-slate-800"))}>
               Form Response: {participant.participant?.name || participant.formResponse?.["Full Name"]}
@@ -187,7 +171,7 @@ export default function EventDetailPage() {
           <button
             onClick={() => navigate(backPath)}
             className="mt-6 rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white"
-            style={{ background: "#6366F1" }}
+            style={{ background: "#2563EB" }}
           >
             Back to events
           </button>
@@ -214,7 +198,7 @@ export default function EventDetailPage() {
           onClose={() => setSelectedParticipant(null)}
         />
       )}
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b", D("border-white/6", "border-slate-200"))}>
+      <div className={cn("flex items-center justify-between px-8 py-5 border-b", D("bg-[#1E293B] border-white/6", "bg-white border-[#E2E8F0]"))}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>{eventName}</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Complete event record and participant details</p>
@@ -238,31 +222,6 @@ export default function EventDetailPage() {
             />
           </div>
         )}
-
-        <div className="grid grid-cols-4 gap-4">
-          {[
-            { label: "Registrations", value: event?.participantCount ?? 0, color: "#10B981" },
-            { label: "Participants", value: event?.participantCount ?? 0, color: "#0D948B" },
-            { label: "Volunteers", value: event?.volunteerCount ?? 0, color: "#6366F1" },
-            { label: "Departments", value: departments.length, color: "#F59E0B" },
-          ].map((card) => (
-            <div
-              key={card.label}
-              className={cn("relative overflow-hidden rounded-2xl border p-5 shadow-sm", D("border-white/[0.08]", "border-slate-200"))}
-              style={{
-                background: D(hexToRgba(card.color, 0.16), hexToRgba(card.color, 0.12)),
-                boxShadow: D(`0 14px 32px ${hexToRgba(card.color, 0.12)}`, "0 10px 24px rgba(15, 23, 42, 0.06)"),
-              }}
-            >
-              <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl" style={{ background: card.color }} />
-              <div className="flex items-center justify-between mb-3">
-                <p className={cn("text-[12px] font-medium", D("text-slate-500", "text-slate-400"))}>{card.label}</p>
-                <span className="w-2 h-2 rounded-full" style={{ background: card.color }} />
-              </div>
-              <p className={cn("text-[28px] font-extrabold tracking-tight leading-none", D("text-slate-50", "text-slate-900"))}>{card.value}</p>
-            </div>
-          ))}
-        </div>
 
         <div className="grid grid-cols-[1.1fr_0.9fr] gap-6">
           <div className={cn("rounded-2xl border p-6", D("bg-deep-navy border-white/7", "bg-white border-slate-200"))}>
@@ -290,8 +249,8 @@ export default function EventDetailPage() {
               <div className="mt-5 pt-5 border-t" style={{ borderColor: D("rgba(255,255,255,0.1)", "#E2E8F0") }}>
                 <p className={cn("text-[11px] uppercase mb-2", D("text-slate-500", "text-slate-400"))}>Registration form link</p>
                 <div className={cn("rounded-lg p-3 flex items-center justify-between gap-3", D("bg-white/3", "bg-slate-50"))}>
-                  <code className={cn("text-[12px] truncate", D("text-indigo-400", "text-indigo-600"))}>{event.registrationFormLink}</code>
-                  <button onClick={() => { const url = `${window.location.origin}/register/${event.registrationFormLink}`; navigator.clipboard.writeText(url); alert("Registration link copied to clipboard!"); }} className={cn("text-[11px] px-2.5 py-1 rounded-lg whitespace-nowrap font-medium", D("bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30", "bg-blue-50 text-blue-600 hover:bg-blue-100"))}>
+                  <code className={cn("text-[12px] truncate", D("text-blue-400", "text-blue-600"))}>{event.registrationFormLink}</code>
+                  <button onClick={() => { const url = `${window.location.origin}/register/${event.registrationFormLink}`; navigator.clipboard.writeText(url); alert("Registration link copied to clipboard!"); }} className={cn("text-[11px] px-2.5 py-1 rounded-lg whitespace-nowrap font-medium", D("bg-blue-500/20 text-blue-400 hover:bg-blue-500/30", "bg-blue-50 text-blue-600 hover:bg-blue-100"))}>
                     Copy link
                   </button>
                 </div>
@@ -316,7 +275,7 @@ export default function EventDetailPage() {
                 <div key={`${volunteer.email}-${index}`} className={cn("rounded-xl border px-4 py-3", D("border-white/6 bg-white/2", "border-slate-200 bg-slate-50"))}>
                   <p className={cn("text-[13px] font-semibold", D("text-slate-100", "text-slate-800"))}>{volunteer.name}</p>
                   <p className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>{volunteer.email}</p>
-                  <p className={cn("text-[11px] mt-1", D("text-indigo-400", "text-indigo-600"))}>{volunteer.role}</p>
+                  <p className={cn("text-[11px] mt-1", D("text-blue-400", "text-blue-600"))}>{volunteer.role}</p>
                 </div>
               )) : (
                 <p className={cn("text-[13px]", D("text-slate-500", "text-slate-400"))}>No volunteers added.</p>
@@ -326,7 +285,7 @@ export default function EventDetailPage() {
         </div>
 
         <div className={cn("rounded-2xl border overflow-hidden", D("border-white/7", "border-slate-200"))}>
-          <div className={cn("px-6 py-4 border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
+          <div className={cn("px-6 py-4 border-b", D("bg-[#1E293B] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
             <p className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Participants & Form Responses</p>
             <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>View participant details and their form submissions</p>
           </div>
@@ -381,7 +340,7 @@ export default function EventDetailPage() {
 
         {event?.judgeResults && event.judgeResults.length > 0 && (
           <div className={cn("rounded-2xl border overflow-hidden", D("border-white/7", "border-slate-200"))}>
-            <div className={cn("px-6 py-4 border-b", D("bg-[#0D1626] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
+            <div className={cn("px-6 py-4 border-b", D("bg-[#1E293B] border-white/[0.07]", "bg-slate-100 border-slate-200"))}>
               <p className={cn("text-[14px] font-bold", D("text-slate-100", "text-slate-800"))}>Judge Results</p>
               <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>Result files uploaded by judges for different rounds</p>
             </div>

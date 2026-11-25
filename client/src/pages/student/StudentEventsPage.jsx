@@ -8,8 +8,8 @@ import { useGetStudentEventsQuery } from "@/store/api";
 const TYPE_LABELS = { internal: "Internal event", public: "Public event" };
 const STATUS_LABELS = {
   draft: { label: "Draft", color: "#F59E0B" },
-  upcoming: { label: "Upcoming", color: "#818CF8" },
-  active: { label: "Active", color: "#14B8A6" },
+  upcoming: { label: "Upcoming", color: "#2563EB" },
+  active: { label: "Active", color: "#2563EB" },
   completed: { label: "Completed", color: "#94A3B8" },
 };
 
@@ -75,10 +75,7 @@ export default function StudentEventsPage() {
       <div
         className={cn(
           "flex items-center justify-between px-8 py-5 border-b shrink-0",
-          D(
-            "bg-[#111827] border-white/[0.06]",
-            "bg-amber-50 border-slate-200",
-          ),
+                    D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
         )}
       >
         <div>
@@ -107,7 +104,7 @@ export default function StudentEventsPage() {
             className={cn(
               "px-3.5 py-2.5 rounded-xl border text-[13px] outline-none capitalize",
               D(
-                "bg-[#111827] border-white/[0.1] text-slate-300",
+                "bg-[#1E293B] border-white/[0.1] text-slate-300",
                 "bg-white border-slate-200 text-slate-700",
               ),
             )}
@@ -119,7 +116,7 @@ export default function StudentEventsPage() {
           <div
             className={cn(
               "flex items-center gap-2 px-3.5 py-2.5 rounded-xl border",
-              D("bg-[#111827] border-white/[0.1]", "bg-white border-slate-200"),
+              D("bg-[#1E293B] border-white/[0.1]", "bg-white border-slate-200"),
             )}
           >
             <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
@@ -159,7 +156,7 @@ export default function StudentEventsPage() {
           <div
             className={cn(
               "rounded-[28px] border p-10 text-center mb-4",
-              D("border-white/[0.06] bg-[#0D1626]", "border-slate-200 bg-white"),
+              D("border-white/[0.06] bg-[#1E293B]", "border-slate-200 bg-white"),
             )}
           >
             <p
@@ -205,7 +202,7 @@ export default function StudentEventsPage() {
                 className={cn(
                   "w-full rounded-[28px] overflow-hidden border transition hover:-translate-y-0.5 text-left",
                   D(
-                    "border-white/[0.06] bg-[#0D1626] hover:border-white/[0.12]",
+                    "border-white/[0.06] bg-[#1E293B] hover:border-white/[0.12]",
                     "border-slate-200 bg-white hover:border-slate-300",
                   ),
                 )}
@@ -312,7 +309,7 @@ export default function StudentEventsPage() {
               className={cn(
                 "rounded-[28px] border p-10 text-center",
                 D(
-                  "border-white/[0.06] bg-[#0D1626]",
+                  "border-white/[0.06] bg-[#1E293B]",
                   "border-slate-200 bg-white",
                 ),
               )}

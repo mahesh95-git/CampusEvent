@@ -167,13 +167,13 @@ export default function JudgeEventDetailPage() {
   if (isError || !event) {
     return (
       <div className="flex-1 overflow-hidden flex items-center justify-center px-8">
-        <div className={cn("rounded-2xl border p-10 text-center max-w-xl w-full", D("bg-[#0D1626] border-white/[0.07] text-rose-400", "bg-white border-slate-200 text-rose-600"))}>
+        <div className={cn("rounded-2xl border p-10 text-center max-w-xl w-full", D("bg-[#1E293B] border-white/[0.07] text-rose-400", "bg-white border-slate-200 text-rose-600"))}>
           <p className="font-semibold text-[16px] mb-2">Event not found</p>
           <p className="text-[13px]">{errorMessage}</p>
           <button
             onClick={() => navigate("/dashboard/judge/events")}
             className="mt-5 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white"
-            style={{ background: "#8B5CF6" }}
+            style={{ background: "#2563EB" }}
           >
             Back to events
           </button>
@@ -184,7 +184,7 @@ export default function JudgeEventDetailPage() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("border-white/[0.06]", "border-slate-200"))}>
+      <div className={cn("flex items-center justify-between px-8 py-5 border-b shrink-0", D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"))}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>{event.eventName}</h1>
           <p className={cn("text-[12px] mt-1", D("text-slate-500", "text-slate-400"))}>
@@ -204,7 +204,7 @@ export default function JudgeEventDetailPage() {
 
       <div className="flex-1 overflow-y-auto px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className={cn("lg:col-span-2 rounded-3xl border p-6", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+          <div className={cn("lg:col-span-2 rounded-3xl border p-6", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
                 <h2 className={cn("text-[16px] font-bold", D("text-slate-100", "text-slate-900"))}>Participants</h2>
@@ -215,7 +215,7 @@ export default function JudgeEventDetailPage() {
                 <select
                   value={roundLabel}
                   onChange={(event) => setRoundLabel(event.target.value)}
-                  className={cn("w-full px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+                  className={cn("w-full px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
                 >
                   {DEFAULT_ROUNDS.map((round) => (
                     <option key={round} value={round}>{round}</option>
@@ -227,7 +227,7 @@ export default function JudgeEventDetailPage() {
             <div className="overflow-hidden rounded-2xl border">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className={cn("border-b", D("bg-white/[0.03] border-white/[0.06]", "bg-slate-50 border-slate-200"))}>
+                  <tr className={cn("border-b", D("bg-white/[0.03] border-white/[0.06]", "bg-white border-[#E2E8F0]"))}>
                     <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">Participant</th>
                     <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">Email</th>
                     <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">Marks</th>
@@ -253,7 +253,7 @@ export default function JudgeEventDetailPage() {
                             min="0"
                             value={draft.marks ?? ""}
                             onChange={(event) => setDraftScore(participant.id, "marks", event.target.value)}
-                            className={cn("w-24 px-3 py-2 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
+                            className={cn("w-24 px-3 py-2 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300", "bg-white border-slate-200 text-slate-700"))}
                           />
                         </td>
                         <td className="px-4 py-3.5">
@@ -261,7 +261,7 @@ export default function JudgeEventDetailPage() {
                             type="text"
                             value={draft.remarks ?? ""}
                             onChange={(event) => setDraftScore(participant.id, "remarks", event.target.value)}
-                            className={cn("w-full px-3 py-2 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300 placeholder:text-slate-600", "bg-white border-slate-200 text-slate-700 placeholder:text-slate-400"))}
+                            className={cn("w-full px-3 py-2 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300 placeholder:text-slate-600", "bg-white border-slate-200 text-slate-700 placeholder:text-slate-400"))}
                             placeholder="Optional remarks"
                           />
                         </td>
@@ -271,7 +271,7 @@ export default function JudgeEventDetailPage() {
                             onClick={() => handleSaveScore(participant.id)}
                             disabled={isSavingScore}
                             className="px-3.5 py-2 rounded-xl text-[12px] font-bold text-white disabled:opacity-60"
-                            style={{ background: "#8B5CF6" }}
+                            style={{ background: "#2563EB" }}
                           >
                             Save score
                           </button>
@@ -281,7 +281,7 @@ export default function JudgeEventDetailPage() {
                   })}
                   {participants.length === 0 && (
                     <tr>
-                      <td colSpan={5} className={cn("text-center py-14", D("bg-[#0D1626] text-slate-400", "bg-white text-slate-500"))}>
+                      <td colSpan={5} className={cn("text-center py-14", D("bg-[#1E293B] text-slate-400", "bg-white text-slate-500"))}>
                         No participants registered yet.
                       </td>
                     </tr>
@@ -298,7 +298,7 @@ export default function JudgeEventDetailPage() {
           </div>
 
           <div className="flex flex-col gap-5">
-            <div className={cn("rounded-3xl border p-6", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+            <div className={cn("rounded-3xl border p-6", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
               <h2 className={cn("text-[16px] font-bold mb-4", D("text-slate-100", "text-slate-900"))}>Upload Result File</h2>
               <div className="flex flex-col gap-3">
                 <div>
@@ -308,7 +308,7 @@ export default function JudgeEventDetailPage() {
                     value={fileTitle}
                     onChange={(event) => setFileTitle(event.target.value)}
                     placeholder="e.g. Round 1 shortlist"
-                    className={cn("w-full px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#111827] border-white/[0.1] text-slate-300 placeholder:text-slate-600", "bg-white border-slate-200 text-slate-700 placeholder:text-slate-400"))}
+                    className={cn("w-full px-3.5 py-2.5 rounded-xl border text-[13px] outline-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300 placeholder:text-slate-600", "bg-white border-slate-200 text-slate-700 placeholder:text-slate-400"))}
                   />
                 </div>
                 <div>
@@ -318,7 +318,7 @@ export default function JudgeEventDetailPage() {
                     value={fileSummary}
                     onChange={(event) => setFileSummary(event.target.value)}
                     placeholder="Optional summary of the round result"
-                    className={cn("w-full px-3.5 py-2.5 rounded-xl border text-[13px] outline-none resize-none", D("bg-[#111827] border-white/[0.1] text-slate-300 placeholder:text-slate-600", "bg-white border-slate-200 text-slate-700 placeholder:text-slate-400"))}
+                    className={cn("w-full px-3.5 py-2.5 rounded-xl border text-[13px] outline-none resize-none", D("bg-[#1E293B] border-white/[0.1] text-slate-300 placeholder:text-slate-600", "bg-white border-slate-200 text-slate-700 placeholder:text-slate-400"))}
                   />
                 </div>
                 <div>
@@ -341,7 +341,7 @@ export default function JudgeEventDetailPage() {
                   onClick={handleUploadResult}
                   disabled={isSavingResult}
                   className={cn("px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2", isSavingResult && "cursor-wait")}
-                  style={{ background: "#8B5CF6" }}
+                  style={{ background: "#2563EB" }}
                 >
                   {isSavingResult ? (
                     <>
@@ -363,7 +363,7 @@ export default function JudgeEventDetailPage() {
               )}
             </div>
 
-            <div className={cn("rounded-3xl border p-6", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+            <div className={cn("rounded-3xl border p-6", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
               <h2 className={cn("text-[16px] font-bold mb-4", D("text-slate-100", "text-slate-900"))}>Saved Results</h2>
               <div className="flex flex-col gap-3">
                 {judgeResults.map((result) => (

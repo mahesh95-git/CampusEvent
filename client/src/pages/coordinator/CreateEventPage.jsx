@@ -160,8 +160,8 @@ export default function CreateEventPage() {
   const inputCls = cn(
     "w-full px-3.5 py-2.5 rounded-xl border text-[13.5px] outline-none transition-all",
     D(
-      "bg-[#111827] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-indigo-500",
-      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500",
+      "bg-[#1E293B] border-white/[0.1] text-slate-200 placeholder:text-slate-600 focus:border-blue-500",
+      "bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-blue-500",
     ),
   );
   const labelCls = cn("block text-[12px] font-medium mb-1.5", D("text-slate-400", "text-slate-500"));
@@ -266,17 +266,17 @@ export default function CreateEventPage() {
     <div
       className={cn(
         "relative flex-1 overflow-y-auto",
-        D("bg-[#0B1220]", "bg-[#F8FAFC]"),
+        D("bg-[#0F172A]", "bg-[#F8FAFC]"),
       )}
     >
-      <div className={cn("relative z-10 mx-6 mt-6 rounded-3xl border overflow-hidden backdrop-blur-xl", D("bg-[#0D1626]/92 border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.22)]", "bg-white/90 border-slate-200 shadow-[0_24px_80px_rgba(15,23,42,0.08)]"))}>
-        <div className={cn("flex items-center justify-between gap-4 px-6 py-5 border-b", D("border-white/[0.07]", "border-slate-200"))}>
+      <div className={cn("relative z-10 mx-6 mt-6 rounded-3xl border overflow-hidden backdrop-blur-xl", D("bg-[#1E293B]/92 border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.22)]", "bg-white/90 border-slate-200 shadow-[0_24px_80px_rgba(15,23,42,0.08)]"))}>
+        <div className={cn("flex items-center justify-between gap-4 px-6 py-5 border-b", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-[#E2E8F0]"))}>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-2">
-              <span className={cn("inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold border", D("bg-white/[0.06] border-white/[0.08] text-slate-300", "bg-slate-50 border-slate-200 text-slate-600"))}>
+              <span className={cn("inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold border", D("bg-white/[0.06] border-white/[0.08] text-slate-300", "bg-white border-[#E2E8F0] text-slate-600"))}>
                 Event Builder
               </span>
-              <span className={cn("text-[11px] font-semibold px-2.5 py-1 rounded-full", D("bg-indigo-500/10 text-indigo-300", "bg-indigo-50 text-indigo-700"))}>
+              <span className={cn("text-[11px] font-semibold px-2.5 py-1 rounded-full", D("bg-blue-500/10 text-blue-300", "bg-blue-50 text-blue-700"))}>
                 Step {step} of 4
               </span>
             </div>
@@ -312,13 +312,13 @@ export default function CreateEventPage() {
                       done
                         ? "bg-emerald-500/10 border-emerald-500/20"
                         : active
-                          ? "bg-indigo-500/10 border-indigo-500/25 shadow-[0_10px_24px_rgba(99,102,241,0.12)]"
+                          ? "bg-blue-500/10 border-blue-500/25 shadow-[0_10px_24px_rgba(37,99,235,0.12)]"
                           : "bg-white/[0.03] border-white/[0.07] hover:bg-white/[0.05]",
                       done
                         ? "bg-emerald-50 border-emerald-200"
                         : active
-                          ? "bg-indigo-50 border-indigo-200 shadow-[0_10px_24px_rgba(99,102,241,0.08)]"
-                          : "bg-slate-50 border-slate-200 hover:bg-white",
+                          ? "bg-blue-50 border-blue-200 shadow-[0_10px_24px_rgba(37,99,235,0.08)]"
+                          : "bg-white border-[#E2E8F0] hover:bg-white",
                     ),
                   )}
                 >
@@ -328,18 +328,18 @@ export default function CreateEventPage() {
                       background: done
                         ? "#10B981"
                         : active
-                          ? "#6366F1"
+                          ? "#2563EB"
                           : dark
                             ? "rgba(255,255,255,0.06)"
                             : "#E2E8F0",
                       color: done || active ? "#FFF" : dark ? "#94A3B8" : "#64748B",
-                      boxShadow: active ? "0 10px 24px rgba(99,102,241,0.22)" : "none",
+                      boxShadow: active ? "0 10px 24px rgba(37,99,235,0.22)" : "none",
                     }}
                   >
                     {done ? "✓" : currentStep}
                   </div>
                   <div className="min-w-0">
-                    <p className={cn("text-[13px] font-semibold", active ? "text-indigo-400" : done ? D("text-slate-200", "text-slate-700") : D("text-slate-500", "text-slate-500"))}>{label}</p>
+                    <p className={cn("text-[13px] font-semibold", active ? "text-blue-400" : done ? D("text-slate-200", "text-slate-700") : D("text-slate-500", "text-slate-500"))}>{label}</p>
                     <p className={cn("text-[11px] mt-0.5", D("text-slate-500", "text-slate-400"))}>
                       {currentStep === 1 ? "Basics" : currentStep === 2 ? "Departments" : currentStep === 3 ? "Form fields" : "Volunteers"}
                     </p>
@@ -377,7 +377,7 @@ export default function CreateEventPage() {
             <div>
               <label className={labelCls}>Event Banner</label>
               <p className={cn("text-[11.5px] mb-2.5", D("text-slate-500", "text-slate-400"))}>Recommended size: 1200×400px</p>
-              <div className={cn("rounded-xl border p-4", D("bg-[#0D1626] border-white/[0.07]", "bg-white border-slate-200"))}>
+              <div className={cn("rounded-xl border p-4", D("bg-[#1E293B] border-white/[0.07]", "bg-white border-slate-200"))}>
                 {bannerUrl ? (
                   <div className="flex flex-col gap-3">
                     <div className="relative">
@@ -444,7 +444,7 @@ export default function CreateEventPage() {
                         onClick={() => setInfo((current) => ({ ...current, participation: value }))}
                         className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
                         style={{
-                        background: info.participation === value ? "#6366F1" : "transparent",
+                        background: info.participation === value ? "#2563EB" : "transparent",
                           color: info.participation === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
                           borderColor: info.participation === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
                         }}
@@ -461,7 +461,7 @@ export default function CreateEventPage() {
                       type="checkbox"
                       checked={info.isCompulsory}
                       onChange={(e) => setInfo((current) => ({ ...current, isCompulsory: e.target.checked }))}
-                      className="w-4 h-4 accent-indigo-500"
+                      className="w-4 h-4 accent-blue-500"
                     />
                     <span className={cn("text-[12.5px] font-medium", D("text-slate-300", "text-slate-700"))}>
                       Mandatory attendance
@@ -481,7 +481,7 @@ export default function CreateEventPage() {
                     onClick={() => setInfo((current) => ({ ...current, fee: value, amount: value === "free" ? "" : current.amount }))}
                     className="py-2.5 rounded-xl text-[12.5px] font-semibold border capitalize transition-all"
                     style={{
-                      background: info.fee === value ? "#0D948B" : "transparent",
+                      background: info.fee === value ? "#2563EB" : "transparent",
                       color: info.fee === value ? "#FFF" : dark ? "#64748B" : "#94A3B8",
                       borderColor: info.fee === value ? "transparent" : dark ? "rgba(255,255,255,0.1)" : "#E2E8F0",
                     }}
@@ -630,11 +630,11 @@ export default function CreateEventPage() {
                       onClick={() => setTeam((current) => ({ ...current, coCoordinators: toggleArr(current.coCoordinators, coordinatorKey) }))}
                       className="flex items-center gap-2 px-3.5 py-2 rounded-xl border transition-all text-left"
                       style={{
-                        background: selected ? "rgba(99,102,241,0.12)" : "transparent",
-                        borderColor: selected ? "#6366F1" : dark ? "rgba(255,255,255,0.08)" : "#E2E8F0",
+                        background: selected ? "rgba(37,99,235,0.12)" : "transparent",
+                        borderColor: selected ? "#2563EB" : dark ? "rgba(255,255,255,0.08)" : "#E2E8F0",
                       }}
                     >
-                      <span className={cn("text-[12px] font-semibold", selected ? "text-indigo-400" : D("text-slate-300", "text-slate-700"))}>
+                      <span className={cn("text-[12px] font-semibold", selected ? "text-blue-400" : D("text-slate-300", "text-slate-700"))}>
                         {department.coordinator.name}
                       </span>
                       <span className={cn("text-[11px]", D("text-slate-500", "text-slate-400"))}>
@@ -656,7 +656,7 @@ export default function CreateEventPage() {
 
             <div className="flex flex-col gap-3">
               {fields.map((field, index) => (
-                <div key={field.id} className={cn("flex flex-col gap-3 px-4 py-3 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
+                <div key={field.id} className={cn("flex flex-col gap-3 px-4 py-3 rounded-xl border", D("bg-card-dark border-white/8", "bg-white border-[#E2E8F0]"))}>
                   <div className="flex items-center gap-3">
                     <span className={cn("text-[11px] font-bold w-5 text-center shrink-0", D("text-slate-600", "text-slate-400"))}>{index + 1}</span>
                     <input
@@ -680,7 +680,7 @@ export default function CreateEventPage() {
                         type="checkbox"
                         checked={field.required}
                         onChange={(event) => patchField(field.id, "required", event.target.checked)}
-                        className="w-3.5 h-3.5 accent-indigo-500"
+                        className="w-3.5 h-3.5 accent-blue-500"
                       />
                       <span className={cn("text-[11.5px] font-medium", D("text-slate-500", "text-slate-400"))}>Required</span>
                     </label>
@@ -730,7 +730,7 @@ export default function CreateEventPage() {
                           const newOptions = [...(field.options || []), ""];
                           patchField(field.id, "options", newOptions);
                         }}
-                        className={cn("text-[11px] px-2 py-1 rounded-lg border text-left w-fit transition-colors", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+                        className={cn("text-[11px] px-2 py-1 rounded-lg border text-left w-fit transition-colors", D("border-white/10 text-slate-400 hover:text-blue-400 hover:border-blue-500/30", "border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"))}
                       >
                         + Add option
                       </button>
@@ -743,7 +743,7 @@ export default function CreateEventPage() {
             <button
               type="button"
               onClick={addField}
-              className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-[13px] font-medium transition-colors self-start", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+              className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-[13px] font-medium transition-colors self-start", D("border-white/10 text-slate-400 hover:text-blue-400 hover:border-blue-500/30", "border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"))}
             >
               <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
               Add field
@@ -757,7 +757,7 @@ export default function CreateEventPage() {
               Pick a student from your college and assign a volunteer role.
             </p>
 
-            <div className={cn("p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
+            <div className={cn("p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-white border-[#E2E8F0]"))}>
               <p className={cn("text-[12px] font-bold mb-3", D("text-slate-400", "text-slate-500"))}>Add volunteer</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <div>
@@ -787,7 +787,7 @@ export default function CreateEventPage() {
                 </div>
               </div>
               {selectedStudent && (
-                <div className={cn("mb-3 rounded-xl border px-4 py-3 text-[12px]", D("bg-white/[0.05] border-white/[0.08] text-slate-300", "bg-slate-50 border-slate-200 text-slate-700"))}>
+                <div className={cn("mb-3 rounded-xl border px-4 py-3 text-[12px]", D("bg-white/[0.05] border-white/[0.08] text-slate-300", "bg-white border-[#E2E8F0] text-slate-700"))}>
                   <p className="font-semibold">{selectedStudent.name}</p>
                   <p className={D("text-slate-400", "text-slate-500")}>{selectedStudent.email}</p>
                   <p className={D("text-slate-400", "text-slate-500")}>
@@ -804,7 +804,7 @@ export default function CreateEventPage() {
                 onClick={addVolunteer}
                 disabled={!selectedStudent?.email?.trim() || !volForm.taskTitle.trim()}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-white disabled:opacity-40 transition-all"
-                style={{ background: "#6366F1", boxShadow: "0 3px 10px rgba(99,102,241,0.22)" }}
+                style={{ background: "#2563EB", boxShadow: "0 3px 10px rgba(37,99,235,0.22)" }}
               >
                 <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
                 Add
@@ -818,7 +818,7 @@ export default function CreateEventPage() {
                 </p>
                 {volunteers.map((volunteer) => (
                   <div key={volunteer.id} className={cn("flex items-center gap-3 px-4 py-2.5 rounded-xl border", D("bg-deep-navy border-white/7", "bg-white border-slate-200"))}>
-                    <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
                       {volunteer.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -837,13 +837,13 @@ export default function CreateEventPage() {
               </p>
             )}
 
-            <div className={cn("mt-2 p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-slate-50 border-slate-200"))}>
+            <div className={cn("mt-2 p-4 rounded-xl border", D("bg-card-dark border-white/8", "bg-white border-[#E2E8F0]"))}>
               <div className="flex items-center justify-between gap-3 mb-3">
                 <p className={cn("text-[12px] font-bold", D("text-slate-400", "text-slate-500"))}>Assign judge</p>
                 <button
                   type="button"
                   onClick={() => setJudgeForm((current) => ({ ...current, password: generatePassword() }))}
-                  className={cn("text-[11px] font-medium", D("text-slate-500 hover:text-indigo-400", "text-slate-400 hover:text-indigo-600"))}
+                  className={cn("text-[11px] font-medium", D("text-slate-500 hover:text-blue-400", "text-slate-400 hover:text-blue-600"))}
                 >
                   Regenerate password
                 </button>
@@ -881,7 +881,7 @@ export default function CreateEventPage() {
       </div>
       </div>
 
-      <div className={cn("sticky bottom-0 z-20 mx-6 mb-6 flex items-center justify-between px-6 py-4 border rounded-3xl backdrop-blur-xl", D("bg-[#070D1A]/95 border-white/[0.06] shadow-[0_18px_50px_rgba(0,0,0,0.18)]", "bg-white/90 border-slate-200 shadow-[0_18px_50px_rgba(15,23,42,0.08)]"))}>
+      <div className={cn("sticky bottom-0 z-20 mx-6 mb-6 flex items-center justify-between px-6 py-4 border rounded-3xl backdrop-blur-xl", D("bg-[#0F172A]/95 border-white/[0.06] shadow-[0_18px_50px_rgba(0,0,0,0.18)]", "bg-white/90 border-slate-200 shadow-[0_18px_50px_rgba(15,23,42,0.08)]"))}>
         <button
           onClick={() => (step > 1 ? setStep((current) => current - 1) : navigate(eventsBasePath))}
           className={cn("px-5 py-2.5 rounded-xl text-[13px] font-medium border", D("border-white/10 text-slate-400", "border-slate-200 text-slate-600"))}
@@ -891,7 +891,7 @@ export default function CreateEventPage() {
 
         <div className="flex items-center gap-2">
           {[1, 2, 3, 4].map((currentStep) => (
-            <span key={currentStep} className={cn("w-2 h-2 rounded-full transition-all", step === currentStep ? "bg-indigo-500 w-5" : D("bg-white/15", "bg-slate-300"))} />
+            <span key={currentStep} className={cn("w-2 h-2 rounded-full transition-all", step === currentStep ? "bg-blue-500 w-5" : D("bg-white/15", "bg-slate-300"))} />
           ))}
         </div>
 
@@ -899,7 +899,7 @@ export default function CreateEventPage() {
           onClick={() => (step < 4 ? setStep((current) => current + 1) : handlePublish())}
           disabled={(step < 4 && !canGoNext) || isLoading}
           className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-white disabled:opacity-50"
-          style={{ background: "#6366F1", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
+          style={{ background: "#2563EB", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
         >
           {isLoading ? "Publishing..." : step < 4 ? "Next >" : "Publish event"}
         </button>

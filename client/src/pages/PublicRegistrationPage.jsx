@@ -83,8 +83,8 @@ export default function PublicRegistrationPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <div className="text-slate-500 text-center">
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-4">
+        <div className="text-[#64748B] text-center">
           <div className="text-[16px] font-medium mb-2">Loading event...</div>
         </div>
       </div>
@@ -93,15 +93,15 @@ export default function PublicRegistrationPage() {
 
   if (isError || !event) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <div className="max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <div className="text-[18px] font-bold mb-2 text-slate-900">Registration not found</div>
-          <p className="text-[13px] text-slate-500 mb-4">
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-4">
+        <div className="max-w-md rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center shadow-sm">
+          <div className="text-[18px] font-bold mb-2 text-[#0F172A]">Registration not found</div>
+          <p className="text-[13px] text-[#64748B] mb-4">
             {error?.data?.message || "This registration link is invalid or has expired."}
           </p>
           <button
             onClick={() => navigate("/")}
-            className="px-4 py-2.5 rounded-xl text-[13px] font-medium bg-linear-to-r from-indigo-500 to-purple-500 text-white"
+            className="rounded-xl bg-[#2563EB] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#1D4ED8]"
           >
             Back to home
           </button>
@@ -111,10 +111,10 @@ export default function PublicRegistrationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {event.bannerUrl && (
-          <div className="mb-8 rounded-xl overflow-hidden h-48 border border-slate-200 shadow-sm">
+          <div className="mb-8 rounded-xl overflow-hidden h-48 border border-[#E2E8F0] shadow-sm">
             <img
               src={event.bannerUrl}
               alt={event.eventName}
@@ -126,45 +126,40 @@ export default function PublicRegistrationPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-[28px] font-extrabold tracking-tight text-slate-900">
+              <h1 className="text-[28px] font-extrabold tracking-tight text-[#0F172A]">
                 {event.eventName}
               </h1>
-              <p className="text-[13px] text-slate-500 mt-2">
+              <p className="text-[13px] text-[#64748B] mt-2">
                 {event.description || "Event registration"}
               </p>
             </div>
-            <button
-              onClick={() => navigate("/")}
-              className="text-slate-500 hover:text-slate-900 transition-colors text-[20px]"
-            >
-              âœ•
-            </button>
+           
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-              <p className="text-[11px] text-slate-500 uppercase mb-1">Event date</p>
-              <p className="text-[13px] font-semibold text-slate-900">
+            <div className="rounded-lg border border-[#E2E8F0] bg-white p-3 shadow-sm">
+              <p className="text-[11px] text-[#64748B] uppercase mb-1">Event date</p>
+              <p className="text-[13px] font-semibold text-[#0F172A]">
                 {new Date(event.startDate).toLocaleDateString("en-IN")}
               </p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-              <p className="text-[11px] text-slate-500 uppercase mb-1">Venue</p>
-              <p className="text-[13px] font-semibold text-slate-900">{event.venue}</p>
+            <div className="rounded-lg border border-[#E2E8F0] bg-white p-3 shadow-sm">
+              <p className="text-[11px] text-[#64748B] uppercase mb-1">Venue</p>
+              <p className="text-[13px] font-semibold text-[#0F172A]">{event.venue}</p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-              <p className="text-[11px] text-slate-500 uppercase mb-1">Type</p>
-              <p className="text-[13px] font-semibold text-slate-900 capitalize">
+            <div className="rounded-lg border border-[#E2E8F0] bg-white p-3 shadow-sm">
+              <p className="text-[11px] text-[#64748B] uppercase mb-1">Type</p>
+              <p className="text-[13px] font-semibold text-[#0F172A] capitalize">
                 {event.eventType} event
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="rounded-2xl border border-[#E2E8F0] bg-white p-8 shadow-sm">
           <div className="mb-6">
-            <h2 className="text-[18px] font-bold text-slate-900 mb-2">Event Registration</h2>
-            <p className="text-[13px] text-slate-500">
+            <h2 className="text-[18px] font-bold text-[#0F172A] mb-2">Event Registration</h2>
+            <p className="text-[13px] text-[#64748B]">
               Please fill out the form below to register for this event
             </p>
           </div>
@@ -174,14 +169,14 @@ export default function PublicRegistrationPage() {
               <div>
                 {registrationSchema.map((field) => (
                   <div key={field.label} className="mb-4">
-                    <label className="block text-[12px] font-medium text-slate-500 mb-2">
+                    <label className="block text-[12px] font-medium text-[#64748B] mb-2">
                       {field.label} {field.required && "*"}
                     </label>
 
                     {field.type === "Text" && (
                       <input
                         type="text"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 text-[13px] outline-none focus:border-indigo-500 transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] placeholder:text-slate-400 text-[13px] outline-none focus:border-[#2563EB] transition-all"
                         placeholder={`Enter ${field.label}`}
                         value={formData[field.label] || ""}
                         onChange={(e) => handleInputChange(field.label, e.target.value)}
@@ -192,7 +187,7 @@ export default function PublicRegistrationPage() {
                     {field.type === "Number" && (
                       <input
                         type="number"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 text-[13px] outline-none focus:border-indigo-500 transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] placeholder:text-slate-400 text-[13px] outline-none focus:border-[#2563EB] transition-all"
                         placeholder={`Enter ${field.label}`}
                         value={formData[field.label] || ""}
                         onChange={(e) => handleInputChange(field.label, e.target.value)}
@@ -203,7 +198,7 @@ export default function PublicRegistrationPage() {
                     {field.type === "Email" && (
                       <input
                         type="email"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 text-[13px] outline-none focus:border-indigo-500 transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] placeholder:text-slate-400 text-[13px] outline-none focus:border-[#2563EB] transition-all"
                         placeholder={`Enter ${field.label}`}
                         value={formData[field.label] || ""}
                         onChange={(e) => handleInputChange(field.label, e.target.value)}
@@ -214,7 +209,7 @@ export default function PublicRegistrationPage() {
                     {field.type === "Textarea" && (
                       <textarea
                         rows={3}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 text-[13px] outline-none focus:border-indigo-500 transition-all resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] placeholder:text-slate-400 text-[13px] outline-none focus:border-[#2563EB] transition-all resize-none"
                         placeholder={`Enter ${field.label}`}
                         value={formData[field.label] || ""}
                         onChange={(e) => handleInputChange(field.label, e.target.value)}
@@ -224,7 +219,7 @@ export default function PublicRegistrationPage() {
 
                     {field.type === "Dropdown" && (
                       <select
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-[13px] outline-none focus:border-indigo-500 transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] text-[13px] outline-none focus:border-[#2563EB] transition-all"
                         value={formData[field.label] || ""}
                         onChange={(e) => handleInputChange(field.label, e.target.value)}
                         required={field.required}
@@ -246,16 +241,16 @@ export default function PublicRegistrationPage() {
                           onChange={(e) =>
                             handleInputChange(field.label, e.target.checked ? "true" : "false")
                           }
-                          className="w-4 h-4 accent-indigo-500"
+                          className="w-4 h-4 accent-[#2563EB]"
                         />
-                        <span className="text-[13px] text-slate-700">{field.label}</span>
+                        <span className="text-[13px] text-[#0F172A]">{field.label}</span>
                       </label>
                     )}
 
                     {field.type === "File upload" && (
                       <input
                         type="file"
-                        className="w-full text-slate-700 text-[13px]"
+                        className="w-full text-[#0F172A] text-[13px]"
                         onChange={(e) => handleInputChange(field.label, e.target.files?.[0]?.name || "")}
                         required={field.required}
                       />
@@ -269,7 +264,7 @@ export default function PublicRegistrationPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 rounded-xl text-[14px] font-bold text-white bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50 transition-all"
+                className="w-full py-3 rounded-xl text-[14px] font-bold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-all shadow-[0_4px_14px_rgba(37,99,235,0.28)]"
               >
                 {isSubmitting ? "Registering..." : "Complete Registration"}
               </button>
@@ -280,8 +275,8 @@ export default function PublicRegistrationPage() {
                 className={cn(
                   "rounded-xl px-4 py-3 text-[13px] border",
                   errorMessage
-                    ? "bg-rose-50 border-rose-200 text-rose-700"
-                    : "bg-emerald-50 border-emerald-200 text-emerald-700",
+                    ? "bg-red-50 border-red-200 text-[#DC2626]"
+                    : "bg-green-50 border-green-200 text-[#16A34A]",
                 )}
               >
                 {errorMessage || successMessage}

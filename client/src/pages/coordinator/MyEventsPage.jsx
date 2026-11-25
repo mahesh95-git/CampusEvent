@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { StatCard } from "@/components/cards/StatCard";
 import { ExportButton } from "@/components/ui/ExportButton";
 import { downloadCsvFile } from "@/lib/reportExport";
 import {
@@ -11,7 +10,7 @@ import {
 
 const STATUS_MAP = {
   active: { label: "Active", bg: "rgba(16,185,129,0.14)", text: "#10B981", dot: "#059669" },
-  upcoming: { label: "Upcoming", bg: "rgba(99,102,241,0.14)", text: "#818CF8", dot: "#6366F1" },
+  upcoming: { label: "Upcoming", bg: "rgba(37,99,235,0.14)", text: "#2563EB", dot: "#2563EB" },
   completed: { label: "Completed", bg: "rgba(148,163,184,0.14)", text: "#94A3B8", dot: "#64748B" },
   draft: { label: "Draft", bg: "rgba(245,158,11,0.14)", text: "#FCD34D", dot: "#F59E0B" },
 };
@@ -92,10 +91,7 @@ export default function MyEventsPage() {
     <div className="flex-1 overflow-hidden flex flex-col">
       <div className={cn(
         "flex items-center justify-between px-8 py-5 border-b shrink-0",
-        D(
-          "bg-[#0D1626] border-white/[0.06]",
-          "bg-blue-50 border-slate-200",
-        ),
+                D("bg-[#1E293B] border-white/[0.06]", "bg-white border-[#E2E8F0]"),
       )}>
         <div>
           <h1 className={cn("text-[20px] font-extrabold tracking-tight", D("text-slate-50", "text-slate-900"))}>My Events</h1>
@@ -130,22 +126,12 @@ export default function MyEventsPage() {
           <button
             onClick={() => navigate("/dashboard/coordinator/events/create")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold"
-            style={{ background: "#6366F1", color: "#FFF", boxShadow: "0 4px 14px rgba(99,102,241,0.22)" }}
+            style={{ background: "#2563EB", color: "#FFF", boxShadow: "0 4px 14px rgba(37,99,235,0.22)" }}
           >
             <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
             New event
           </button>
         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 px-8 py-5 shrink-0 border-b" style={{ borderColor: dark ? "rgba(255,255,255,0.04)" : "#F1F5F9" }}>
-        {[
-          { label: "Total events", value: events.length, color: "#6366F1" },
-          { label: "Active", value: events.filter((event) => event.status === "active").length, color: "#10B981" },
-          { label: "Registrations", value: events.reduce((sum, event) => sum + event.registrationCount, 0), color: "#0D948B" },
-        ].map((stat) => (
-          <StatCard key={stat.label} label={stat.label} value={stat.value} color={stat.color} dark={dark} />
-        ))}
       </div>
 
       {statusMessage && (
@@ -185,7 +171,7 @@ export default function MyEventsPage() {
                         {status.label}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-center font-semibold text-[14px] border-r last:border-r-0" style={{ color: "#6366F1" }}>
+                    <td className="px-4 py-3.5 text-center font-semibold text-[14px] border-r last:border-r-0" style={{ color: "#2563EB" }}>
                       {event.registrationCount}
                     </td>
                     <td className={tdCls}>
@@ -217,7 +203,7 @@ export default function MyEventsPage() {
                     <td className="px-4 py-3.5 text-right border-r last:border-r-0">
                       <button
                         onClick={() => navigate(`/dashboard/coordinator/events/${event.id}`)}
-                        className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30", "border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300"))}
+                        className={cn("text-[12px] font-medium px-3 py-1.5 rounded-lg border transition-colors", D("border-white/10 text-slate-400 hover:text-blue-400 hover:border-blue-500/30", "border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"))}
                       >
                         View
                       </button>
