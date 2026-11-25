@@ -28,13 +28,13 @@ function CollegeLogo({ college }) {
       <img
         src={college.logoUrl}
         alt={college.name}
-        className="w-[64px] h-[64px] rounded-[18px] object-contain border border-white/10"
+        className="w-[128px] h-[128px] rounded-[24px] object-contain border border-white/10"
       />
     );
   }
   return (
     <div
-      className="w-[64px] h-[64px] rounded-[18px] flex items-center justify-center text-white font-black text-[22px] tracking-tight"
+      className="w-[128px] h-[128px] rounded-[24px] flex items-center justify-center text-white font-black text-[36px] tracking-tight"
       style={{
         background: `linear-gradient(135deg, ${college.accentColor}, #14B8A6)`,
         boxShadow: `0 8px 28px ${college.accentColor}50`,
@@ -236,7 +236,7 @@ function CollegeLogin() {
                   )
                 )}
               >
-                {ROLE_OPTIONS.map((opt) => (
+                {ROLE_OPTIONS.filter((opt) => opt.value !== "volunteer").map((opt) => (
                   <option key={opt.value} value={opt.value} style={{ background: dark ? "#0D1626" : "#ffffff", color: dark ? "#e2e8f0" : "#000000" }}>
                     {opt.label}
                   </option>

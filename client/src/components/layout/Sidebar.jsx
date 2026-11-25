@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,7 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
   const dark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   const D = (d, l) => (dark ? d : l);
   const [logout] = useLogoutUserMutation();
+  const [logoFailed, setLogoFailed] = useState(false);
 
   const currentRoleMatch = location.pathname.split("/")[2];
   const currentRole = NAV_CONFIG[currentRoleMatch] ? currentRoleMatch : "collegeadmin";
@@ -106,9 +107,18 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
   const organizationName =
     currentUser?.organization?.name ||
     currentUser?.organization?.collegeName ||
-    currentUser?.collegeName ||
-    config.label ||
-    "College";
+    currentUser?.collegeName;
+  const organizationLogo = currentUser?.organization?.logoUrl;
+  const collegeShortName =
+    currentUser?.organization?.shortName ||
+    currentUser?.organization?.collegeShortName ||
+    currentUser?.collegeShortName ||
+    organizationName?.trim().split(/\s+/)[0]?.slice(0, 4).toUpperCase();
+  const sidebarTitle = collegeShortName || "Campus Event";
+
+  useEffect(() => {
+    setLogoFailed(false);
+  }, [organizationLogo]);
   const toggleTheme = () => dispatch(setTheme(dark ? "light" : "dark"));
 
   async function handleLogout() {
@@ -141,11 +151,24 @@ export function Sidebar({ NAV_CONFIG, onClose }) {
           D("border-white/[0.06]", "border-blue-100"),
         )}
       >
-        <div className={cn("w-8 md:w-[32px] h-8 md:h-[32px] rounded-[9px] flex items-center justify-center text-[12px] md:text-[14px] shadow-lg shrink-0 text-white", getIconBg(config.color))}>
-          {config.emoji}
-        </div>
+        {organizationLogo && !logoFailed ? (
+          <img
+            src={organizationLogo}
+            alt={organizationName ? `${organizationName} logo` : "College logo"}
+            title={organizationName || "College logo"}
+            onError={() => setLogoFailed(true)}
+            className="w-8 md:w-[32px] h-8 md:h-[32px] rounded-[9px] object-cover shadow-lg shrink-0 bg-white"
+          />
+        ) : (
+          <div
+            title={organizationName || "Campus Event"}
+            className={cn("w-8 md:w-[32px] h-8 md:h-[32px] rounded-[9px] flex items-center justify-center text-[10px] md:text-[11px] font-extrabold shadow-lg shrink-0 text-white", getIconBg(config.color))}
+          >
+            {collegeShortName || "CE"}
+          </div>
+        )}
         <div className="min-w-0 hidden sm:block">
-          <p className={cn("font-extrabold text-[13px] leading-tight truncate tracking-tight", D("text-slate-50", "text-slate-900"))}>{organizationName}</p>
+          <p title={organizationName || sidebarTitle} className={cn("font-extrabold text-[13px] leading-tight truncate tracking-tight", D("text-slate-50", "text-slate-900"))}>{sidebarTitle}</p>
           <p className={cn("text-[11px] truncate", D("text-slate-500", "text-slate-400"))}>{config.label}</p>
         </div>
       </div>

@@ -62,7 +62,7 @@ const SHARED_FIELDS = [
     name: "password",
     label: "Password",
     type: "password",
-    placeholder: "â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢",
+    placeholder: "••••••••",
     autoComplete: "current-password",
   },
 ];
@@ -170,7 +170,7 @@ const COLLEGE_TYPES = [
 const NAV_CONFIG = {
   collegeadmin: {
     label: "Org Admin",
-    emoji: "ðŸŽ¯",
+    emoji: "🎯",
     color: "teal",
     accent: { dark: "#14B8A6", light: "#0D948B" },
     navItems: [
@@ -188,7 +188,7 @@ const NAV_CONFIG = {
 
   coordinator: {
     label: "Coordinator",
-    emoji: "ðŸ“‹",
+    emoji: "📋",
     color: "indigo",
     accent: { dark: "#818CF8", light: "#6366F1" },
     plan: null, // coordinators don't have a plan badge
@@ -205,7 +205,7 @@ const NAV_CONFIG = {
 
   student: {
     label: "Student",
-    emoji: "ðŸŽ“",
+    emoji: "🎓",
     color: "amber",
     accent: { dark: "#F59E0B", light: "#D97706" },
     plan: null,
@@ -221,7 +221,7 @@ const NAV_CONFIG = {
 
   volunteer: {
     label: "Volunteer",
-    emoji: "ðŸŽ—ï¸",
+    emoji: "🎗️",
     color: "blue",
     accent: { dark: "#60A5FA", light: "#3B82F6" },
     plan: null,
