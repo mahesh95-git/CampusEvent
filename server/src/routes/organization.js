@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   getOrganizationBySlug,
+  getPublicOrganizationStats,
   getMyOrganization,
   getOrganizationOverview,
   registerStudentForOrganization,
@@ -14,6 +15,7 @@ import requireRole from "../middlewares/requireRole.js";
 
 const router = Router();
 
+router.get("/public/stats", asyncHandler(getPublicOrganizationStats));
 router.post("/", asyncHandler(registerOrganization));
 router.post("/:slug/students", asyncHandler(registerStudentForOrganization));
 router.get(

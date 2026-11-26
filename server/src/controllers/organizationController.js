@@ -230,6 +230,16 @@ export async function registerOrganization(req, res) {
   );
 }
 
+export async function getPublicOrganizationStats(_req, res) {
+  const registeredColleges = await prisma.organization.count();
+  return successResponse(
+    res,
+    { count: registeredColleges },
+    "Public organization stats fetched successfully",
+    200,
+  );
+}
+
 export async function getOrganizationBySlug(req, res) {
   const slug = req.params.slug?.trim().toLowerCase();
 

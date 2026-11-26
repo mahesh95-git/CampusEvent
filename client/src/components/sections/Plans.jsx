@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { GraduationCap } from "lucide-react";
 import { useSelector } from "react-redux";
 import Pill from "@/components/ui/Pill";
@@ -7,8 +7,6 @@ import PlanCard from "@/components/cards/PlanCard";
 import { PLANS } from "@/constants";
 
 function Plans() {
-  const [activePlan, setActivePlan] = useState(1);
-
   const theme = useSelector((state) => state.theme.value);
   const dark =
     theme === "dark" ||
@@ -36,19 +34,14 @@ function Plans() {
           <p
             className={`text-[16px] max-w-[480px] mx-auto ${D("text-slate-400", "text-[#64748B]")}`}
           >
-            Subscribe to create and manage campus events. Students join and participate completely free.
+            Compare the available options for managing campus events and registrations.
           </p>
         </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
           {PLANS.map((plan, i) => (
             <FadeIn key={i} delay={i * 0.1}>
-              <PlanCard
-                plan={plan}
-                isActive={activePlan === i}
-                onClick={() => setActivePlan(i)}
-                dark={dark}
-              />
+              <PlanCard plan={plan} dark={dark} />
             </FadeIn>
           ))}
         </div>
@@ -59,7 +52,7 @@ function Plans() {
             <span className={D("text-blue-400 font-semibold", "text-[#2563EB] font-semibold")}>
               free
             </span>
-            . No account needed to browse events.
+            . No paid organization plan is required to participate.
           </p>
         </FadeIn>
       </div>

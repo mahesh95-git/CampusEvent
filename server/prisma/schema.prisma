@@ -186,3 +186,14 @@ model JudgeResultFile {
 
   @@index([eventId, roundLabel])
 }
+
+model Inquiry {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  collegeName String   @db.VarChar(150)
+  email       String   @db.VarChar(254)
+  message     String   @db.VarChar(3000)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}

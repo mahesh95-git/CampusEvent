@@ -6,6 +6,22 @@ export const publicApi = createApi({
     baseUrl: import.meta.env.VITE_API_BASE_URL || "",
   }),
   endpoints: (builder) => ({
+    getPublicOrganizationStats: builder.query({
+      query: () => ({
+        url: "/organizations/public/stats",
+        method: "GET",
+      }),
+    }),
+    submitInquiry: builder.mutation({
+      query: (inquiry) => ({
+        url: "/inquiries",
+        method: "POST",
+        body: inquiry,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
     getEventByFormLink: builder.query({
       query: (formLink) => ({
         url: `/events/form/${formLink}`,
@@ -15,4 +31,8 @@ export const publicApi = createApi({
   }),
 });
 
-export const { useGetEventByFormLinkQuery } = publicApi;
+export const {
+  useGetEventByFormLinkQuery,
+  useGetPublicOrganizationStatsQuery,
+  useSubmitInquiryMutation,
+} = publicApi;

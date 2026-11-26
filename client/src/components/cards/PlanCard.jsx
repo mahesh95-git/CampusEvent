@@ -1,27 +1,22 @@
 import React from "react";
 import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
-function PlanCard({ plan, isActive, onClick, dark }) {
+function PlanCard({ plan, dark }) {
   const D = (darkClass, lightClass) => (dark ? darkClass : lightClass);
 
   return (
     <div
-      onClick={onClick}
-      className={`relative h-full rounded-2xl p-6 cursor-pointer transition-all duration-200 border ${
+      className={`relative h-full rounded-2xl p-6 transition-all duration-200 border ${
         plan.highlight
           ? `${D(
-              "bg-[#1E293B] border-[#2563EB] shadow-lg shadow-blue-950/20",
-              "bg-white border-[#2563EB] shadow-lg shadow-blue-900/10"
+              "bg-[#1E293B] border-blue-500/70 shadow-xl shadow-blue-950/30",
+              "bg-white border-blue-500 shadow-xl shadow-blue-900/10"
             )}`
-          : isActive
-            ? D(
-                "bg-[#1E293B] border-blue-500/50 shadow-md",
-                "bg-white border-[#BFDBFE] shadow-sm"
-              )
-            : D(
-                "bg-[#1E293B] border-slate-700 hover:border-blue-500/50 hover:shadow-md",
-                "bg-white border-[#E2E8F0] hover:border-[#BFDBFE] hover:shadow-md"
-              )
+          : D(
+              "bg-[#1E293B] border-slate-700 hover:border-blue-500/50 hover:-translate-y-1 hover:shadow-lg",
+              "bg-white border-[#E2E8F0] hover:border-[#BFDBFE] hover:-translate-y-1 hover:shadow-lg"
+            )
       }`}
     >
       {plan.badge && (
@@ -77,11 +72,12 @@ function PlanCard({ plan, isActive, onClick, dark }) {
         ))}
       </div>
 
-      <button
-        className={`w-full py-[11px] rounded-[11px] text-[15px] font-bold transition-all duration-200 hover:scale-[1.02] cursor-pointer ${D(plan.btnDark, plan.btnLight)}`}
+      <Link
+        to="/orgregistration"
+        className={`block w-full rounded-[11px] py-[11px] text-center text-[15px] font-bold no-underline transition-all duration-200 hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${D(plan.btnDark, plan.btnLight)}`}
       >
         {plan.cta}
-      </button>
+      </Link>
     </div>
   );
 }
