@@ -1,8 +1,9 @@
-import React from "react";
-import { Moon, Sun } from "lucide-react";
+import React, { useState } from "react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { setTheme } from "@/store/slices/theme";
+import { selectCurrentUser } from "@/store/slices/user";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -28,7 +29,10 @@ const PRODUCT_ITEMS = [
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
-  { label: "About",    href: "#about"    },
+  { label: "Workflow", href: "#workflow" },
+  { label: "About Us", href: "#about" },
+  { label: "Pricing", href: "#plans" },
+  { label: "Contact", href: "#contact" },
 ];
 
 // ─── Sub-components ────
@@ -50,7 +54,7 @@ function MenuPanel({ dark, className, children }) {
 }
 
 const MenuCard = React.forwardRef(
-  ({ icon: Icon, iconBg, title, desc, href, dark, className, ...props }, ref) => (
+  ({ icon, iconBg, title, desc, href, dark, className, ...props }, ref) => (
     <li>
       <NavigationMenuLink asChild>
         <Link
@@ -69,7 +73,7 @@ const MenuCard = React.forwardRef(
             className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
             style={{ background: iconBg }}
           >
-            <Icon size={18} strokeWidth={1.8} aria-hidden="true" />
+            {React.createElement(icon, { size: 18, strokeWidth: 1.8, "aria-hidden": true })}
           </div>
           <div className="flex flex-col gap-0.5">
             <span
@@ -101,17 +105,14 @@ MenuCard.displayName = "MenuCard";
 
 function NavBar() {
   const theme    = useSelector((state) => state.theme.value);
+  const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const dark =
     theme === "dark" ||
     (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   const D = (d, l) => (dark ? d : l);
-
-  function handleParticipantSignIn() {
-    navigate("/login");
-  }
 
   return (
     <nav
@@ -120,10 +121,10 @@ function NavBar() {
         D("bg-[#0F172A]/95 border-slate-800", "bg-[#F8FAFC]/95 border-[#E2E8F0]")
       )}
     >
-      <div className="max-w-[1280px] mx-auto px-8 h-[66px] flex items-center justify-between">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 h-[66px] flex items-center justify-between gap-3">
 
         {/* ── Logo ── */}
-        <div className="flex items-center gap-2.5">
+        <Link to="/" className="flex shrink-0 items-center gap-2.5 no-underline">
           <div className="w-[38px] h-[38px] rounded-[11px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[19px] shadow-lg shadow-blue-600/25">
             <Building2 size={21} strokeWidth={1.8} aria-hidden="true" />
           </div>
@@ -135,7 +136,7 @@ function NavBar() {
           >
             CampusEvents
           </span>
-        </div>
+        </Link>
 
         {/* ── Center nav (shadcn NavigationMenu) ── */}
         <NavigationMenu className="hidden md:flex">
@@ -192,9 +193,11 @@ function NavBar() {
 
           {/* Theme toggle */}
           <button
+            type="button"
             onClick={() => dispatch(setTheme(dark ? "light" : "dark"))}
+            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
             className={cn(
-              "flex items-center gap-1.5 px-[14px] py-[7px] rounded-[8px] border",
+              "flex items-center gap-1.5 px-2.5 py-[7px] rounded-[8px] border sm:px-[14px]",
               "text-[13px] font-medium cursor-pointer transition-all duration-200",
               D(
                 "bg-white/[0.06] border-slate-700 text-slate-300 hover:text-white",
@@ -203,13 +206,71 @@ function NavBar() {
             )}
           >
             {dark ? <Sun size={15} aria-hidden="true" /> : <Moon size={15} aria-hidden="true" />}
-            {D("Light", "Dark")}
+            <span className="hidden sm:inline">{D("Light", "Dark")}</span>
           </button>
-
-
-
+          {currentUser ? (
+            <Link
+              to="/dashboard"
+              className="hidden sm:inline-flex items-center rounded-lg bg-[#2563EB] px-4 py-2 text-[14px] font-semibold text-white shadow-sm transition-colors hover:bg-[#1D4ED8]"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/orgregistration"
+              className="hidden sm:inline-flex items-center rounded-lg bg-[#2563EB] px-4 py-2 text-[14px] font-semibold text-white shadow-sm transition-colors hover:bg-[#1D4ED8]"
+            >
+              Register College
+            </Link>
+          )}
+          <button
+            type="button"
+            className={cn(
+              "inline-flex h-10 w-10 items-center justify-center rounded-lg border md:hidden",
+              D("border-slate-700 text-slate-200 hover:bg-white/[0.06]", "border-slate-200 text-slate-700 hover:bg-slate-100"),
+            )}
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+          >
+            {mobileMenuOpen ? <X size={19} aria-hidden="true" /> : <Menu size={19} aria-hidden="true" />}
+          </button>
         </div>
       </div>
+
+      {mobileMenuOpen && (
+        <div
+          id="mobile-navigation"
+          className={cn(
+            "md:hidden border-t px-4 py-3 shadow-lg",
+            D("border-slate-800 bg-[#0F172A]", "border-[#E2E8F0] bg-white"),
+          )}
+        >
+          <div className="mx-auto flex max-w-[1280px] flex-col gap-1">
+            {NAV_LINKS.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  "rounded-lg px-3 py-2.5 text-sm font-semibold no-underline transition-colors",
+                  D("text-slate-300 hover:bg-white/[0.06]", "text-slate-700 hover:bg-slate-50"),
+                )}
+              >
+                {label}
+              </a>
+            ))}
+            <Link
+              to={currentUser ? "/dashboard" : "/orgregistration"}
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-1 rounded-lg bg-[#2563EB] px-3 py-2.5 text-center text-sm font-bold text-white no-underline hover:bg-[#1D4ED8]"
+            >
+              {currentUser ? "Go to Dashboard" : "Register College"}
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

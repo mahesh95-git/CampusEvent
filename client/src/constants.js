@@ -79,7 +79,7 @@ const ROLE_OPTIONS = [
 const PLANS = [
   {
     name: "Starter",
-    price: "â‚¹499",
+    price: "₹499",
     period: "per semester",
     desc: "For small clubs just getting started",
     highlight: false,
@@ -101,7 +101,7 @@ const PLANS = [
   },
   {
     name: "Organisation",
-    price: "â‚¹999",
+    price: "₹999",
     period: "per semester",
     desc: "For active departments & student bodies",
     highlight: true,
@@ -149,7 +149,7 @@ const PLANS = [
       "SSO & custom integrations",
       "Dedicated account manager",
     ],
-    cta: "Contact Sales",
+    cta: "Register your college",
   },
 ];
 

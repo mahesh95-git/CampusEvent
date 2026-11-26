@@ -51,7 +51,11 @@ export const {
   useUpdateStudentPlanMutation,
   useRegisterForEventMutation,
 } = studentApi;
-export const { useGetEventByFormLinkQuery } = publicApi;
+export const {
+  useGetEventByFormLinkQuery,
+  useGetPublicOrganizationStatsQuery,
+  useSubmitInquiryMutation,
+} = publicApi;
 
 export const {
   useGetVolunteerDashboardQuery,

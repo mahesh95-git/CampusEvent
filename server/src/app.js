@@ -9,6 +9,7 @@ import judgeRouter from "./routes/judge.js";
 import studentRouter from "./routes/student.js";
 import uploadRouter from "./routes/upload.js";
 import volunteerRouter from "./routes/volunteer.js";
+import inquiryRouter from "./routes/inquiry.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 import "./config/cloudinary.js"; // Initialize Cloudinary
 
@@ -37,6 +38,7 @@ app.use("/api/judge", judgeRouter);
 app.use("/api/students", studentRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/volunteer", volunteerRouter);
+app.use("/api/inquiries", inquiryRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
