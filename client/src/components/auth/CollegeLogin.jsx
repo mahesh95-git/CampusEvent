@@ -1,41 +1,32 @@
 import React, { useState } from "react";
-import { Building2 } from "lucide-react";
+import { Building2, CalendarDays, Check, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
-import { Select } from "@/components/ui/select";
 import { FieldLabel, FieldError, inputCls, EyeIcon } from "@/components/ui/form-helpers";
 import loginSchema from "@/zod/login";
-import { ROLES, SHARED_FIELDS, ROLE_OPTIONS } from "@/constants";
+import { SHARED_FIELDS } from "@/constants";
 import {
   useGetOrganizationBySlugQuery,
   useLoginUserMutation,
 } from "@/store/api";
 
-const LOGIN_ROLE_MAP = {
-  participant: "student",
-  student: "student",
-  coordinator: "coordinator",
-  collegeadmin: "collegeAdmin",
-  volunteer: "volunteer",
-  judge: "judge",
-};
 // ─── College logo / avatar ──
-function CollegeLogo({ college }) {
+function CollegeLogo({ college, compact = false }) {
   if (college.logoUrl) {
     return (
       <img
         src={college.logoUrl}
         alt={college.name}
-        className="w-[128px] h-[128px] rounded-[24px] object-contain border border-white/10"
+        className={cn(compact ? "h-16 w-16 rounded-2xl" : "h-32 w-32 rounded-[24px]", "object-contain border border-white/10")}
       />
     );
   }
   return (
     <div
-      className="w-[128px] h-[128px] rounded-[24px] flex items-center justify-center text-white font-black text-[36px] tracking-tight"
+      className={cn(compact ? "h-16 w-16 rounded-2xl text-xl" : "h-32 w-32 rounded-[24px] text-[36px]", "flex items-center justify-center text-white font-black tracking-tight")}
       style={{
         background: `linear-gradient(135deg, ${college.accentColor || "#2563EB"}, #1D4ED8)`,
         boxShadow: `0 8px 28px ${(college.accentColor || "#2563EB")}40`,
@@ -52,7 +43,6 @@ function CollegeLogo({ college }) {
 
 function CollegeLogin() {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const navigate = useNavigate();
 
   const theme = useSelector((state) => state.theme.value);
@@ -63,12 +53,18 @@ function CollegeLogin() {
   const D = (d, l) => (dark ? d : l);
 
   const collegeSlug = searchParams.get("college")?.toLowerCase() || null;
-  const initialRole = searchParams.get("role") || "participant";
-
-  const [role, setRole] = useState(
-    ROLES[initialRole] ? initialRole : "participant"
-  );
-
+  const loginType = (searchParams.get("role") || "").trim().toLowerCase();
+  const loginTitle = ({
+    participant: "Student Login",
+    student: "Student Login",
+    collegestudent: "Student Login",
+    college: "College Login",
+    collegeadmin: "College Login",
+    orgadmin: "College Login",
+    coordinator: "Coordinator Login",
+    judge: "Judge Login",
+    volunteer: "Volunteer Login",
+  })[loginType] || "Student Login";
   const [serverError, setServerError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginUser] = useLoginUserMutation();
@@ -80,44 +76,23 @@ function CollegeLogin() {
     skip: !collegeSlug,
   });
 
-  const config = ROLES[role];
   const college = collegeResponse?.college ?? null;
-  const pendingApproval = location.state?.pendingApproval;
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  function handleRoleChange(newRole) {
-    setRole(newRole);
-    setServerError("");
-    setShowPassword(false);
-    reset({ email: "", password: "" }); // clear fields + errors
-    const params = new URLSearchParams(searchParams);
-    params.set("role", newRole);
-    navigate(`?${params.toString()}`, { replace: true });
-  }
-
   async function onSubmit(data) {
     setServerError("");
     try {
-      const backendRole = LOGIN_ROLE_MAP[role];
-
-      if (!backendRole) {
-        setServerError("This role is not supported for login yet.");
-        return;
-      }
-
       const response = await loginUser({
         email: data.email,
         password: data.password,
-        role: backendRole,
         collegeSlug,
       }).unwrap();
 
@@ -178,96 +153,83 @@ function CollegeLogin() {
       {/* Ambient glow */}
       <div
         className="absolute top-[-140px] left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full pointer-events-none transition-all duration-500"
-        style={{ background: `radial-gradient(ellipse, ${config.accent}18 0%, transparent 70%)` }}
+        style={{ background: "radial-gradient(ellipse, rgba(37,99,235,0.10) 0%, transparent 70%)" }}
         aria-hidden
       />
 
-      <div className="w-full max-w-[440px] relative z-10">
+      <div className="w-full max-w-[1180px] relative z-10 grid overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_32px_100px_-45px_rgba(15,23,42,0.35)] dark:border-slate-700 dark:bg-[#1E293B] lg:min-h-[680px] lg:grid-cols-[0.92fr_1.08fr]">
+
+        {/* College information panel */}
+        <aside className="relative flex min-h-[340px] flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0B1736] via-[#172554] to-[#1D4ED8] p-8 text-white sm:p-10 lg:p-12">
+          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-white/10" aria-hidden="true" />
+          <div className="absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-blue-400/10 blur-2xl" aria-hidden="true" />
+          <div className="absolute right-12 top-36 h-40 w-40 rounded-full border border-white/[0.06]" aria-hidden="true" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-4">
+              {college ? (
+                <CollegeLogo college={college} compact />
+              ) : (
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20">
+                  <Building2 size={30} aria-hidden="true" />
+                </div>
+              )}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-200">CampusEvents</p>
+                <p className="mt-1 text-sm text-blue-100">College portal</p>
+              </div>
+            </div>
+            <div className="mt-10 max-w-lg lg:mt-16">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-3 py-1.5 text-xs font-medium text-blue-100">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(110,231,183,0.8)]" />
+                Your campus portal
+              </div>
+              <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                {college?.name || "Your campus community"}
+              </h1>
+              {college?.location && <p className="mt-3 text-base text-blue-100">{college.location}</p>}
+              <p className="mt-6 max-w-md text-sm leading-7 text-blue-50/85 sm:text-base">
+                Discover campus events, connect with your community, and keep everything happening at your college in one place.
+              </p>
+              <div className="mt-8 rounded-2xl border border-white/15 bg-white/[0.08] p-4 backdrop-blur-sm sm:p-5">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-100">
+                    <CalendarDays size={19} aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-white">Campus life, organized</p>
+                    <p className="mt-1 text-xs leading-5 text-blue-100/75">Find events and stay connected with your college community.</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 pt-3 text-xs text-blue-100/85">
+                  <span className="inline-flex items-center gap-1.5"><Check size={14} /> Event updates</span>
+                  <span className="inline-flex items-center gap-1.5"><Check size={14} /> Student access</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="relative z-10 mt-10 border-t border-white/15 pt-5 text-xs text-blue-100/80">
+            A connected campus starts here.
+          </div>
+        </aside>
+
+        <section className="flex flex-col justify-center px-5 py-9 sm:px-10 sm:py-12 lg:px-14">
 
         {/* ── College header ── */}
-        <div className="flex flex-col items-center text-center mb-8">
-          {college ? (
-            <>
-              <CollegeLogo college={college} />
-              <h1 className={cn("mt-4 text-[22px] font-extrabold tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>
-                {college.name}
-              </h1>
-              {college.location && (
-                <p className={cn("text-[13px] mt-1", D("text-slate-400", "text-[#64748B]"))}>
-                  {college.location}
-                </p>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="w-[56px] h-[56px] rounded-[16px] bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-[26px] shadow-xl shadow-blue-600/25 mb-1">
-                <Building2 size={27} strokeWidth={1.8} aria-hidden="true" />
-              </div>
-              <h1 className={cn("mt-4 text-[22px] font-extrabold tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>
-                Campus Portal
-              </h1>
-            </>
-          )}
-          <p className={cn("text-[13px] mt-2", D("text-slate-400", "text-[#64748B]"))}>
-            Sign in to access campus events
-          </p>
+        <div className="mb-8">
+          <div className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
+            <ShieldCheck size={14} aria-hidden="true" /> Secure campus access
+          </div>
+          <h2 className={cn("mt-2 text-3xl font-bold tracking-tight", D("text-slate-50", "text-[#0F172A]"))}>{loginTitle}</h2>
+          <p className={cn("mt-2 text-sm", D("text-slate-400", "text-[#64748B]"))}>Use your college account to access campus events.</p>
         </div>
 
         {/* ── Card ── */}
         <div
           className={cn(
-            "rounded-[24px] border p-8 transition-colors duration-200",
+            "rounded-[22px] border p-6 transition-colors duration-200 sm:p-8",
             D("bg-[#1E293B] border-slate-700", "bg-white border-[#E2E8F0] shadow-xl shadow-slate-900/[0.06]")
           )}
         >
-          {/* Role selector dropdown */}
-          <div className="mb-6">
-            <p className={cn("text-[11px] font-semibold uppercase tracking-[0.07em] mb-2.5", D("text-slate-400", "text-[#64748B]"))}>
-              Select your role
-            </p>
-            <div className="relative">
-              <Select
-                value={role}
-                onChange={(e) => handleRoleChange(e.target.value)}
-                className={cn(
-                  "w-full pr-10",
-                  D(
-                    "bg-[#0F172A] border-slate-700 text-slate-100 focus:ring-blue-500/30 focus:border-[#3B82F6]",
-                    "bg-white border-[#E2E8F0] text-[#0F172A] focus:ring-blue-500/20 focus:border-[#2563EB]"
-                  )
-                )}
-              >
-                {ROLE_OPTIONS.filter((opt) => opt.value !== "volunteer").map((opt) => (
-                  <option key={opt.value} value={opt.value} style={{ background: dark ? "#0F172A" : "#ffffff", color: dark ? "#e2e8f0" : "#0F172A" }}>
-                    {opt.label}
-                  </option>
-                ))}
-              </Select>
-              <svg
-                className={cn("absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none", D("text-slate-500", "text-slate-400"))}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Role description badge */}
-          <div className="flex items-center gap-2 mb-5">
-            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: config.dot }} />
-            <span className={cn("text-[12px] font-medium", D("text-slate-400", "text-slate-500"))}>
-              {config.desc}
-            </span>
-          </div>
-
-          {pendingApproval && role === "participant" && (
-            <div className={cn("mb-5 rounded-xl border px-4 py-3 text-[13px]", D("bg-amber-500/10 border-amber-500/20 text-amber-300", "bg-amber-50 border-amber-200 text-amber-700"))}>
-              Your student account has been created and is waiting for coordinator approval. You can log in after approval.
-            </div>
-          )}
-
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
 
@@ -357,10 +319,10 @@ function CollegeLogin() {
                   </svg>
                   Signing in…
                 </span>
-              ) : config.cta}
+              ) : "Sign in"}
             </button>
 
-            {collegeSlug && (role === "participant" || role === "student") && (
+            {collegeSlug && (
               <a
                 href={`/register?college=${collegeSlug}`}
                 className={cn(
@@ -382,12 +344,8 @@ function CollegeLogin() {
         <p className={cn("text-center text-[12px] mt-6", D("text-slate-500", "text-[#64748B]"))}>
           Protected by CampusEvents · Role-based access
         </p>
-        <p className={cn("text-center text-[12px] mt-2", D("text-slate-500", "text-[#64748B]"))}>
-          Not from this college?{" "}
-          <a href="/login" className={cn("underline underline-offset-2 transition-colors", D("text-slate-400 hover:text-blue-400", "text-[#64748B] hover:text-[#2563EB]"))}>
-            General login
-          </a>
-        </p>
+        
+        </section>
       </div>
     </div>
   );
